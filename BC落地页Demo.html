@@ -1,0 +1,4900 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>躺着学 · 雅思写作</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+/* ============================================================
+   IELTS Writing Landing — Warm Editorial System
+   ============================================================ */
+
+:root {
+  --paper: #f4f7fb;
+  --paper-2: #e7eef7;
+  --paper-3: #d5e0ef;
+  --ink: #0b1f3a;
+  --ink-2: #1e3a63;
+  --ink-3: #4f6a8f;
+  --ink-4: #8aa0bd;
+  --rule: #c6d4e6;
+  --rule-soft: #dde6f2;
+
+  --accent: #1e5fd6;
+  --accent-ink: #143f99;
+  --accent-wash: #d8e5fb;
+  --sage: #2b6cb0;
+  --sage-wash: #d3e2f2;
+  --cream: #e8f0fb;
+
+  --radius: 16px;
+
+  --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, serif;
+  --sans: "Noto Sans SC", "PingFang SC", -apple-system, "Helvetica Neue", sans-serif;
+  --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+  --gutter: clamp(16px, 2vw, 32px);
+  --page-max: 1440px;
+  --flow-axis-width: 168px;
+  --flow-axis-gap: 12px;
+  --flow-axis-slot: 0px;
+
+  /* Meta / label typography (readability) */
+  --text-meta-xs: 12px;
+  --text-meta-sm: 13px;
+  --text-meta-md: 14px;
+  --text-meta-lg: 15px;
+  --text-section-num: 15px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+img { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  width: 100%;
+  min-width: 0;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(30, 95, 214, 0.05), transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(43, 108, 176, 0.05), transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Nav */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  background: rgba(244, 247, 251, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 50;
+}
+.nav__brand img {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.nav__links a:hover { color: var(--accent); }
+.nav__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 14px;
+  border-radius: 16px;
+  transition: background 160ms ease;
+}
+.nav__cta:hover { background: var(--accent); }
+
+/* Left flow axis — page journey tracker (desktop) */
+#hero, #pain, #paths, #proof,
+[id^="path-"] {
+  scroll-margin-top: 88px;
+}
+.flow-axis {
+  position: fixed;
+  left: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--sans);
+  pointer-events: none;
+  width: var(--flow-axis-width);
+}
+.flow-axis__inner {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 12px 12px 12px 10px;
+  border-radius: 14px;
+  background: rgba(244, 247, 251, 0.94);
+  border: 1px solid var(--rule);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 28px rgba(11, 31, 58, 0.08);
+  max-width: 168px;
+}
+.flow-axis__track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.flow-axis__rail {
+  position: absolute;
+  left: 7px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: var(--rule);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.flow-axis__progress {
+  position: absolute;
+  left: 7px;
+  top: 10px;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: height 0.35s ease;
+  max-height: calc(100% - 20px);
+  pointer-events: none;
+}
+.flow-axis__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  column-gap: 10px;
+  align-items: center;
+  padding: 8px 4px 8px 0;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 140ms ease;
+  min-width: 120px;
+}
+.flow-axis__step:hover {
+  background: var(--paper-2);
+}
+.flow-axis__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--rule);
+  background: var(--paper);
+  justify-self: center;
+  transition: all 0.25s ease;
+  z-index: 1;
+}
+.flow-axis__step.is-active .flow-axis__dot,
+.flow-axis__step.is-active-parent .flow-axis__dot {
+  width: 12px;
+  height: 12px;
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-wash);
+}
+.flow-axis__step.is-done .flow-axis__dot {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.flow-axis__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-3);
+  line-height: 1.25;
+  transition: color 0.2s ease;
+}
+.flow-axis__step.is-active .flow-axis__label,
+.flow-axis__step.is-active-parent .flow-axis__label {
+  color: var(--ink);
+}
+.flow-axis__subs {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 6px 26px;
+  padding-left: 10px;
+  border-left: 1px solid var(--rule-soft);
+}
+.flow-axis__sub-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 4px 5px 0;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 6px;
+  width: 100%;
+  transition: background 140ms ease;
+}
+.flow-axis__sub-step:hover { background: var(--paper-2); }
+.flow-axis__sub-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--rule);
+  flex-shrink: 0;
+  margin-top: 5px;
+  transition: background 0.2s ease;
+}
+.flow-axis__sub-step.is-active .flow-axis__sub-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-wash);
+}
+.flow-axis__sub-step.is-done .flow-axis__sub-dot {
+  background: var(--accent);
+}
+.flow-axis__sub-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-4);
+  line-height: 1.3;
+  transition: color 0.2s ease;
+}
+.flow-axis__sub-step.is-active .flow-axis__sub-label {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.flow-axis__sub-step.is-done .flow-axis__sub-label {
+  color: var(--ink-3);
+}
+@media (min-width: 1280px) {
+  :root {
+    --flow-axis-slot: calc(var(--flow-axis-width) + var(--flow-axis-gap));
+  }
+  .flow-axis { display: flex; }
+  .page {
+    padding-left: calc(var(--gutter) + var(--flow-axis-slot));
+  }
+  .proto-toolbar { display: none; }
+}
+@media (min-width: 1820px) {
+  .flow-axis {
+    left: calc((100vw - var(--page-max)) / 2 - var(--flow-axis-width) - var(--flow-axis-gap));
+  }
+  .page {
+    padding-left: var(--gutter);
+  }
+}
+@media (max-width: 1279px) {
+  .flow-axis { display: none !important; }
+}
+
+/* Site footer — aligned with igopx.cn main site */
+.site-footer {
+  position: relative;
+  width: 100%;
+  margin-top: 0;
+}
+.site-footer__bar {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4320 / 502;
+  min-height: 140px;
+  background-image: url(https://s-cdn.igopx.cn/prod/upload/202603231652/bg.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+}
+.site-footer__links {
+  position: absolute;
+  left: clamp(16px, 5.5vw, 88px);
+  top: clamp(14px, 2.6vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.5vw, 8px);
+  z-index: 1;
+}
+.site-footer__link-item {
+  color: #fff;
+  font-size: clamp(11px, 0.95vw, 14px);
+  line-height: 1.45;
+}
+.site-footer__name {
+  font-size: clamp(12px, 1.05vw, 15px);
+  font-weight: 800;
+}
+.site-footer__label {
+  opacity: 0.92;
+}
+.site-footer__link-item a {
+  color: #fff;
+  text-decoration: none;
+}
+.site-footer__link-item a:hover {
+  color: #2d91ff;
+}
+@media (max-width: 767px) {
+  .site-footer__bar {
+    aspect-ratio: auto;
+    min-height: 200px;
+    background-size: cover;
+    background-position: center;
+  }
+  .site-footer__links {
+    max-width: 52%;
+  }
+}
+
+/* Eyebrow */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: "";
+  width: 18px; height: 1px;
+  background: var(--accent);
+  display: inline-block;
+}
+.eyebrow--plain::before { display: none; }
+
+/* Section */
+.section {
+  padding: 88px 0;
+  border-top: 1px solid var(--rule);
+  position: relative;
+}
+.section__head {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 48px;
+  margin-bottom: 48px;
+  align-items: end;
+}
+.section__head--stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: flex-start;
+  max-width: 720px;
+}
+.section__head--center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 48px;
+  gap: 0;
+}
+.section__label {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4.2vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  color: var(--ink);
+  text-wrap: balance;
+  margin-bottom: 14px;
+}
+.section__head--center .section__label {
+  margin-bottom: 16px;
+}
+.section__num {
+  font-family: var(--mono);
+  font-size: var(--text-section-num);
+  color: var(--ink-2);
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+.section__title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.2vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+.section__head--stack .section__title,
+.section__head--center .section__title {
+  font-size: clamp(24px, 2.6vw, 36px);
+  font-weight: 600;
+  color: var(--ink);
+}
+.section__title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 500;
+}
+.section__sub {
+  color: var(--ink-2);
+  font-size: 17px;
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 16px;
+  transition: all 180ms ease;
+  line-height: 1;
+}
+.btn--primary {
+  background: var(--accent);
+  color: var(--paper);
+}
+.btn--primary:hover { background: var(--accent-ink); transform: translateY(-1px); }
+.btn--ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn--ink:hover { background: var(--accent); }
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+}
+.btn--ghost:hover { border-color: var(--ink); }
+
+.path-back-select {
+  position: absolute;
+  top: 32px;
+  right: 0;
+  z-index: 2;
+  font-size: 13px;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+.btn__arrow { transition: transform 180ms ease; }
+.btn:hover .btn__arrow { transform: translateX(3px); }
+
+.rule { height: 1px; background: var(--rule); }
+.rule--dotted {
+  height: 1px;
+  background-image: linear-gradient(to right, var(--ink-4) 0, var(--ink-4) 4px, transparent 4px);
+  background-size: 8px 1px;
+  background-repeat: repeat-x;
+}
+
+/* Pain mode A/B toggle */
+.pain-mode {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.pain-mode__tabs { display: flex; flex-wrap: wrap; gap: 12px; align-items: stretch; flex-shrink: 0; }
+.pain-mode__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 22px;
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  letter-spacing: 0.06em;
+  border-radius: 16px;
+  transition: all 180ms ease;
+  line-height: 1.2;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.pain-mode__btn--a.is-active {
+  background: var(--accent);
+  color: #fff;
+  border: 2px solid var(--accent);
+  box-shadow: 0 4px 14px rgba(30, 95, 214, 0.28);
+}
+.pain-mode__btn--a.is-idle {
+  background: var(--paper);
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+}
+.pain-mode__btn--a.is-idle:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+.pain-mode__btn--b.is-active {
+  background: var(--accent);
+  color: #fff;
+  border: 2px solid var(--accent);
+  box-shadow: 0 4px 14px rgba(30, 95, 214, 0.28);
+}
+.pain-mode__btn--b.is-highlight {
+  background: var(--accent-wash);
+  color: var(--accent-ink);
+  border: 2px solid var(--accent);
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(30, 95, 214, 0.12);
+}
+.pain-mode__btn--b.is-highlight:hover {
+  background: #c8daf8;
+  box-shadow: 0 0 0 4px rgba(30, 95, 214, 0.16);
+}
+.pain-mode__btn--b.is-idle {
+  background: var(--paper);
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+}
+.pain-mode__badge {
+  font-size: var(--text-meta-xs);
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  color: inherit;
+  font-weight: 600;
+}
+.pain-mode__btn--b.is-highlight .pain-mode__badge {
+  background: var(--accent);
+  color: #fff;
+}
+.pain-mode__hint {
+  flex: 0 1 auto;
+  width: fit-content;
+  max-width: min(100%, 42ch);
+  margin: 0;
+  font-size: 15px;
+  color: var(--accent-ink);
+  line-height: 1.5;
+  padding: 12px 16px;
+  background: var(--accent-wash);
+  border: 1px dashed var(--accent);
+  border-radius: 12px;
+}
+.pain-mode__hint strong { font-weight: 600; color: var(--accent-ink); }
+
+/* Pain point cards — route match */
+.pain-card {
+  text-align: left;
+  padding: 28px 26px 32px;
+  transition: background 220ms ease, color 220ms ease, box-shadow 220ms ease;
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18;
+  border-radius: 0;
+  border: none;
+}
+.pain-card--selected {
+  box-shadow: inset 0 0 0 2px rgba(107, 156, 234, 0.45);
+}
+.pain-card__match {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 36px;
+}
+.pain-card__check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  flex-shrink: 0;
+  animation: pain-card-check-in 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+.pain-card__route {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink-3);
+  transition: font-size 0.35s ease, color 0.35s ease, font-weight 0.35s ease, transform 0.35s ease, opacity 0.35s ease;
+}
+.pain-card--selected .pain-card__route {
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-weight: 700;
+  color: #8ec0ff;
+  letter-spacing: -0.01em;
+  animation: pain-card-route-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pain-card-check-in {
+  from { transform: scale(0) rotate(-40deg); opacity: 0; }
+  to { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes pain-card-route-in {
+  from { transform: translateY(8px); opacity: 0.4; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ── Responsive: Mobile <768 · Tablet 768–1023 · Desktop ≥1024 ── */
+@media (max-width: 767px) {
+  .proto-toolbar { display: none; }
+  .section { padding: 56px 0; }
+  #hero.section { padding-top: 20px; padding-bottom: 36px; }
+  .section__head { margin-bottom: 32px; }
+  .section__sub { font-size: 15px; }
+  #hero, #pain, #paths, #proof { scroll-margin-top: 72px; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .section { padding: 72px 0; }
+}
+
+/* Nav */
+.nav__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+@media (max-width: 767px) {
+  .nav { padding: 16px 0; }
+  .nav__bar { flex-wrap: wrap; }
+  .nav__brand img { height: 28px; }
+  .nav__links {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    gap: 14px;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 90%, transparent);
+  }
+  .nav__links::-webkit-scrollbar { display: none; }
+  .nav__links a { white-space: nowrap; flex-shrink: 0; font-size: 14px; }
+  .nav__cta { padding: 8px 14px; font-size: 13px; flex-shrink: 0; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .nav__links { gap: 18px; font-size: 14px; }
+}
+
+/* Hero */
+#hero.section {
+  padding-top: 20px;
+  padding-bottom: 32px;
+}
+@media (min-width: 768px) {
+  #hero.section { padding-top: 24px; padding-bottom: 36px; }
+}
+@media (min-width: 1024px) {
+  #hero.section { padding-top: 20px; padding-bottom: 28px; }
+}
+
+.hero-tagline {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(30, 95, 214, 0.2);
+  background:
+    linear-gradient(102deg, rgba(30, 95, 214, 0.1) 0%, rgba(238, 244, 255, 0.95) 42%, var(--paper) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 10px 32px rgba(11, 31, 58, 0.07);
+}
+.hero-tagline::after {
+  content: "";
+  position: absolute;
+  right: 12%;
+  top: -24px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(30, 95, 214, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tagline__bar {
+  width: 5px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--accent) 0%, #143f99 100%);
+}
+.hero-tagline__inner {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 22px;
+  padding: 18px 22px;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+.hero-tagline__copy {
+  flex: 1;
+  min-width: 0;
+}
+.hero-tagline__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32em;
+  margin: 0;
+}
+.hero-tagline__line {
+  font-family: var(--serif);
+  font-size: clamp(19px, 2.35vw, 28px);
+  font-weight: 600;
+  line-height: 1.38;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin: 0;
+  text-wrap: pretty;
+}
+.hero-tagline__anchor {
+  color: var(--accent-ink);
+  font-weight: 800;
+}
+.hero-tagline__echo {
+  color: var(--accent-ink);
+  font-weight: 800;
+  background: linear-gradient(transparent 58%, rgba(30, 95, 214, 0.14) 58%);
+  box-decoration-break: clone;
+}
+.hero-tagline__facts {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: min(468px, 52%);
+  min-width: 336px;
+}
+.hero-tagline__fact {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  padding: 11px 14px;
+  padding-right: 58px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(30, 95, 214, 0.14);
+  box-shadow: 0 2px 8px rgba(11, 31, 58, 0.04);
+  min-height: 68px;
+  overflow: hidden;
+}
+.hero-tagline__fact-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+}
+.hero-tagline__fact-icon {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  color: var(--accent);
+  opacity: 0.13;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-tagline__fact-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.hero-tagline__fact--accent .hero-tagline__fact-icon {
+  opacity: 0.2;
+  color: var(--accent-ink);
+}
+.hero-tagline__fact--accent {
+  background: linear-gradient(135deg, rgba(30, 95, 214, 0.1) 0%, rgba(255, 255, 255, 0.88) 100%);
+  border-color: rgba(30, 95, 214, 0.22);
+}
+.hero-tagline__fact-num {
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.75vw, 20px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--accent-ink);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.hero-tagline__fact-suf {
+  font-size: 0.72em;
+  font-weight: 700;
+}
+.hero-tagline__fact-label {
+  font-size: clamp(11px, 1.2vw, 13px);
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+.hero-tagline__fact-highlight {
+  color: var(--accent-ink);
+  font-weight: 800;
+}
+@media (max-width: 767px) {
+  .hero-tagline { margin-bottom: 14px; border-radius: 12px; }
+  .hero-tagline__inner {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .hero-tagline__line { font-size: clamp(17px, 4.6vw, 21px); }
+  .hero-tagline__facts {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero-tagline__fact { min-height: 60px; padding: 9px 12px; padding-right: 50px; }
+  .hero-tagline__fact-icon { width: 40px; height: 40px; right: 2px; }
+  .hero-tagline::after { display: none; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-tagline__line { font-size: clamp(18px, 2.2vw, 24px); }
+  .hero-tagline__facts {
+    width: min(400px, 52%);
+    min-width: 300px;
+  }
+}
+
+.hero-showcase {
+  display: grid;
+  grid-template-columns: 1.62fr 1fr;
+  gap: 28px;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--paper);
+  padding: 24px;
+  align-items: start;
+}
+.hero-main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.hero-player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+.hero-player__media {
+  border-radius: 12px;
+}
+.hero-player__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(244, 247, 251, 0.94);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+.hero-player__play-wrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.hero-player__play-wrap .hero-player__play {
+  position: static;
+  transform: none;
+}
+.hero-player__bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #f4f7fb;
+  border-radius: 0 0 12px 12px;
+}
+.hero-player__progress {
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  position: relative;
+}
+.hero-player__progress-fill {
+  width: 34%;
+  height: 100%;
+  background: var(--accent);
+}
+.hero-player__time {
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  white-space: nowrap;
+}
+.hero-main__info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 2px;
+}
+.hero-main__title {
+  font-family: var(--serif);
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.hero-main__desc {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  margin: 0;
+}
+.hero-main__meta {
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  color: var(--ink-2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hero-main__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.hero-main__meta-row .hero-main__meta {
+  flex: 1;
+  min-width: 0;
+}
+.hero-main__meta-row .proto-drip {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  flex-shrink: 0;
+}
+.hero-playlist {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--rule);
+  padding-left: 24px;
+  min-width: 0;
+  min-height: 0;
+}
+.hero-playlist__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 18px;
+  flex-shrink: 0;
+}
+.hero-playlist__head-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+.hero-playlist__head-meta {
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  color: var(--ink-2);
+}
+.hero-playlist__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-height: 0;
+}
+.playlist-item__title {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+.playlist-item__teacher {
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@media (min-width: 1024px) {
+  #hero.section {
+    /* 预留：导航 + 标语 + 内边距 + 标题信息区 */
+    --hero-player-h: clamp(280px, min(42vh, calc(100svh - 360px)), 380px);
+  }
+  .hero-showcase {
+    gap: 20px;
+    padding: 16px 18px;
+  }
+  .hero-main { gap: 10px; }
+  .hero-player {
+    width: min(100%, calc(var(--hero-player-h) * 16 / 9));
+    max-height: var(--hero-player-h);
+  }
+  .hero-player__play {
+    width: 64px;
+    height: 64px;
+  }
+  .hero-player__play svg { width: 20px; height: 20px; }
+  .hero-player__bar { padding: 8px 12px; }
+  .hero-main__title {
+    font-size: 17px;
+    line-height: 1.28;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hero-main__desc {
+    font-size: 13px;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hero-main__meta { font-size: 11px; }
+  .hero-main__info { gap: 4px; }
+  .hero-playlist {
+    padding-left: 18px;
+    max-height: calc(var(--hero-player-h) + 92px);
+  }
+  .hero-playlist__head { margin-bottom: 10px; }
+  .hero-playlist__head-title { font-size: 16px; }
+  .hero-playlist__scroll {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding-right: 2px;
+  }
+  .playlist-item {
+    grid-template-columns: 22px 64px 1fr;
+    gap: 8px;
+    padding: 7px 6px;
+  }
+  .playlist-item__title {
+    font-size: 13px;
+    margin-bottom: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .playlist-item__teacher { font-size: 10px; }
+  .playlist-item__thumb .media-ph-thumb {
+    aspect-ratio: 16 / 9 !important;
+    border-radius: 6px;
+  }
+  .hero-tagline__inner { padding: 14px 20px; }
+  .hero-tagline { margin-bottom: 12px; }
+}
+@media (min-width: 1280px) {
+  #hero.section {
+    --hero-player-h: clamp(300px, min(44vh, calc(100svh - 348px)), 400px);
+  }
+  .hero-main__title { font-size: 18px; }
+}
+.playlist-item {
+  display: grid;
+  grid-template-columns: 28px 96px 1fr;
+  gap: 14px;
+  padding: 14px 10px;
+  text-align: left;
+  align-items: start;
+  border-left: 2px solid transparent;
+  border-radius: 8px;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+.playlist-item.is-active {
+  background: var(--paper-2);
+  border-left-color: var(--accent);
+}
+.playlist-item:not(.is-active):hover { background: var(--paper-2); }
+@media (max-width: 1023px) {
+  .hero-showcase {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 0;
+  }
+  .hero-playlist {
+    border-left: none;
+    border-top: 1px solid var(--rule);
+    padding-left: 0;
+    padding-top: 24px;
+    margin-top: 24px;
+  }
+}
+@media (max-width: 767px) {
+  .hero-showcase { padding: 16px; border-radius: 12px; }
+  .hero-main__title { font-size: 20px !important; }
+  .playlist-item {
+    grid-template-columns: 24px 72px 1fr;
+    gap: 10px;
+    padding: 12px 6px;
+  }
+}
+@media (max-width: 479px) {
+  .playlist-item { grid-template-columns: 24px 1fr; }
+  .playlist-item__thumb { display: none; }
+}
+
+/* Pain mode + cards */
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.pain-grid .pain-card { background: var(--paper); }
+.pain-grid .pain-card:not(.pain-card--selected):hover { background: var(--paper-2); }
+.pain-card__title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+@media (max-width: 767px) {
+  .pain-mode {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .pain-mode__tabs { width: 100%; }
+  .pain-mode__btn { flex: 1; min-width: 0; padding: 12px 14px; white-space: normal; }
+  .pain-mode__hint { max-width: 100%; width: 100%; }
+  .pain-card { padding: 22px 20px 26px; min-height: auto; }
+  .pain-card__title { font-size: 18px; }
+}
+@media (max-width: 1023px) {
+  .pain-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .pain-grid { grid-template-columns: 1fr; border-radius: 12px; }
+}
+
+/* Match result bar */
+.match-result {
+  margin-top: 28px;
+  padding: 24px 28px;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 28px;
+  align-items: center;
+  min-height: 88px;
+}
+.match-result__text {
+  font-family: var(--serif);
+  font-size: 20px;
+  text-wrap: pretty;
+}
+@media (max-width: 1023px) {
+  .match-result {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 20px;
+  }
+  .match-result .btn { justify-self: start; }
+}
+@media (max-width: 767px) {
+  .match-result { padding: 18px 16px; }
+  .match-result__text { font-size: 17px; }
+}
+
+/* Quiz layout */
+.quiz-layout {
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--paper);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  min-height: 520px;
+}
+.quiz-panel {
+  padding: 40px 44px;
+  display: flex;
+  flex-direction: column;
+}
+.quiz-panel--left { border-right: 1px solid var(--rule); }
+.quiz-panel--right {
+  position: relative;
+  background: var(--paper-2);
+  min-height: 360px;
+}
+.quiz-panel--right-inner {
+  position: absolute;
+  inset: 0;
+  padding: 40px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: space-between;
+}
+.quiz-q-title {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+.quiz-done-title {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+@media (max-width: 1023px) {
+  .quiz-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .quiz-panel { padding: 28px 24px; }
+  .quiz-panel--left { border-right: none; border-bottom: 1px solid var(--rule); }
+  .quiz-panel--right { min-height: 320px; }
+  .quiz-panel--right-inner {
+    position: relative;
+    inset: unset;
+    min-height: 320px;
+    padding: 28px 24px;
+  }
+  .quiz-q-title { font-size: 26px; }
+  .quiz-done-title { font-size: 30px; }
+}
+@media (max-width: 767px) {
+  .quiz-layout { border-radius: 12px; }
+  .quiz-done-actions { flex-direction: column; }
+  .quiz-done-actions .btn { width: 100%; justify-content: center; }
+  .section__head--center { margin-bottom: 32px; }
+  .quiz-panel { padding: 22px 18px; }
+  .quiz-panel--right { min-height: 280px; }
+  .quiz-panel--right-inner { padding: 22px 18px; min-height: 280px; }
+  .quiz-q-title { font-size: 22px; }
+  .quiz-done-title { font-size: 26px; }
+}
+
+/* Path index */
+.path-index {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.path-index__item {
+  padding: 20px 18px;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: background 180ms ease, color 180ms ease;
+}
+.path-index__item:last-child { border-right: none; }
+.path-index__item.is-highlight {
+  background: var(--ink);
+  color: var(--paper);
+}
+.path-index__item:not(.is-highlight):hover { background: var(--paper-2); }
+.path-index__num {
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+.path-index__item.is-highlight .path-index__num { color: var(--accent); }
+.path-index__item:not(.is-highlight) .path-index__num { color: var(--ink-2); }
+.path-index__label {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.path-index__item.is-highlight .path-index__label { color: var(--paper); }
+.path-index__item:not(.is-highlight) .path-index__label { color: var(--ink); }
+@media (max-width: 1023px) {
+  .path-index {
+    grid-template-columns: repeat(3, 1fr);
+    border-radius: 12px;
+  }
+  .path-index__item:nth-child(3) { border-right: none; }
+  .path-index__item:nth-child(n+4) { border-top: 1px solid var(--rule); }
+  .path-index__item:nth-child(6) { border-right: none; }
+}
+@media (max-width: 767px) {
+  .path-index {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .path-index::-webkit-scrollbar { display: none; }
+  .path-index__item {
+    flex: 0 0 min(72vw, 220px);
+    scroll-snap-align: start;
+    border-top: none !important;
+    padding: 16px 14px;
+  }
+}
+
+/* Path detail cards */
+.path-card.section { padding: 96px 0; }
+.path-card__grid {
+  display: grid;
+  gap: 48px;
+  align-items: stretch;
+}
+.path-card--media-left .path-card__grid { grid-template-columns: 2fr 1fr; }
+.path-card--media-right .path-card__grid { grid-template-columns: 1fr 2fr; }
+.path-card--media-left .path-card__media { order: 1; }
+.path-card--media-left .path-card__content { order: 2; }
+.path-card--media-right .path-card__media { order: 2; }
+.path-card--media-right .path-card__content { order: 1; padding-left: 8px; }
+.path-card__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.path-card__title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+  text-wrap: balance;
+}
+@media (max-width: 1023px) {
+  .path-card.section { padding: 72px 0; }
+  .path-card__grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px;
+  }
+  .path-card__media { order: 1 !important; }
+  .path-card__content { order: 2 !important; padding-left: 0 !important; }
+}
+@media (max-width: 767px) {
+  .path-card.section { padding: 48px 0; }
+  .path-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .path-back-select {
+    position: static;
+    align-self: flex-end;
+    margin-bottom: 20px;
+    order: -1;
+  }
+  .path-card__title { font-size: clamp(24px, 6vw, 32px); }
+  .path-card .btn--ink { width: 100%; justify-content: center; align-self: stretch; }
+}
+
+/* Path WeChat consult — compact inline chip */
+.path-card__wechat {
+  margin-top: 20px;
+  padding: 8px 12px 8px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  max-width: 100%;
+  background: var(--paper);
+  transition: border-color 160ms ease, background 160ms ease;
+}
+.path-card__wechat:hover {
+  border-color: var(--ink-3);
+  background: var(--paper-2);
+}
+.path-card__wechat-qr {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, var(--ink) 33%, transparent 33%) 0 0 / 3px 3px,
+    linear-gradient(var(--ink) 33%, transparent 33%) 0 0 / 3px 3px;
+  background-color: var(--paper);
+  border: 1px solid var(--rule-soft);
+  position: relative;
+}
+.path-card__wechat-qr img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.path-card__wechat-qr img[src=""],
+.path-card__wechat-qr img:not([src]) {
+  display: none;
+}
+.path-card__wechat-body {
+  min-width: 0;
+  padding-right: 2px;
+}
+.path-card__wechat-kicker {
+  font-family: var(--mono);
+  font-size: var(--text-meta-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+.path-card__wechat-text {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+@media (max-width: 767px) {
+  .path-card__wechat {
+    width: auto;
+    max-width: 100%;
+  }
+  .path-card__wechat-text {
+    white-space: normal;
+  }
+}
+
+/* Proof grid */
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.proof-card {
+  padding: 32px 28px;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 340px;
+}
+.proof-card:last-child { border-right: none; }
+.proof-scores {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  font-family: var(--serif);
+  flex-wrap: wrap;
+}
+.proof-scores__cycle {
+  margin-left: auto;
+  align-self: center;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+@media (max-width: 1023px) {
+  .proof-grid { grid-template-columns: repeat(2, 1fr); }
+  .proof-card:nth-child(2) { border-right: none; }
+  .proof-card:nth-child(3) {
+    grid-column: 1 / -1;
+    border-right: none;
+    border-top: 1px solid var(--rule);
+  }
+}
+@media (max-width: 767px) {
+  .proof-grid { grid-template-columns: 1fr; border-radius: 12px; }
+  .proof-card {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+    min-height: auto;
+    padding: 24px 20px;
+  }
+  .proof-card:last-child { border-bottom: none; }
+  .proof-card:nth-child(3) { grid-column: auto; border-top: none; }
+  .proof-scores__cycle { margin-left: 0; width: 100%; }
+}
+
+
+@media (max-width: 767px) {
+  .auth-modal-backdrop { padding: 12px; align-items: flex-end; }
+  .auth-modal {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    max-height: 92vh;
+  }
+  .auth-modal__actions { grid-template-columns: 1fr; }
+}
+
+/* ── Prototype drip annotations (dev handoff only) ── */
+.proto-wrap { position: relative; }
+.proto-anchor {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  vertical-align: middle;
+  max-width: 100%;
+}
+.proto-anchor--block { display: flex; width: 100%; max-width: 100%; }
+.proto-anchor--start { flex-direction: row-reverse; }
+.proto-anchor--end { flex-direction: row; }
+.proto-anchor--top { flex-direction: column-reverse; align-items: flex-start; }
+.proto-anchor--bottom { flex-direction: column; align-items: flex-start; }
+.proto-anchor__drips {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.proto-anchor__drips--row { flex-direction: row; gap: 6px; }
+.proto-drip--inline,
+.proto-anchor .proto-drip {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  flex-shrink: 0;
+}
+.proto-drip {
+  position: absolute;
+  z-index: 40;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 10px rgba(11, 31, 58, 0.22);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.proto-drip:hover { transform: rotate(-45deg) scale(1.08); box-shadow: 0 4px 16px rgba(11, 31, 58, 0.28); }
+.proto-drip__icon {
+  display: block;
+  transform: rotate(45deg);
+  font-size: 12px;
+  line-height: 22px;
+  text-align: center;
+  font-weight: 700;
+  color: #fff;
+  user-select: none;
+}
+.proto-drip--note { background: linear-gradient(135deg, #3b82f6, #1e5fd6); }
+.proto-drip--todo { background: linear-gradient(135deg, #f59e0b, #c9580c); }
+.proto-drip--tl { top: 10px; left: 10px; }
+.proto-drip--tr { top: 10px; right: 10px; }
+.proto-drip--bl { bottom: 10px; left: 10px; }
+.proto-drip--br { bottom: 10px; right: 10px; }
+
+.proto-toolbar {
+  position: fixed;
+  left: 0;
+  top: 38vh;
+  transform: translateY(-50%);
+  z-index: 2000;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  font-family: var(--sans);
+  filter: drop-shadow(0 8px 28px rgba(11, 31, 58, 0.12));
+}
+.proto-toolbar__tab {
+  flex-shrink: 0;
+  width: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 0;
+  background: rgba(244, 247, 251, 0.96);
+  border: 1px solid var(--rule);
+  border-left: none;
+  border-radius: 0 12px 12px 0;
+  backdrop-filter: blur(8px);
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+.proto-toolbar__tab:hover { background: var(--paper-2); color: var(--ink); }
+.proto-toolbar__tab-icon {
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 600;
+}
+.proto-toolbar__tab-text {
+  writing-mode: vertical-rl;
+  font-family: var(--mono);
+  font-size: var(--text-meta-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.proto-toolbar__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  min-width: 132px;
+  background: rgba(244, 247, 251, 0.96);
+  border: 1px solid var(--rule);
+  border-left: none;
+  border-radius: 0 14px 14px 0;
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition: min-width 0.28s ease, width 0.28s ease, opacity 0.22s ease, padding 0.28s ease;
+}
+.proto-toolbar.is-collapsed .proto-toolbar__panel {
+  min-width: 0;
+  width: 0;
+  padding-left: 0;
+  padding-right: 0;
+  opacity: 0;
+  pointer-events: none;
+  border-color: transparent;
+}
+.proto-toolbar.is-expanded .proto-toolbar__tab {
+  border-radius: 0;
+  border-right: none;
+}
+.proto-toolbar__label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 0 2px 4px;
+  border-bottom: 1px solid var(--rule-soft);
+  margin-bottom: 2px;
+}
+.proto-toolbar__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink-2);
+  transition: all 140ms ease;
+  text-align: left;
+}
+.proto-toolbar__btn:hover { border-color: var(--ink-3); }
+.proto-toolbar__btn.is-on { color: var(--ink); font-weight: 600; }
+.proto-toolbar__btn.is-on--note { background: var(--accent-wash); border-color: var(--accent); }
+.proto-toolbar__btn.is-on--todo { background: #fef3e2; border-color: #c9580c; }
+.proto-toolbar__dot {
+  width: 10px; height: 10px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  flex-shrink: 0;
+}
+.proto-toolbar__dot--note { background: #1e5fd6; }
+.proto-toolbar__dot--todo { background: #c9580c; }
+
+.proto-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(11, 31, 58, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.proto-modal {
+  width: min(480px, 100%);
+  max-height: min(80vh, 640px);
+  overflow: auto;
+  background: var(--paper);
+  border-radius: 16px;
+  border: 1px solid var(--rule);
+  box-shadow: 0 24px 60px rgba(11, 31, 58, 0.2);
+}
+.proto-modal__head {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.proto-modal__kind {
+  font-family: var(--mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.proto-modal__kind--note { color: var(--accent); }
+.proto-modal__kind--todo { color: #c9580c; }
+.proto-modal__title { font-family: var(--serif); font-size: 20px; font-weight: 700; line-height: 1.25; }
+.proto-modal__close {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--paper-2);
+  color: var(--ink-3);
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.proto-modal__body { padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; }
+.proto-modal__text { font-size: 14px; color: var(--ink-2); line-height: 1.6; white-space: pre-wrap; }
+.proto-modal__section-title {
+  font-family: var(--mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+.proto-modal__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.proto-modal__tag {
+  font-family: var(--mono);
+  font-size: var(--text-meta-sm);
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--paper-2);
+  color: var(--ink-2);
+  border: 1px solid var(--rule-soft);
+}
+.proto-modal__links { display: flex; flex-direction: column; gap: 6px; }
+.proto-modal__link {
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.proto-modal__meta { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+
+/* Auth / SVIP modals (product UI — formal build reuses main site components) */
+.auth-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3100;
+  background: rgba(11, 31, 58, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.auth-modal {
+  width: min(440px, 100%);
+  max-height: min(88vh, 720px);
+  overflow: auto;
+  background: var(--paper);
+  border-radius: 16px;
+  border: 1px solid var(--rule);
+  box-shadow: 0 24px 60px rgba(11, 31, 58, 0.22);
+}
+.auth-modal__head {
+  padding: 20px 22px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.auth-modal__title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.auth-modal__close {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--paper-2);
+  color: var(--ink-3);
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.auth-modal__close:hover { background: var(--rule-soft); color: var(--ink); }
+.auth-modal__body { padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 18px; }
+.auth-modal__promo {
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-wash) 0%, #eef4ff 100%);
+  border: 1px solid rgba(30, 95, 214, 0.22);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  font-weight: 500;
+  text-align: center;
+}
+.auth-modal__promo strong { color: var(--accent-ink); font-weight: 800; }
+.auth-modal__svip-link {
+  display: inline;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-weight: 800;
+  font-size: inherit;
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.auth-modal__svip-link:hover { color: var(--accent-ink); }
+.auth-modal__promo-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.auth-modal__bubble {
+  position: relative;
+  padding: 12px 14px 12px 16px;
+  border-radius: 12px;
+  background: var(--paper-2);
+  border: 1px dashed rgba(30, 95, 214, 0.35);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.auth-modal__bubble::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 28px;
+  width: 12px;
+  height: 12px;
+  background: var(--paper-2);
+  border-left: 1px dashed rgba(30, 95, 214, 0.35);
+  border-top: 1px dashed rgba(30, 95, 214, 0.35);
+  transform: rotate(45deg);
+}
+.auth-modal__bubble-title {
+  font-family: var(--mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.06em;
+  color: var(--accent-ink);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.auth-modal__bubble ul {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.auth-modal__bubble strong { color: var(--ink); font-weight: 600; }
+.auth-modal__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.auth-modal__hint {
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+  line-height: 1.5;
+}
+.auth-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3200;
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 12px 18px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  box-shadow: 0 12px 40px rgba(11, 31, 58, 0.28);
+  animation: auth-toast-in 0.28s ease;
+}
+@keyframes auth-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.svip-modal__list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+/* Path 02 · AI 学习方案弹窗 */
+.plan-modal { width: min(520px, 100%); }
+.plan-modal--wide { width: min(640px, 100%); }
+.plan-modal__hint {
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  margin: 0;
+}
+.plan-upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 520px) {
+  .plan-upload-grid { grid-template-columns: 1fr; }
+}
+.plan-upload-slot {
+  position: relative;
+  min-height: 132px;
+  border: 1.5px dashed var(--rule);
+  border-radius: 12px;
+  background: var(--paper-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+.plan-upload-slot:hover,
+.plan-upload-slot.is-dragover {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+.plan-upload-slot.has-file {
+  border-style: solid;
+  border-color: rgba(30, 95, 214, 0.35);
+  background: #f8fbff;
+  cursor: default;
+}
+.plan-upload-slot__label {
+  font-family: var(--mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.plan-upload-slot__icon { font-size: 22px; line-height: 1; opacity: 0.55; }
+.plan-upload-slot__name {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 600;
+  word-break: break-all;
+  line-height: 1.35;
+  max-width: 100%;
+}
+.plan-upload-slot__meta { font-size: 12px; color: var(--ink-3); }
+.plan-upload-slot__remove {
+  margin-top: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--ink-3);
+  border-radius: 6px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+.plan-upload-slot__remove:hover { color: var(--ink); border-color: var(--ink-3); }
+.plan-upload-slot input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.plan-upload-slot.has-file input[type="file"] { pointer-events: none; }
+.plan-gen-bar {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 3050;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgba(11, 31, 58, 0.14);
+  max-width: min(360px, calc(100vw - 56px));
+}
+.plan-gen-bar__spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--rule);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: plan-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes plan-spin { to { transform: rotate(360deg); } }
+.plan-gen-bar__text { font-size: 13px; color: var(--ink-2); line-height: 1.4; }
+.plan-gen-bar__text strong { color: var(--ink); font-weight: 600; }
+.plan-progress {
+  height: 4px;
+  background: var(--rule-soft);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.plan-progress__fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.plan-result-preview {
+  max-height: min(42vh, 360px);
+  overflow: auto;
+  padding: 16px 18px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.plan-result-preview h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.plan-result-preview h4 + p { margin-top: 0; }
+.plan-result-preview section + section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--rule-soft); }
+.plan-result-preview ul { margin: 8px 0 0; padding-left: 18px; }
+.plan-result-preview li + li { margin-top: 4px; }
+.path-card__plan-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--accent-wash);
+  border: 1px solid rgba(30, 95, 214, 0.2);
+  font-size: 13px;
+  color: var(--accent-ink);
+}
+.path-card__plan-status--gen {
+  background: var(--paper-2);
+  border-color: var(--rule);
+  color: var(--ink-2);
+}
+.path-card__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.plan-overwrite-actions {
+  display: flex;
+  gap: 10px;
+}
+.plan-overwrite-actions .btn { flex: 1; justify-content: center; }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useMemo, createContext, useContext, useCallback } = React;
+
+/* ============================================================
+   Prototype drip annotations (handoff · not for production)
+   ============================================================ */
+
+const DOC_LINKS = {
+  prd: { label: "BC落地页PRD.md", href: "./BC落地页PRD.md" },
+  todo: { label: "TODO.md", href: "./TODO.md" },
+  tracking: { label: "Partner_LandingPage_Tracking_Guide.pdf", href: "./Partner_LandingPage_Tracking_Guide.pdf" },
+  html: { label: "BC落地页Demo.html（本原型）", href: "./BC落地页Demo.html" },
+};
+
+const PAGE_TODOS = {
+  "T-001": {
+    title: "问卷匹配规则",
+    detail: "产品需交付：\n1. 平局时的优先级策略\n2. 各题权重（若有）\n3. 完整验算用例表\n\nDemo 暂用「计票最高 hook」逻辑；正式验收以 T-001 交付物为准。",
+    owner: "产品", status: "待提供", blocker: "模式 B 正式验收",
+    prd: ["§2.2 功能 3", "§4.2 匹配计分", "§10 验算用例"],
+  },
+  "T-002": {
+    title: "CTA 跳转 URL 配置表",
+    detail: "需配置的外链（路径 02 走内嵌弹窗，不在此表）：\n· 路径 01 / 03 / 04 / 05 / 06 主 CTA\n· 导航 Logo 点击\n· 导航「登录/注册」\n\n联调前由产品/运营提供完整 URL 表。",
+    owner: "产品/运营", status: "待提供", blocker: "全站转化链路联调",
+    prd: ["§2.2 功能 5", "§2.1 导航"],
+  },
+  "T-003b": {
+    title: "Hero 视频素材（续）",
+    detail: "T-003a 已定：6 集大/小标题 + 讲师 Icey Zhang。\n\n仍待补充（每集）：\n· 时长\n· 封面图\n· 播放地址 / 资源 ID\n· 主题角标（若独立于标题）\n· 扩展简介",
+    owner: "内容/运营", status: "待补充", blocker: "视频可播",
+    prd: ["§2.2 功能 1", "§4.1 实体 1"],
+  },
+  "T-006": {
+    title: "登录点位确认",
+    detail: "已定交互：\n· 导航「登录/注册」\n· 6 条路径主 CTA 未登录时 → 登录/注册弹窗\n· 弹窗展示 7 天 SVIP 注册权益；「SVIP」可点开介绍弹窗\n· 登录成功后：路径 02 → AI 方案弹窗；其余 → deep link（T-002）\n\n正式版复用主站登录组件；Demo 点击即模拟鉴权。",
+    owner: "产品", status: "交互已定", blocker: "账号跳转验收",
+    prd: ["§2.1 导航", "§2.2 功能 5", "§7.3 前置条件"],
+  },
+  "T-008": {
+    title: "躺着学品牌资产",
+    detail: "待设计/品牌提供：\n· 躺着学 Logo 正式稿\n· 与「BC备考平台」并排的基础版式（导航区）\n\n页脚已对齐 igopx.cn 主站，不重复 BC Logo。",
+    owner: "设计/品牌", status: "待提供", blocker: "导航定稿",
+    prd: ["§2.1 联名标识", "§2.2 功能 7"],
+  },
+  "T-010": {
+    title: "GrowingIO 凭证",
+    detail: "BC 需提供（生产 + 非生产各一套）：\n· Account ID\n· Data Source ID\n\n用于 gdp('init', ...) 初始化。",
+    owner: "BC / 我方对接", status: "待提供", blocker: "SDK 初始化",
+    prd: ["§4.3.1 BC 合作埋点"],
+    docs: ["tracking"],
+  },
+  "T-011": {
+    title: "btn_id 联调",
+    detail: "步骤：\n1. 将 PRD §4.3.1 btn_id 清单发给 BC（杨效鲁）\n2. 部署测试环境\n3. Network 验证 tracker_btn_click 上报\n4. BC 后台确认接收\n\n含路径 02 专项 btn_id。",
+    owner: "前端 / BC", status: "待联调", blocker: "埋点上线",
+    prd: ["§4.3.1 BC 合作埋点"],
+    docs: ["tracking"],
+  },
+  "T-012": {
+    title: "路径02 AI 学习方案模版",
+    detail: "教研/产品需定义：\n· 方案章节结构\n· Prompt / 字段映射\n· 示例输出 PDF\n\nAI 生成结果须按此模版渲染。",
+    owner: "产品/教研", status: "待提供", blocker: "路径02方案生成",
+    prd: ["§2.2 功能 5.1"],
+  },
+  "T-013": {
+    title: "路径02 方案生成后端",
+    detail: "后端需实现：\n· PDF 上传与存储\n· 异步任务队列 + 状态轮询\n· AI 调用 + 模版渲染\n· PDF 导出与下载 URL\n· 账号绑定；保留最近 3 份历史",
+    owner: "后端", status: "待开发", blocker: "路径02正式能力",
+    prd: ["§2.2 功能 5.1"],
+  },
+  "T-014": {
+    title: "路径02 文案定稿",
+    detail: "当前 Demo/PRD 为草案，待产品/运营定稿：\n· 路径详情标题 / 正文 / 3 条 bullets\n· 主 CTA 文案\n· 弹窗内说明语（若有调整）",
+    owner: "产品/运营", status: "待调整", blocker: "路径02上线",
+    prd: ["§2.2 功能 5.1"],
+  },
+  "T-015": {
+    title: "产品侧埋点开发",
+    detail: "按 BC落地页PRD §4.3.2 接入主站分析 SDK。\n· 与 BC GrowingIO（§4.3.1）并行双报\n· 优先 P0：匹配完成、路径 CTA、路径 02 漏斗\n· 详见 PRD 事件字典与公共属性表",
+    owner: "前端 / 数据", status: "待开发", blocker: "内部分析上线",
+    prd: ["§4.3.2 产品侧埋点"],
+  },
+};
+
+const DripContext = createContext(null);
+
+function DripProvider({ children }) {
+  const [showNotes, setShowNotes] = useState(true);
+  const [showTodos, setShowTodos] = useState(true);
+  const [active, setActive] = useState(null);
+
+  const close = useCallback(() => setActive(null), []);
+
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active, close]);
+
+  return (
+    <DripContext.Provider value={{ showNotes, setShowNotes, showTodos, setShowTodos, active, setActive, close }}>
+      {children}
+      <DripModal />
+    </DripContext.Provider>
+  );
+}
+
+function useDrip() {
+  return useContext(DripContext);
+}
+
+function DripAnchor({ side = "end", gap = 6, row = false, block = false, className = "", style, children, drip }) {
+  if (!drip) return children;
+  const cls = [
+    "proto-anchor",
+    `proto-anchor--${side}`,
+    block ? "proto-anchor--block" : "",
+    className,
+  ].filter(Boolean).join(" ");
+  const dripsCls = row ? "proto-anchor__drips proto-anchor__drips--row" : "proto-anchor__drips";
+  return (
+    <span className={cls} style={{ gap, ...style }}>
+      {children}
+      <span className={dripsCls}>{drip}</span>
+    </span>
+  );
+}
+
+function NoteDrip({ pos = "tr", style, inline, title, body, prd = [], docs = [], links = [] }) {
+  const { showNotes, setActive } = useDrip();
+  if (!showNotes) return null;
+  const isInline = inline || style;
+  return (
+    <button
+      type="button"
+      className={`proto-drip proto-drip--note${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}`}
+      style={style}
+      title={title}
+      aria-label={`备注：${title}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        setActive({ kind: "note", title, body, prd, docs, links });
+      }}
+    >
+      <span className="proto-drip__icon">i</span>
+    </button>
+  );
+}
+
+function TodoDrip({ pos = "br", style, inline, todoId }) {
+  const { showTodos, setActive } = useDrip();
+  const todo = PAGE_TODOS[todoId];
+  if (!showTodos || !todo) return null;
+  const isInline = inline || style;
+  return (
+    <button
+      type="button"
+      className={`proto-drip proto-drip--todo${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}`}
+      style={style}
+      title={`${todoId} ${todo.title}`}
+      aria-label={`待办：${todoId}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        setActive({
+          kind: "todo",
+          todoId,
+          title: `${todoId} · ${todo.title}`,
+          body: todo.detail,
+          prd: todo.prd || [],
+          docs: ["todo", ...(todo.docs || [])],
+          meta: { owner: todo.owner, status: todo.status, blocker: todo.blocker },
+        });
+      }}
+    >
+      <span className="proto-drip__icon">!</span>
+    </button>
+  );
+}
+
+function DripModal() {
+  const { active, close } = useDrip();
+  if (!active) return null;
+
+  const docKeys = active.docs || [];
+  const prdSections = active.prd || [];
+
+  return (
+    <div className="proto-modal-backdrop" onClick={close}>
+      <div className="proto-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+        <div className="proto-modal__head">
+          <div>
+            <div className={`proto-modal__kind proto-modal__kind--${active.kind}`}>
+              {active.kind === "note" ? "备注 · PRD / 逻辑说明" : "待办 · TODO"}
+            </div>
+            <div className="proto-modal__title">{active.title}</div>
+          </div>
+          <button type="button" className="proto-modal__close" onClick={close} aria-label="关闭">×</button>
+        </div>
+        <div className="proto-modal__body">
+          {active.body && <div className="proto-modal__text">{active.body}</div>}
+          {active.meta && (
+            <div className="proto-modal__meta">
+              负责人：{active.meta.owner}<br />
+              状态：{active.meta.status}<br />
+              阻塞：{active.meta.blocker}
+            </div>
+          )}
+          {prdSections.length > 0 && (
+            <div>
+              <div className="proto-modal__section-title">PRD 章节</div>
+              <div className="proto-modal__tags">
+                {prdSections.map((s) => <span key={s} className="proto-modal__tag">{s}</span>)}
+              </div>
+            </div>
+          )}
+          {docKeys.length > 0 && (
+            <div>
+              <div className="proto-modal__section-title">相关文档</div>
+              <div className="proto-modal__links">
+                {docKeys.map((k) => {
+                  const d = DOC_LINKS[k];
+                  return d ? (
+                    <a key={k} className="proto-modal__link" href={d.href} target="_blank" rel="noopener noreferrer">{d.label}</a>
+                  ) : null;
+                })}
+              </div>
+            </div>
+          )}
+          {(active.links || []).length > 0 && (
+            <div>
+              <div className="proto-modal__section-title">相关链接</div>
+              <div className="proto-modal__links">
+                {active.links.map((l) => (
+                  <a key={l.href} className="proto-modal__link" href={l.href} target="_blank" rel="noopener noreferrer">{l.label}</a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DripToolbar() {
+  const { showNotes, setShowNotes, showTodos, setShowTodos } = useDrip();
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className={`proto-toolbar ${expanded ? "is-expanded" : "is-collapsed"}`}>
+      <button
+        type="button"
+        className="proto-toolbar__tab"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        aria-label={expanded ? "收起标注面板" : "展开标注面板"}
+        title={expanded ? "收起" : "原型标注"}
+      >
+        <span className="proto-toolbar__tab-icon">{expanded ? "‹" : "›"}</span>
+        {!expanded && <span className="proto-toolbar__tab-text">标注</span>}
+      </button>
+      <div className="proto-toolbar__panel">
+        <div className="proto-toolbar__label">原型标注</div>
+        <button
+          type="button"
+          className={`proto-toolbar__btn ${showNotes ? "is-on is-on--note" : ""}`}
+          onClick={() => setShowNotes((v) => !v)}
+        >
+          <span className="proto-toolbar__dot proto-toolbar__dot--note" />
+          {showNotes ? "隐藏备注" : "显示备注"}
+        </button>
+        <button
+          type="button"
+          className={`proto-toolbar__btn ${showTodos ? "is-on is-on--todo" : ""}`}
+          onClick={() => setShowTodos((v) => !v)}
+        >
+          <span className="proto-toolbar__dot proto-toolbar__dot--todo" />
+          {showTodos ? "隐藏待办" : "显示待办"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Shared building blocks
+   ============================================================ */
+
+function MediaPlaceholder({ label, aspect = "16/9", tone = "warm", caption, badge, className = "", fill = false }) {
+  const toneBg = {
+    warm: "linear-gradient(135deg, #cfe0f5 0%, #7aa7d9 100%)",
+    sage: "linear-gradient(135deg, #b9c8e1 0%, #5f7aa3 100%)",
+    ink: "linear-gradient(135deg, #1e3a63 0%, #0b1f3a 100%)",
+    cream: "linear-gradient(135deg, #e8f0fb 0%, #b8cde8 100%)",
+    accent: "linear-gradient(135deg, #6b9cea 0%, #1e5fd6 100%)",
+  }[tone];
+
+  const stripeTone = tone === "ink" ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.18)";
+  const textColor = tone === "ink" || tone === "accent" ? "#f4f7fb" : "#0b1f3a";
+
+  return (
+    <div
+      className={className}
+      style={{
+      ...(fill
+        ? { position: "absolute", inset: 0, width: "100%", height: "100%" }
+        : { aspectRatio: aspect, width: "100%", position: "relative", borderRadius: 16 }),
+      background: toneBg,
+      overflow: "hidden",
+    }}>
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        backgroundImage: `repeating-linear-gradient(45deg, transparent 0 14px, ${stripeTone} 14px 15px)`,
+      }} />
+      {badge && (
+        <div style={{
+          position: "absolute", top: 14, left: 14,
+          background: "#0b1f3a", color: "#f4f7fb",
+          padding: "4px 10px", fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)",
+          letterSpacing: "0.12em", textTransform: "uppercase",
+          borderRadius: 8,
+        }}>{badge}</div>
+      )}
+      {label && (
+        <div style={{
+          position: "absolute", inset: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
+          letterSpacing: "0.18em", textTransform: "uppercase",
+          color: textColor, opacity: 0.85,
+        }}>
+          [ {label} ]
+        </div>
+      )}
+      {caption && (
+        <div style={{
+          position: "absolute", bottom: 14, left: 14, right: 14,
+          fontFamily: "var(--serif)", fontSize: 14,
+          color: textColor, opacity: 0.9,
+        }}>{caption}</div>
+      )}
+    </div>
+  );
+}
+
+function Annotation({ children, align = "left", top, bottom, left, right }) {
+  return (
+    <div style={{
+      position: "absolute",
+      top, bottom, left, right,
+      fontFamily: "var(--mono)",
+      fontSize: "var(--text-meta-sm)",
+      letterSpacing: "0.1em",
+      textTransform: "uppercase",
+      color: "var(--ink-3)",
+      display: "flex",
+      gap: 6,
+      alignItems: "center",
+    }}>
+      {align === "right" ? (
+        <>
+          <span>{children}</span>
+          <span style={{ width: 18, height: 1, background: "var(--ink-4)" }} />
+        </>
+      ) : (
+        <>
+          <span style={{ width: 18, height: 1, background: "var(--ink-4)" }} />
+          <span>{children}</span>
+        </>
+      )}
+    </div>
+  );
+}
+
+const Arrow = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" className="btn__arrow" fill="none">
+    <path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" />
+  </svg>
+);
+
+const Play = ({ size = 14 }) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" fill="currentColor">
+    <path d="M4 2.5v11l10-5.5-10-5.5z" />
+  </svg>
+);
+
+const Check = ({ size = 14 }) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+    <path d="M3 8.5l3.5 3.5 7-8" stroke="currentColor" strokeWidth="1.6" />
+  </svg>
+);
+
+/* ============================================================
+   Hero
+   ============================================================ */
+
+const HERO_VIDEOS = [
+  {
+    id: "v1",
+    title: "3分钟大作文【连贯与衔接】轻松上6",
+    teacher: "Icey Zhang",
+    duration: "3:00",
+    views: "1,024",
+    desc: "雅思作文，你写反了吗？",
+    tone: "warm",
+    topic: "连贯与衔接 · 大作文",
+  },
+  {
+    id: "v2",
+    title: "3分钟拯救大作文【任务与回应】",
+    teacher: "Icey Zhang",
+    duration: "3:00",
+    views: "912",
+    desc: "考官为什么会觉得你「答非所问」？",
+    tone: "sage",
+    topic: "任务与回应 · 大作文",
+  },
+  {
+    id: "v3",
+    title: "3分钟提升小作文【任务完成情况】",
+    teacher: "Icey Zhang",
+    duration: "3:00",
+    views: "816",
+    desc: "你又在无脑照抄小作文数据了吗？",
+    tone: "cream",
+    topic: "任务完成情况 · 小作文",
+  },
+  {
+    id: "v4",
+    title: "3分钟提升小作文【连贯与衔接】",
+    teacher: "Icey Zhang",
+    duration: "3:00",
+    views: "728",
+    desc: "写了半天，写出一篇流水账？",
+    tone: "ink",
+    topic: "连贯与衔接 · 小作文",
+  },
+  {
+    id: "v5",
+    title: "3分钟提升雅思写作【语法】",
+    teacher: "Icey Zhang",
+    duration: "3:00",
+    views: "634",
+    desc: "华丽的长难句≠高分",
+    tone: "accent",
+    topic: "语法",
+  },
+  {
+    id: "v6",
+    title: "3分钟提升雅思写作【词汇】",
+    teacher: "Icey Zhang",
+    duration: "3:00",
+    views: "548",
+    desc: "摆脱小学生词汇水平，你要先做对这些",
+    tone: "warm",
+    topic: "词汇",
+  },
+];
+
+function HeroFactIcon({ name }) {
+  const icons = {
+    video: (
+      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <rect x="7" y="13" width="34" height="22" rx="5" stroke="currentColor" strokeWidth="2.2" />
+        <path d="M21 20v8l7-4-7-4z" fill="currentColor" />
+      </svg>
+    ),
+    data: (
+      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="12" cy="34" r="3.5" fill="currentColor" />
+        <circle cx="24" cy="24" r="3.5" fill="currentColor" />
+        <circle cx="36" cy="14" r="3.5" fill="currentColor" />
+        <path d="M12 34L24 24L36 14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      </svg>
+    ),
+    trend: (
+      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M8 36L20 24L30 28L40 10" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M32 10h8v8" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    svip: (
+      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M24 9l4.8 9.7 10.7 1.6-7.8 7.5 1.8 10.6L24 35.8l-9.5 4.9 1.8-10.6-7.8-7.5 10.7-1.6L24 9z" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.22" />
+      </svg>
+    ),
+  };
+  return <span className="hero-tagline__fact-icon">{icons[name]}</span>;
+}
+
+const HERO_FACTS = [
+  { icon: "video", num: "207", suf: "个", label: "雅思考点视频讲解" },
+  { icon: "data", num: "100万+", label: "学生作文大数据" },
+  { icon: "trend", num: "30天", label: "平均提高", highlight: "1", labelEnd: "分" },
+  { icon: "svip", num: "7天", label: "免费", highlight: "SVIP", labelEnd: "全功能体验", accent: true },
+];
+
+function Hero() {
+  const [activeId, setActiveId] = useState(HERO_VIDEOS[0].id);
+  const active = HERO_VIDEOS.find(v => v.id === activeId);
+
+  return (
+    <section id="hero" className="section" style={{ borderTop: "none" }}>
+      <div className="hero-tagline" role="banner" aria-label="平台标语">
+        <div className="hero-tagline__bar" aria-hidden="true" />
+        <div className="hero-tagline__inner">
+          <div className="hero-tagline__copy">
+            <div className="hero-tagline__lines">
+              <p className="hero-tagline__line">
+                <span className="hero-tagline__anchor">一</span>
+                站式雅思备考平台，已助力30万
+                <span className="hero-tagline__echo">考生</span>
+                出分。
+              </p>
+              <p className="hero-tagline__line">
+                <span className="hero-tagline__anchor">六</span>
+                类个性化学习路径，总有一种满足
+                <span className="hero-tagline__echo">你</span>
+                需求。
+              </p>
+            </div>
+          </div>
+          <div className="hero-tagline__facts" aria-label="平台数据">
+            {HERO_FACTS.map((f) => (
+              <div key={f.icon} className={`hero-tagline__fact${f.accent ? " hero-tagline__fact--accent" : ""}`}>
+                <HeroFactIcon name={f.icon} />
+                <div className="hero-tagline__fact-content">
+                  <span className="hero-tagline__fact-num">
+                    {f.num}
+                    {f.suf && <span className="hero-tagline__fact-suf">{f.suf}</span>}
+                  </span>
+                  <span className="hero-tagline__fact-label">
+                    {f.label}
+                    {f.highlight && <span className="hero-tagline__fact-highlight">{f.highlight}</span>}
+                    {f.labelEnd || ""}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="hero-showcase">
+        {/* Main player */}
+        <div className="hero-main">
+          <div className="hero-player">
+            <MediaPlaceholder
+              className="hero-player__media"
+              fill
+              tone={active.tone}
+              badge={active.topic}
+              label="精选公开课"
+            />
+            <DripAnchor
+              side="end"
+              className="hero-player__play-wrap"
+              drip={
+                <NoteDrip
+                  inline
+                  title="播放量规则"
+                  body={"公式：展示 = 真实 + round(预设)\n\n预设 = 视频预设值 × 随机系数 × 时间系数\n· 预设值：1000→500（6 集递减 100）\n· 随机：∈ [0.9, 1.1]，每集独立，加载时生成\n· 时间：2026-06-01 前=1；之后每天 +0.05\n\n真实值：点击播放 +1；同用户同视频去重；每小时刷新"}
+                  prd={["§2.2 播放量规则", "§4.2 数据规则"]}
+                  docs={["prd", "todo"]}
+                />
+              }
+            >
+              <button type="button" className="hero-player__play" aria-label="播放">
+                <Play size={22} />
+              </button>
+            </DripAnchor>
+            <div className="hero-player__bar">
+              <div className="hero-player__progress">
+                <div className="hero-player__progress-fill" />
+              </div>
+              <div className="hero-player__time">02:53 / {active.duration}</div>
+            </div>
+          </div>
+
+          <div className="hero-main__info">
+            <h2 className="hero-main__title">{active.title}</h2>
+            <p className="hero-main__desc">{active.desc}</p>
+            <div className="hero-main__meta-row">
+              <div className="hero-main__meta">
+                {active.teacher} · 官方认证教师 · {active.views} 次播放 · {active.duration}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Playlist */}
+        <div className="hero-playlist">
+          <div className="hero-playlist__head">
+            <div>
+              <div className="eyebrow eyebrow--plain" style={{ marginBottom: 4 }}>播放列表</div>
+              <DripAnchor
+                side="end"
+                drip={<TodoDrip inline todoId="T-003b" />}
+              >
+                <h3 className="hero-playlist__head-title">写作免费公开课 · 6 集</h3>
+              </DripAnchor>
+            </div>
+            <span className="hero-playlist__head-meta">共 18 分钟</span>
+          </div>
+
+          <div className="hero-playlist__scroll">
+            {HERO_VIDEOS.map((v, i) => {
+              const isActive = v.id === activeId;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  onClick={() => setActiveId(v.id)}
+                  className={`playlist-item${isActive ? " is-active" : ""}`}
+                >
+                  <span style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", color: "var(--ink-3)", paddingTop: 2 }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="playlist-item__thumb" style={{ position: "relative" }}>
+                    <MediaPlaceholder className="media-ph-thumb" aspect="16/9" tone={v.tone} />
+                    <div style={{
+                      position: "absolute", bottom: 4, right: 4,
+                      background: "rgba(26,26,26,0.85)", color: "var(--paper)",
+                      padding: "1px 5px", fontFamily: "var(--mono)", fontSize: "var(--text-meta-xs)",
+                      borderRadius: 4,
+                    }}>{v.duration}</div>
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <div className="playlist-item__title" style={{ color: isActive ? "var(--accent-ink)" : "var(--ink)" }}>
+                      {v.title}
+                    </div>
+                    <div className="playlist-item__teacher">
+                      {v.teacher.split(" · ")[0]}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <NoteDrip
+        pos="tr"
+        title="公开课 Hero"
+        body={"【首屏标语 · 已定】\n左：两行 serif 文案（一/六、考生/你 视觉呼应）\n右：2×2 数据标签\n  · 207个 考点视频 · 100万+ 作文大数据\n  · 30天 提1分 · 7天 免费 SVIP（accent 卡）\n每张标签右侧有低透明度装饰图标\n\n【视频区】\n· 6 集免费公开课（Icey Zhang）\n· 主播放器 16:9，高度随首屏 clamp 自适应\n· 列表切换联动主区域；点击播放计次\n· 无需登录 · 正式版不连播\n\n【精确标注】\n· 播放按钮旁 → 播放量规则\n· 播放列表标题旁 → T-003b 素材待办"}
+        prd={["§2.2 功能 1", "§3.2 响应式 Hero"]}
+        docs={["prd", "todo"]}
+      />
+
+    </section>
+  );
+}
+
+/* ============================================================
+   Pain Points
+   ============================================================ */
+
+const PAIN_POINTS = [
+  {
+    id: "score",
+    label: "我想要老师带我提分",
+    tag: "01 · 稳步提高",
+    detail: "你已经练过模板和题库，但作文分数停在 6。问题通常出在论证深度和语言精度。",
+    match: "名师课程学习",
+    hookIdx: 0,
+  },
+  {
+    id: "plan",
+    label: "我想知道最匹配我当前水平和学习习惯的方案是什么",
+    tag: "02 · 个性化方案",
+    detail: "基于30万+学生学习行为数据，自动根据你的阶段、能力特点、学习偏好推荐成功率最高的方案。",
+    match: "生成提分方案",
+    hookIdx: 1,
+  },
+  {
+    id: "self",
+    label: "我想按自己节奏看高质量录播课自学",
+    tag: "03 · I人福音",
+    detail: "SVIP 专属互动课 + CPITS智能体互动课堂。人类老师与AI智能体老师，双师模式，让自学效率加倍。",
+    match: "自学录播课程",
+    hookIdx: 2,
+  },
+  {
+    id: "social",
+    label: "我学习需要氛围，想要一些学习搭子陪我、卷我",
+    tag: "04 · E人大喜",
+    detail: "写作是孤独的练习。一个每天打卡、互相批改的小组,比你想象的更能影响结果。",
+    match: "自学训练营",
+    hookIdx: 4,
+  },
+  {
+    id: "calendar",
+    label: "我想要一个详细科学、精确到小时的学习任务日历",
+    tag: "05 · J人必备",
+    detail: "告诉 AI 你的现状、目标、每日可用时间，它会生成一份到考试日的日程表。每天打开就知道该练什么。",
+    match: "学习任务日历",
+    hookIdx: 3,
+  },
+  {
+    id: "diagnose",
+    label: "我想要老师帮我仔细诊断下卡分点到底在哪儿",
+    tag: "06 · 雅思老中医",
+    detail: "写作老师亲自批改，实时讲解失分原因和提分建议，精确诊断写作弱项和能力短板，互动答疑扫除盲点。",
+    match: "人工精批诊断",
+    hookIdx: 5,
+  },
+];
+
+function PainPointsA({ onMatch }) {
+  const [selected, setSelected] = useState(null);
+  const match = PAIN_POINTS.find(p => p.id === selected);
+
+  return (
+    <div>
+      <div className="pain-grid">
+        {PAIN_POINTS.map((p) => {
+          const isSel = p.id === selected;
+          return (
+            <button
+              key={p.id}
+              type="button"
+              className={`pain-card${isSel ? " pain-card--selected" : ""}`}
+              onClick={() => { setSelected(p.id); onMatch && onMatch(p); }}
+              style={{
+                background: isSel ? "var(--ink)" : undefined,
+                color: isSel ? "var(--paper)" : "var(--ink)",
+              }}
+            >
+              <div>
+                <div style={{
+                  fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)",
+                  letterSpacing: "0.1em", textTransform: "uppercase",
+                  color: isSel ? "rgba(244,247,251,0.75)" : "var(--ink-2)",
+                  marginBottom: 16,
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                }}>
+                  <span>{p.tag}</span>
+                  <span style={{ color: isSel ? "var(--accent)" : "var(--ink-2)", fontSize: 18, lineHeight: 1, fontWeight: 600, opacity: isSel ? 1 : 0.35 }} aria-hidden="true">→</span>
+                </div>
+                <div className="pain-card__title">
+                  "{p.label}"
+                </div>
+              </div>
+              <div className={`pain-card__match${isSel ? " pain-card__match--selected" : ""}`}>
+                {isSel && (
+                  <span className="pain-card__check" aria-hidden="true">
+                    <Check size={16} />
+                  </span>
+                )}
+                <span className="pain-card__route">{p.match}</span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      <div
+        className="match-result"
+        style={{
+          border: `1px ${match ? "solid" : "dashed"} var(--rule)`,
+          background: match ? "var(--paper-2)" : "transparent",
+        }}
+      >
+        <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--ink-2)", fontWeight: 500 }}>
+          {match ? "已匹配" : "等待选择"}
+        </div>
+        <div className="match-result__text" style={{ color: match ? "var(--ink)" : "var(--ink-4)" }}>
+          {match
+            ? <>你的情况最接近 <em style={{ color: "var(--accent)", fontStyle: "italic" }}>「{match.match}」</em>。下方已为你展开相应的学习路径。</>
+            : "选择最贴近你的那一张卡,页面会向下展开为你量身的学习路径。"}
+        </div>
+        {match && (
+          <a href={`#path-${match.hookIdx}`} className="btn btn--ink">
+            查看路径 <Arrow />
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* Updated quiz with 4 questions incl. multi-select Q4 */
+const QUIZ = [
+  {
+    q: "你当前雅思写作水平大约是？",
+    type: "single",
+    a: [
+      { k: "l1", label: "不到 5 分", hook: 2 },
+      { k: "l2", label: "5 – 5.5", hook: 0 },
+      { k: "l3", label: "5.5 – 6", hook: 1 },
+      { k: "l4", label: "6 分及以上", hook: 0 },
+      { k: "l5", label: "不确定", hook: 3 },
+    ],
+  },
+  {
+    q: "你的雅思写作目标分是？",
+    type: "single",
+    a: [
+      { k: "g1", label: "5.5", hook: 2 },
+      { k: "g2", label: "6", hook: 0 },
+      { k: "g3", label: "6.5", hook: 1 },
+      { k: "g4", label: "7 分及以上", hook: 0 },
+    ],
+  },
+  {
+    q: "离你下一次雅思考试还有多久？",
+    type: "single",
+    a: [
+      { k: "t1", label: "不到 1 个月", hook: 3 },
+      { k: "t2", label: "1 – 3 个月", hook: 1 },
+      { k: "t3", label: "4 – 6 个月", hook: 0 },
+      { k: "t4", label: "6 个月以上", hook: 0 },
+    ],
+  },
+  {
+    q: "雅思写作最让你觉得困难的是什么？",
+    type: "multi",
+    hint: "（可多选）",
+    a: [
+      { k: "d1", label: "审题、内容生成、观点拓展", hook: 2 },
+      { k: "d2", label: "逻辑衔接和过渡", hook: 1 },
+      { k: "d3", label: "词汇表达", hook: 0 },
+      { k: "d4", label: "句型语法", hook: 1 },
+      { k: "d5", label: "其他", hook: 3 },
+    ],
+  },
+];
+
+function PainPointsB({ onMatch }) {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState([]); // array of { qIdx, hook, label, multi? }
+  const [multiSelected, setMultiSelected] = useState([]); // for current multi-select step
+  const done = step >= QUIZ.length;
+
+  const resultIdx = useMemo(() => {
+    if (answers.length === 0) return 0;
+    const counts = {};
+    answers.forEach(a => { counts[a.hook] = (counts[a.hook] || 0) + 1; });
+    const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+    return Number(best[0]);
+  }, [answers]);
+
+  const result = PAIN_POINTS.find(p => p.hookIdx === resultIdx) || PAIN_POINTS[0];
+
+  useEffect(() => { if (done && onMatch) onMatch(result); }, [done]);
+
+  function pickSingle(a) {
+    setAnswers(prev => [...prev, { qIdx: step, hook: a.hook, label: a.label }]);
+    setStep(s => s + 1);
+  }
+
+  function toggleMulti(a) {
+    setMultiSelected(prev =>
+      prev.find(x => x.k === a.k) ? prev.filter(x => x.k !== a.k) : [...prev, a]
+    );
+  }
+
+  function confirmMulti() {
+    if (multiSelected.length === 0) return;
+    // Use most-common hook among selections
+    const counts = {};
+    multiSelected.forEach(a => { counts[a.hook] = (counts[a.hook] || 0) + 1; });
+    const bestHook = Number(Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0]);
+    const labelStr = multiSelected.map(x => x.label).join("、");
+    setAnswers(prev => [...prev, { qIdx: step, hook: bestHook, label: labelStr }]);
+    setMultiSelected([]);
+    setStep(s => s + 1);
+  }
+
+  function reset() {
+    setAnswers([]); setStep(0); setMultiSelected([]);
+  }
+
+  const q = QUIZ[step];
+
+  // Build preview rows: answered + pending
+  const previewRows = QUIZ.map((qItem, i) => {
+    const ans = answers.find(a => a.qIdx === i);
+    const isCurrent = i === step && !done;
+    return { qItem, ans, isCurrent };
+  });
+
+  return (
+    <div className="quiz-layout">
+      {/* Left: quiz */}
+      <div className="quiz-panel quiz-panel--left">
+        {/* Progress */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 40 }}>
+          {QUIZ.map((_, i) => (
+            <div key={i} style={{
+              flex: 1, height: 3,
+              background: i < step ? "var(--accent)" : i === step && !done ? "var(--ink)" : "var(--rule)",
+              borderRadius: 2,
+              transition: "background 200ms ease",
+            }} />
+          ))}
+        </div>
+
+        {done ? (
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <div className="eyebrow" style={{ marginBottom: 16 }}>诊断完成</div>
+            <div className="quiz-done-title" style={{ marginBottom: 16 }}>
+              你最适合 <em style={{ color: "var(--accent)", fontStyle: "italic" }}>「{result.match}」</em>
+            </div>
+            <p style={{ fontSize: 15, color: "var(--ink-2)", marginBottom: 28, maxWidth: "48ch" }}>
+              {result.detail}
+            </p>
+            <div className="quiz-done-actions" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <a className="btn btn--ink" href={`#path-${result.hookIdx}`}>查看专属路径 <Arrow /></a>
+              <button className="btn btn--ghost" onClick={reset}>重新测试</button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", letterSpacing: "0.12em", color: "var(--ink-3)", textTransform: "uppercase", marginBottom: 14 }}>
+              第 {step + 1} 题 / 共 {QUIZ.length} 题
+              {q.type === "multi" && (
+                <span style={{ marginLeft: 12, color: "var(--accent)" }}>多选</span>
+              )}
+            </div>
+            <div className="quiz-q-title" style={{ marginBottom: q.hint ? 8 : 32 }}>
+              {q.q}
+            </div>
+            {q.hint && (
+              <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", color: "var(--ink-3)", marginBottom: 24 }}>
+                {q.hint}
+              </div>
+            )}
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+              {q.a.map((a, i) => {
+                const isChecked = q.type === "multi" && multiSelected.find(x => x.k === a.k);
+                return (
+                  <button
+                    key={a.k}
+                    onClick={() => q.type === "multi" ? toggleMulti(a) : pickSingle(a)}
+                    style={{
+                      textAlign: "left",
+                      padding: "14px 18px",
+                      border: `1px solid ${isChecked ? "var(--accent)" : "var(--rule)"}`,
+                      borderRadius: 12,
+                      fontFamily: "var(--serif)", fontSize: 16,
+                      transition: "all 160ms ease",
+                      display: "flex", alignItems: "center", gap: 14,
+                      background: isChecked ? "var(--accent-wash)" : "transparent",
+                      color: isChecked ? "var(--accent-ink)" : "var(--ink)",
+                    }}
+                    onMouseEnter={e => {
+                      if (!isChecked) {
+                        e.currentTarget.style.background = "var(--ink)";
+                        e.currentTarget.style.color = "var(--paper)";
+                        e.currentTarget.style.borderColor = "var(--ink)";
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isChecked) {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "var(--ink)";
+                        e.currentTarget.style.borderColor = "var(--rule)";
+                      }
+                    }}
+                  >
+                    {q.type === "multi" ? (
+                      <span style={{
+                        width: 18, height: 18, borderRadius: 4,
+                        border: `1.5px solid ${isChecked ? "var(--accent)" : "var(--rule)"}`,
+                        background: isChecked ? "var(--accent)" : "transparent",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0,
+                        transition: "all 160ms ease",
+                      }}>
+                        {isChecked && <Check size={12} />}
+                      </span>
+                    ) : (
+                      <span style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", opacity: 0.6, minWidth: 16 }}>
+                        {String.fromCharCode(65 + i)}
+                      </span>
+                    )}
+                    <span style={{ flex: 1 }}>{a.label}</span>
+                    {q.type === "single" && <Arrow />}
+                  </button>
+                );
+              })}
+            </div>
+
+            {q.type === "multi" && (
+              <button
+                onClick={confirmMulti}
+                disabled={multiSelected.length === 0}
+                className="btn btn--ink"
+                style={{
+                  marginTop: 20, alignSelf: "flex-start",
+                  opacity: multiSelected.length === 0 ? 0.4 : 1,
+                  cursor: multiSelected.length === 0 ? "not-allowed" : "pointer",
+                }}
+              >
+                确认选择 ({multiSelected.length}) <Arrow />
+              </button>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Right: diagnosis preview */}
+      <div className="quiz-panel quiz-panel--right">
+        <div className="quiz-panel--right-inner">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 20 }}>写作诊断表</div>
+            <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", color: "var(--ink-2)", lineHeight: 1.8 }}>
+              {previewRows.map(({ qItem, ans, isCurrent }, i) => (
+                <div key={i} style={{
+                  display: "flex", justifyContent: "space-between",
+                  borderBottom: "1px dashed var(--rule)", padding: "6px 0",
+                  gap: 12,
+                }}>
+                  <span style={{ color: isCurrent ? "var(--accent)" : "var(--ink-3)", whiteSpace: "nowrap" }}>
+                    第 {i + 1} 题
+                  </span>
+                  <span style={{
+                    color: ans ? "var(--ink)" : (isCurrent ? "var(--accent)" : "var(--ink-4)"),
+                    textAlign: "right",
+                    fontSize: "var(--text-meta-md)",
+                    maxWidth: "20ch",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}>
+                    {ans ? ans.label : (isCurrent ? "▶ 作答中" : "———————")}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ position: "relative" }}>
+            <MediaPlaceholder aspect="4/3" tone="cream" label={done ? "你的结果" : "预览"} />
+            <Annotation top={-12} right={12}>根据回答实时更新</Annotation>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PainPointsSection({ pattern, onMatch }) {
+  return (
+    <section id="pain" className="section">
+      <div className="section__head section__head--stack">
+        <h2 className="section__label">问题匹配</h2>
+        <p className="section__title">
+          大数据匹配最佳学习路径
+        </p>
+        <p className="section__sub" style={{ marginTop: 18 }}>
+            同样是写作困难，不同原因对应完全不同的训练路径。花一分钟做个诊断，让页面只向你展示真正相关的内容。
+          </p>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 24, marginBottom: 32 }}>
+        <div className="pain-mode">
+          <DripAnchor
+            side="end"
+            block
+            drip={
+              <NoteDrip
+                inline
+                title="需求匹配 · 双模式"
+                body={"【模式 A · 默认】6 张痛点卡单选 → 匹配结果条 → 路径高亮\n\n【模式 B】4 题问卷 + 右侧诊断表 → 同路径推荐\n· 入口：Tab「互动诊断」+ 模式 A 下右侧引导（≈1 分钟）\n\n【切换】A↔B 时清空另一侧匹配与高亮"}
+                prd={["§2.2 功能 2", "§2.2 功能 3", "§5.1 主流程"]}
+                docs={["prd", "todo"]}
+              />
+            }
+          >
+            <div className="pain-mode__tabs">
+              <button
+                type="button"
+                className={`pain-mode__btn pain-mode__btn--a ${pattern === "A" ? "is-active" : "is-idle"}`}
+                onClick={() => window.dispatchEvent(new CustomEvent("tweak-set", { detail: { painPattern: "A" } }))}
+              >
+                自主选择
+              </button>
+              <DripAnchor
+                side="end"
+                drip={<TodoDrip inline todoId="T-001" />}
+              >
+                <button
+                  type="button"
+                  className={`pain-mode__btn pain-mode__btn--b ${pattern === "B" ? "is-active" : "is-highlight"}`}
+                  onClick={() => window.dispatchEvent(new CustomEvent("tweak-set", { detail: { painPattern: "B" } }))}
+                >
+                  互动诊断
+                  <span className="pain-mode__badge">≈1 分钟</span>
+                </button>
+              </DripAnchor>
+            </div>
+          </DripAnchor>
+          {pattern === "A" && (
+            <p className="pain-mode__hint">
+              不确定选哪个？试试 <strong>互动诊断</strong> — 4 道题，获取你的专属路径推荐
+            </p>
+          )}
+        </div>
+        <div style={{ height: 1, background: "var(--rule)", width: "100%" }} />
+      </div>
+
+      {pattern === "A" ? <PainPointsA onMatch={onMatch} /> : <PainPointsB onMatch={onMatch} />}
+
+    </section>
+  );
+}
+
+/* ============================================================
+   Conversion Paths
+   ============================================================ */
+
+const PATHS = [
+  {
+    num: "01", kicker: "课程学习路径",
+    title: "把好老师的课堂,搬到你的书桌上。",
+    body: "8 大写作模块、48 节课程精讲。从小作文到大作文，按步骤推进，跟着练笔。",
+    bullets: ["48 节课程 + 配套练习", "讲义、答题模板、范文库", "7 天免费试学"],
+    cta: "查看课程目录 →",
+    tone: "warm", layout: "mediaLeft",
+  },
+  {
+    num: "02", kicker: "专属提分方案",
+    title: "上传写作报告，AI 生成你的学习方案",
+    body: "上传 1–2 份 PDF（如 BC WriteUp 写作报告），AI 将依据学习方案模版，在约 1 分钟内为你生成专属提升计划。",
+    bullets: ["支持 1–2 份 PDF，单文件不超过 5MB", "AI 按模版输出结构化学习方案", "生成完成后可下载 PDF"],
+    cta: "获取我的 AI 方案 →",
+    tone: "sage", layout: "mediaRight",
+  },
+  {
+    num: "03", kicker: "自学 + 互动课",
+    title: "不是在看视频, 是在课堂里。",
+    body: "SVIP 专属互动课 + CPITS智能体互动课堂。人类老师与AI智能体老师，双师模式，优势互补，让自学效率加倍。",
+    bullets: ["随堂互动式练习，当堂巩固知识点", "CPITS智能体互动课堂", "学习节奏自己把控"],
+    cta: "加入 SVIP 互动课 →",
+    tone: "ink", layout: "mediaLeft",
+  },
+  {
+    num: "04", kicker: "AI 学习计划",
+    title: "把目标分数, 拆成每天做什么。",
+    body: "告诉 AI 你的现状、目标、每日可用时间，它会生成一份到考试日的日程表。每天打开就知道该练什么。",
+    bullets: ["倒推式日程生成", "按基础与目标动态调整", "与练习/批改无缝衔接"],
+    cta: "生成我的学习日历 →",
+    tone: "cream", layout: "mediaRight",
+  },
+  {
+    num: "05", kicker: "学习营/导师",
+    title: "一个人写容易停, 有人陪就不一样。",
+    body: "21 天 / 45 天写作营，每日任务、小组互评、导师每周一次一对一答疑。私域社群全程打卡。",
+    bullets: ["每日作业 + 小组互评", "每周导师 1 对 1", "私域社群陪伴"],
+    cta: "报名下一期学习营 →",
+    tone: "accent", layout: "mediaLeft",
+  },
+  {
+    num: "06", kicker: "人工精批/诊断",
+    title: "人工精批诊断，让你真正看懂批改报告",
+    body: "写作老师亲自批改，实时讲解失分原因和提分建议，精确诊断写作弱项和能力短板，互动答疑扫除盲点。",
+    bullets: ["真人批改及详解", "全维度剖析写作能力", "获取批改报告和建议"],
+    cta: "预约1v1精批诊断课 →",
+    tone: "warm", layout: "mediaRight",
+  },
+];
+
+/* ============================================================
+   Auth gate (path CTA · login modal · SVIP intro)
+   ============================================================ */
+
+const AUTH_STORAGE_KEY = "bc-landing-demo-auth";
+const PATH02_INDEX = 1;
+
+const AuthContext = createContext(null);
+
+function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
+}
+
+function SvipIntroModal() {
+  const { svipOpen, closeSvip } = useAuth();
+  useEffect(() => {
+    if (!svipOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") closeSvip(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [svipOpen, closeSvip]);
+  if (!svipOpen) return null;
+
+  return (
+    <div className="auth-modal-backdrop" onClick={closeSvip} style={{ zIndex: 3150 }}>
+      <div className="auth-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="svip-modal-title">
+        <div className="auth-modal__head">
+          <div className="auth-modal__title" id="svip-modal-title">SVIP 会员介绍</div>
+          <button type="button" className="auth-modal__close" onClick={closeSvip} aria-label="关闭">×</button>
+        </div>
+        <div className="auth-modal__body">
+          <p style={{ fontSize: 14, color: "var(--ink-2)", lineHeight: 1.55 }}>
+            SVIP 是躺着学平台的全功能会员档位，覆盖写作、听说读写全科互动学习与 AI 工具。
+          </p>
+          <ul className="svip-modal__list">
+            <li>互动课堂与 CPITS 智能体双师模式</li>
+            <li>全科题库、模考与 AI 学习计划</li>
+            <li>会员专属内容与学习数据报告</li>
+            <li>新用户注册可享 <strong>7 天 SVIP</strong> 体验（价值 ¥99）</li>
+          </ul>
+          <button type="button" className="btn btn--ink" style={{ width: "100%" }} onClick={closeSvip}>我知道了</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LoginRegisterModal() {
+  const { loginOpen, closeLogin, completeAuth, openSvip, pendingPathIndex } = useAuth();
+  useEffect(() => {
+    if (!loginOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") closeLogin(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [loginOpen, closeLogin]);
+  if (!loginOpen) return null;
+
+  const pathHint = pendingPathIndex != null ? PATHS[pendingPathIndex]?.cta?.replace(/\s*→\s*$/, "") : null;
+
+  return (
+    <div className="auth-modal-backdrop" onClick={closeLogin}>
+      <div className="auth-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
+        <div className="auth-modal__head">
+          <div className="auth-modal__title" id="login-modal-title">登录 / 注册</div>
+          <button type="button" className="auth-modal__close" onClick={closeLogin} aria-label="关闭">×</button>
+        </div>
+        <div className="auth-modal__body">
+          <div className="auth-modal__promo" role="note">
+            注册即送价值<strong>￥99</strong>的<strong>7 天</strong>
+            <button type="button" className="auth-modal__svip-link" onClick={openSvip}>SVIP</button>
+            会员，体验平台全部功能
+          </div>
+          {pathHint && (
+            <p style={{ fontSize: 13, color: "var(--ink-3)", textAlign: "center", margin: "-6px 0 0" }}>
+              登录后继续：{pathHint}
+            </p>
+          )}
+          <div className="auth-modal__actions">
+            <button type="button" className="btn btn--ghost" style={{ justifyContent: "center" }} onClick={() => completeAuth("login")}>
+              登录
+            </button>
+            <button type="button" className="btn btn--ink" style={{ justifyContent: "center" }} onClick={() => completeAuth("register")}>
+              注册
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AuthProvider({ children }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    try { return localStorage.getItem(AUTH_STORAGE_KEY) === "1"; } catch { return false; }
+  });
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [svipOpen, setSvipOpen] = useState(false);
+  const [pendingPathIndex, setPendingPathIndex] = useState(null);
+
+  const openLogin = useCallback((pathIndex = null) => {
+    setPendingPathIndex(pathIndex);
+    setLoginOpen(true);
+  }, []);
+
+  const closeLogin = useCallback(() => {
+    setLoginOpen(false);
+    setPendingPathIndex(null);
+  }, []);
+
+  const openSvip = useCallback(() => setSvipOpen(true), []);
+  const closeSvip = useCallback(() => setSvipOpen(false), []);
+
+  const dispatchPathSuccess = useCallback((pathIndex) => {
+    if (pathIndex === PATH02_INDEX) {
+      window.dispatchEvent(new CustomEvent("path02-plan-request"));
+      return;
+    }
+    window.dispatchEvent(new CustomEvent("path-cta-success", {
+      detail: { index: pathIndex, label: PATHS[pathIndex]?.cta },
+    }));
+  }, []);
+
+  const completeAuth = useCallback((mode) => {
+    try { localStorage.setItem(AUTH_STORAGE_KEY, "1"); } catch { /* ignore */ }
+    setIsLoggedIn(true);
+    setLoginOpen(false);
+    const idx = pendingPathIndex;
+    setPendingPathIndex(null);
+    if (idx != null) dispatchPathSuccess(idx);
+  }, [pendingPathIndex, dispatchPathSuccess]);
+
+  const logout = useCallback(() => {
+    try { localStorage.removeItem(AUTH_STORAGE_KEY); } catch { /* ignore */ }
+    setIsLoggedIn(false);
+    window.dispatchEvent(new CustomEvent("bc-landing-auth-logout"));
+  }, []);
+
+  const setLoggedInDemo = useCallback((value) => {
+    if (value) {
+      try { localStorage.setItem(AUTH_STORAGE_KEY, "1"); } catch { /* ignore */ }
+      setIsLoggedIn(true);
+    } else {
+      logout();
+    }
+  }, [logout]);
+
+  const requireAuthForPath = useCallback((pathIndex) => {
+    if (isLoggedIn) {
+      dispatchPathSuccess(pathIndex);
+      return true;
+    }
+    openLogin(pathIndex);
+    return false;
+  }, [isLoggedIn, openLogin, dispatchPathSuccess]);
+
+  const value = useMemo(() => ({
+    isLoggedIn,
+    loginOpen,
+    svipOpen,
+    pendingPathIndex,
+    openLogin,
+    closeLogin,
+    openSvip,
+    closeSvip,
+    completeAuth,
+    logout,
+    setLoggedInDemo,
+    requireAuthForPath,
+  }), [isLoggedIn, loginOpen, svipOpen, pendingPathIndex, openLogin, closeLogin, openSvip, closeSvip, completeAuth, logout, setLoggedInDemo, requireAuthForPath]);
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      <LoginRegisterModal />
+      <SvipIntroModal />
+    </AuthContext.Provider>
+  );
+}
+
+/* ============================================================
+   Path 02 · AI 学习方案（Demo 弹窗流程）
+   ============================================================ */
+
+const PLAN_STORAGE_KEY = "bc-landing-demo-path02-plan";
+const PLAN_MAX_BYTES = 5 * 1024 * 1024;
+const PLAN_DEMO_GEN_MS = 12000;
+
+const Path02PlanContext = createContext(null);
+
+function usePath02Plan() {
+  const ctx = useContext(Path02PlanContext);
+  if (!ctx) throw new Error("usePath02Plan must be used within Path02PlanProvider");
+  return ctx;
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function loadStoredPlan() {
+  try {
+    const raw = localStorage.getItem(PLAN_STORAGE_KEY);
+    if (!raw) return { status: "none" };
+    const data = JSON.parse(raw);
+    if (data?.status === "generating") {
+      const elapsed = Date.now() - (data.startedAt || 0);
+      if (elapsed >= PLAN_DEMO_GEN_MS) return { ...data, status: "ready", readyAt: data.startedAt + PLAN_DEMO_GEN_MS };
+      return data;
+    }
+    return data;
+  } catch {
+    return { status: "none" };
+  }
+}
+
+function saveStoredPlan(plan) {
+  try {
+    if (plan.status === "none") localStorage.removeItem(PLAN_STORAGE_KEY);
+    else localStorage.setItem(PLAN_STORAGE_KEY, JSON.stringify(plan));
+  } catch { /* ignore */ }
+}
+
+function isPdfFile(file) {
+  return file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+}
+
+function buildDemoPlanPreview(fileNames) {
+  const sources = fileNames.filter(Boolean).join("、") || "写作报告";
+  return {
+    title: "IELTS Writing 个性化学习方案",
+    sections: [
+      {
+        heading: "诊断摘要",
+        body: `基于你上传的 ${sources}，AI 识别出任务回应与连贯衔接为主要提升方向，词汇与语法基础良好。`,
+      },
+      {
+        heading: "阶段目标（4 周）",
+        items: [
+          "第 1 周：大作文论点展开与段落结构训练",
+          "第 2 周：小作文数据选取与对比描述",
+          "第 3 周：连贯衔接与指代一致性专项",
+          "第 4 周：限时模考 + 错题复盘",
+        ],
+      },
+      {
+        heading: "每日建议",
+        body: "工作日 45 分钟（1 篇 Task 2 提纲 + 1 篇 Task 1 精写）；周末 90 分钟完整模考。",
+      },
+      {
+        heading: "推荐练习",
+        items: ["BC WriteUp 连贯衔接模块", "躺着学 Task 2 真题题库 · 教育/科技类", "每周 1 次人工精批（路径 06）"],
+      },
+    ],
+  };
+}
+
+function createDemoPdfBlob(preview) {
+  const lines = [
+    preview.title,
+    "",
+    ...preview.sections.flatMap((s) => {
+      const block = [s.heading, s.body || "", ...(s.items || [])].filter(Boolean);
+      return [...block, ""];
+    }),
+  ];
+  const escaped = lines.map((l) => l.replace(/[()\\]/g, "\\$&")).slice(0, 40);
+  let y = 750;
+  const textOps = escaped.map((line) => {
+    const op = `BT /F1 11 Tf 48 ${y} Td (${line.slice(0, 80)}) Tj ET`;
+    y -= 16;
+    return op;
+  }).join("\n");
+  const stream = textOps + "\n";
+  const pdf = `%PDF-1.4
+1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj
+2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj
+3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj
+4 0 obj<</Length ${stream.length}>>stream
+${stream}
+endstream endobj
+5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>endobj
+xref
+0 6
+0000000000 65535 f 
+0000000010 00000 n 
+0000000053 00000 n 
+0000000100 00000 n 
+0000000240 00000 n 
+0000000500 00000 n 
+trailer<</Size 6/Root 1 0 R>>
+startxref
+580
+%%EOF`;
+  return new Blob([pdf], { type: "application/pdf" });
+}
+
+function PlanModalShell({ title, wide, onClose, children, footer }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="auth-modal-backdrop" onClick={onClose}>
+      <div
+        className={`auth-modal plan-modal${wide ? " plan-modal--wide" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="plan-modal-title"
+      >
+        <div className="auth-modal__head">
+          <div className="auth-modal__title" id="plan-modal-title">{title}</div>
+          <button type="button" className="auth-modal__close" onClick={onClose} aria-label="关闭">×</button>
+        </div>
+        <div className="auth-modal__body">
+          {children}
+          {footer}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PlanUploadSlot({ label, file, error, onPick, onRemove }) {
+  const [drag, setDrag] = useState(false);
+  const inputRef = useRef(null);
+
+  function handleFiles(list) {
+    const f = list?.[0];
+    if (f) onPick(f);
+  }
+
+  return (
+    <div
+      className={`plan-upload-slot${file ? " has-file" : ""}${drag ? " is-dragover" : ""}`}
+      onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+      onDragLeave={() => setDrag(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDrag(false);
+        handleFiles(e.dataTransfer.files);
+      }}
+      onClick={() => { if (!file) inputRef.current?.click(); }}
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pdf,application/pdf"
+        onChange={(e) => handleFiles(e.target.files)}
+      />
+      <div className="plan-upload-slot__label">{label}</div>
+      {file ? (
+        <>
+          <div className="plan-upload-slot__name">{file.name}</div>
+          <div className="plan-upload-slot__meta">{formatFileSize(file.size)}</div>
+          <button type="button" className="plan-upload-slot__remove" onClick={(e) => { e.stopPropagation(); onRemove(); }}>
+            移除
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="plan-upload-slot__icon">📄</div>
+          <div className="plan-upload-slot__meta">点击或拖拽 PDF</div>
+        </>
+      )}
+      {error && <div className="plan-upload-slot__meta" style={{ color: "#c9580c" }}>{error}</div>}
+    </div>
+  );
+}
+
+function Path02PlanUI() {
+  const {
+    modal, closeModal, files, setFileAt, clearFileAt, fileErrors,
+    submitUpload, plan, genProgress, confirmOverwrite, planToast,
+  } = usePath02Plan();
+
+  let dialog = null;
+
+  if (modal === "upload") {
+    const hasValid = files.some(Boolean) && files.every((f, i) => !f || !fileErrors[i]);
+    const anyFile = files.some(Boolean);
+
+    dialog = (
+      <PlanModalShell
+        title="上传写作报告"
+        onClose={closeModal}
+        footer={(
+          <>
+            <p className="plan-modal__hint">支持 1–2 份 PDF，单文件不超过 5MB。提交后可关闭弹窗，生成将在后台继续。</p>
+            <button
+              type="button"
+              className="btn btn--ink"
+              style={{ width: "100%", justifyContent: "center" }}
+              disabled={!anyFile || !hasValid}
+              onClick={submitUpload}
+            >
+              开始生成方案
+            </button>
+          </>
+        )}
+      >
+        <p style={{ fontSize: 14, color: "var(--ink-2)", lineHeight: 1.55, margin: 0 }}>
+          上传你的写作报告 PDF，AI 将按学习方案模版生成专属提升计划。
+        </p>
+        <div className="plan-upload-grid">
+          <PlanUploadSlot
+            label="文件 1"
+            file={files[0]}
+            error={fileErrors[0]}
+            onPick={(f) => setFileAt(0, f)}
+            onRemove={() => clearFileAt(0)}
+          />
+          <PlanUploadSlot
+            label="文件 2（可选）"
+            file={files[1]}
+            error={fileErrors[1]}
+            onPick={(f) => setFileAt(1, f)}
+            onRemove={() => clearFileAt(1)}
+          />
+        </div>
+      </PlanModalShell>
+    );
+  }
+
+  if (modal === "generating") {
+    dialog = (
+      <PlanModalShell title="正在生成方案" onClose={closeModal}>
+        <p style={{ fontSize: 14, color: "var(--ink-2)", lineHeight: 1.55, margin: 0 }}>
+          AI 正在分析你的报告并生成学习方案，预计约 1 分钟内完成。
+        </p>
+        <div className="plan-progress" aria-hidden="true">
+          <div className="plan-progress__fill" style={{ width: `${genProgress}%` }} />
+        </div>
+        <p className="plan-modal__hint" style={{ textAlign: "center" }}>
+          可关闭此窗口继续浏览 · 完成后将自动弹出结果
+        </p>
+        <button type="button" className="btn btn--ghost" style={{ width: "100%", justifyContent: "center" }} onClick={closeModal}>
+          关闭，后台继续
+        </button>
+      </PlanModalShell>
+    );
+  }
+
+  if (modal === "overwrite") {
+    dialog = (
+      <PlanModalShell
+        title="重新生成方案？"
+        onClose={closeModal}
+        footer={(
+          <div className="plan-overwrite-actions">
+            <button type="button" className="btn btn--ghost" onClick={closeModal}>取消</button>
+            <button type="button" className="btn btn--ink" onClick={confirmOverwrite}>确认覆盖</button>
+          </div>
+        )}
+      >
+        <p style={{ fontSize: 14, color: "var(--ink-2)", lineHeight: 1.55, margin: 0 }}>
+          你已有当前学习方案。重新生成将<strong>覆盖</strong>现有方案。
+        </p>
+      </PlanModalShell>
+    );
+  }
+
+  if (modal === "result" && plan.status === "ready" && plan.preview) {
+    const downloadPdf = () => {
+      const blob = createDemoPdfBlob(plan.preview);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "IELTS-Writing-学习方案.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    dialog = (
+      <PlanModalShell
+        title="你的 AI 学习方案"
+        wide
+        onClose={closeModal}
+        footer={(
+          <div className="plan-overwrite-actions">
+            <button type="button" className="btn btn--ghost" onClick={closeModal}>关闭</button>
+            <button type="button" className="btn btn--ink" onClick={downloadPdf}>下载 PDF</button>
+          </div>
+        )}
+      >
+        <div className="plan-result-preview">
+          <h4>{plan.preview.title}</h4>
+          {plan.preview.sections.map((s, i) => (
+            <section key={i}>
+              <h4>{s.heading}</h4>
+              {s.body && <p>{s.body}</p>}
+              {s.items && (
+                <ul>{s.items.map((item, j) => <li key={j}>{item}</li>)}</ul>
+              )}
+            </section>
+          ))}
+        </div>
+      </PlanModalShell>
+    );
+  }
+
+  return (
+    <>
+      {dialog}
+      {planToast && <div className="auth-toast" role="status">{planToast}</div>}
+    </>
+  );
+}
+
+function Path02GeneratingBar() {
+  const { plan, genProgress, modal } = usePath02Plan();
+  const { isLoggedIn } = useAuth();
+  if (!isLoggedIn || plan.status !== "generating" || modal === "generating") return null;
+
+  return (
+    <div className="plan-gen-bar" role="status">
+      <div className="plan-gen-bar__spinner" aria-hidden="true" />
+      <div className="plan-gen-bar__text">
+        <strong>方案生成中</strong>
+        <div>可继续浏览 · 完成后自动弹出 · {genProgress}%</div>
+      </div>
+    </div>
+  );
+}
+
+function Path02PlanProvider({ children }) {
+  const [plan, setPlan] = useState(loadStoredPlan);
+  const [modal, setModal] = useState(null);
+  const [files, setFiles] = useState([null, null]);
+  const [fileErrors, setFileErrors] = useState(["", ""]);
+  const [genProgress, setGenProgress] = useState(0);
+  const [planToast, setPlanToast] = useState("");
+  const genStartedInSessionRef = useRef(false);
+  const timerRef = useRef(null);
+  const progressRef = useRef(null);
+
+  const persistPlan = useCallback((next) => {
+    setPlan(next);
+    saveStoredPlan(next);
+  }, []);
+
+  const showToast = useCallback((msg) => {
+    setPlanToast(msg);
+    setTimeout(() => setPlanToast(""), 3200);
+  }, []);
+
+  const closeModal = useCallback(() => setModal(null), []);
+
+  const openUpload = useCallback(() => {
+    setFiles([null, null]);
+    setFileErrors(["", ""]);
+    setModal("upload");
+  }, []);
+
+  const viewPlan = useCallback(() => {
+    if (plan.status === "ready") setModal("result");
+  }, [plan.status]);
+
+  const handlePlanRequest = useCallback(() => {
+    if (plan.status === "generating") {
+      showToast("方案生成中，请稍候");
+      return;
+    }
+    if (plan.status === "ready") {
+      setModal("overwrite");
+      return;
+    }
+    openUpload();
+  }, [plan.status, showToast, openUpload]);
+
+  const confirmOverwrite = useCallback(() => {
+    openUpload();
+  }, [openUpload]);
+
+  const validateFile = useCallback((file) => {
+    if (!isPdfFile(file)) return "请上传 PDF 文件";
+    if (file.size > PLAN_MAX_BYTES) return "文件超过 5MB";
+    return "";
+  }, []);
+
+  const setFileAt = useCallback((index, file) => {
+    const err = validateFile(file);
+    setFiles((prev) => {
+      const next = [...prev];
+      next[index] = err ? null : file;
+      return next;
+    });
+    setFileErrors((prev) => {
+      const next = [...prev];
+      next[index] = err;
+      return next;
+    });
+  }, [validateFile]);
+
+  const clearFileAt = useCallback((index) => {
+    setFiles((prev) => {
+      const next = [...prev];
+      next[index] = null;
+      return next;
+    });
+    setFileErrors((prev) => {
+      const next = [...prev];
+      next[index] = "";
+      return next;
+    });
+  }, []);
+
+  const finishGeneration = useCallback((fileNames) => {
+    const preview = buildDemoPlanPreview(fileNames);
+    const readyPlan = {
+      status: "ready",
+      fileNames,
+      preview,
+      readyAt: Date.now(),
+    };
+    persistPlan(readyPlan);
+    setGenProgress(100);
+    if (genStartedInSessionRef.current) {
+      setModal("result");
+    }
+  }, [persistPlan]);
+
+  const startGeneration = useCallback((fileNames) => {
+    genStartedInSessionRef.current = true;
+    persistPlan({ status: "generating", fileNames, startedAt: Date.now() });
+    setGenProgress(0);
+    setModal("generating");
+  }, [persistPlan]);
+
+  const submitUpload = useCallback(() => {
+    const picked = files.filter(Boolean);
+    if (!picked.length) return;
+    const names = files.map((f) => f?.name || null);
+    startGeneration(names.filter(Boolean));
+  }, [files, startGeneration]);
+
+  useEffect(() => {
+    const onRequest = () => handlePlanRequest();
+    window.addEventListener("path02-plan-request", onRequest);
+    return () => window.removeEventListener("path02-plan-request", onRequest);
+  }, [handlePlanRequest]);
+
+  useEffect(() => {
+    const onAuthChange = () => setModal(null);
+    window.addEventListener("bc-landing-auth-logout", onAuthChange);
+    return () => window.removeEventListener("bc-landing-auth-logout", onAuthChange);
+  }, []);
+
+  useEffect(() => {
+    if (plan.status !== "generating" || !plan.startedAt) return undefined;
+
+    const fileNames = plan.fileNames || [];
+    const remaining = Math.max(0, PLAN_DEMO_GEN_MS - (Date.now() - plan.startedAt));
+
+    const updateProgress = () => {
+      const elapsed = Date.now() - plan.startedAt;
+      setGenProgress(Math.min(99, Math.round((elapsed / PLAN_DEMO_GEN_MS) * 100)));
+    };
+
+    updateProgress();
+    progressRef.current = setInterval(updateProgress, 200);
+
+    timerRef.current = setTimeout(() => {
+      if (progressRef.current) clearInterval(progressRef.current);
+      finishGeneration(fileNames);
+    }, remaining);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (progressRef.current) clearInterval(progressRef.current);
+    };
+  }, [plan.status, plan.startedAt, plan.fileNames, finishGeneration]);
+
+  const resetPlanDemo = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (progressRef.current) clearInterval(progressRef.current);
+    genStartedInSessionRef.current = false;
+    persistPlan({ status: "none" });
+    setModal(null);
+    setFiles([null, null]);
+    setFileErrors(["", ""]);
+    setGenProgress(0);
+  }, [persistPlan]);
+
+  const simulateReadyPlan = useCallback(() => {
+    genStartedInSessionRef.current = false;
+    const preview = buildDemoPlanPreview(["demo-report.pdf"]);
+    persistPlan({
+      status: "ready",
+      fileNames: ["demo-report.pdf"],
+      preview,
+      readyAt: Date.now(),
+    });
+  }, [persistPlan]);
+
+  const value = useMemo(() => ({
+    plan,
+    modal,
+    files,
+    fileErrors,
+    genProgress,
+    planToast,
+    closeModal,
+    openUpload,
+    viewPlan,
+    confirmOverwrite,
+    submitUpload,
+    setFileAt,
+    clearFileAt,
+    handlePlanRequest,
+    resetPlanDemo,
+    simulateReadyPlan,
+  }), [
+    plan, modal, files, fileErrors, genProgress, planToast,
+    closeModal, openUpload, viewPlan, confirmOverwrite, submitUpload,
+    setFileAt, clearFileAt, handlePlanRequest, resetPlanDemo, simulateReadyPlan,
+  ]);
+
+  return (
+    <Path02PlanContext.Provider value={value}>
+      {children}
+      <Path02PlanUI />
+      <Path02GeneratingBar />
+    </Path02PlanContext.Provider>
+  );
+}
+
+function scrollToPathSelection() {
+  document.getElementById("pain")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function PathCard({ path, index, highlight }) {
+  const { requireAuthForPath, isLoggedIn } = useAuth();
+  const { plan, viewPlan } = usePath02Plan();
+  const isPath02 = index === PATH02_INDEX;
+  const showPlanState = isPath02 && isLoggedIn;
+  const layoutClass = path.layout === "mediaLeft" ? "path-card--media-left" : "path-card--media-right";
+
+  return (
+    <section
+      id={`path-${index}`}
+      className={`section path-card ${layoutClass}`}
+      style={{
+        background: highlight ? "var(--paper-2)" : "transparent",
+      }}
+    >
+      <button
+        type="button"
+        className="btn btn--ghost path-back-select"
+        onClick={scrollToPathSelection}
+      >
+        回到路径选择
+      </button>
+      <div className="path-card__grid">
+        {/* Media */}
+        <div className="path-card__media" style={{ position: "relative" }}>
+          <MediaPlaceholder
+            aspect="16/10"
+            tone={path.tone}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="path-card__content">
+          <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--accent)", marginBottom: 14 }}>
+            {path.num} · {path.kicker}
+          </div>
+          <h3 className="path-card__title">
+            {path.title}
+          </h3>
+          <p style={{ fontSize: 15, color: "var(--ink-2)", marginBottom: 22, textWrap: "pretty" }}>
+            {path.body}
+          </p>
+
+          <ul style={{ listStyle: "none", marginBottom: 28, display: "flex", flexDirection: "column", gap: 10 }}>
+            {path.bullets.map((b, i) => (
+              <li key={i} style={{
+                display: "flex", gap: 12, alignItems: "baseline",
+                fontSize: 15, color: "var(--ink-2)",
+                paddingBottom: 10,
+                borderBottom: "1px solid var(--rule-soft)",
+              }}>
+                <span style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", color: "var(--accent)", minWidth: 20 }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+
+          {showPlanState && plan.status === "generating" && (
+            <div className="path-card__plan-status path-card__plan-status--gen" role="status">
+              <span className="plan-gen-bar__spinner" style={{ width: 14, height: 14, borderWidth: 2 }} aria-hidden="true" />
+              方案生成中，请稍候…
+            </div>
+          )}
+          {showPlanState && plan.status === "ready" && (
+            <div className="path-card__plan-status" role="status">
+              ✓ 你的 AI 学习方案已就绪
+            </div>
+          )}
+
+          <div className="path-card__cta-row">
+            <DripAnchor
+              side="end"
+              drip={
+                isPath02 ? (
+                  <>
+                    <NoteDrip
+                      inline
+                      title="路径02 · AI 学习方案"
+                      body={"【入口】路径 02 主 CTA → 落地页内嵌弹窗（非外链）\n\n【流程】\n1. 上传 1–2 PDF（≤5MB，任意 PDF）\n2. 异步生成（目标 ≤1 分钟；Demo ~12 秒）\n3. 等待中可关弹窗；当前会话完成 → 自动弹结果\n4. 回访/刷新 → 不自动弹，显示「查看我的方案」\n5. 再次生成 → 覆盖确认；生成中 → toast 拦截\n\n【存储】账号绑定；服务端保留 3 份历史（Demo 仅当前一份）"}
+                      prd={["§2.2 功能 5.1"]}
+                      docs={["prd", "todo"]}
+                    />
+                    <TodoDrip inline todoId="T-012" />
+                    <TodoDrip inline todoId="T-013" />
+                    <TodoDrip inline todoId="T-014" />
+                    <TodoDrip inline todoId="T-002" />
+                  </>
+                ) : (
+                  <TodoDrip inline todoId="T-002" />
+                )
+              }
+            >
+              <button
+                type="button"
+                className="btn btn--ink"
+                onClick={() => requireAuthForPath(index)}
+              >
+                {path.cta}
+              </button>
+            </DripAnchor>
+            {showPlanState && plan.status === "ready" && (
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={viewPlan}
+              >
+                查看我的方案 →
+              </button>
+            )}
+          </div>
+
+          {/* WeChat contact card */}
+          <div className="path-card__wechat" role="group" aria-label="微信咨询">
+            <div className="path-card__wechat-qr">
+              <img
+                src="https://www.figma.com/api/mcp/asset/fdc3433d-07fa-440b-ab58-386c8057a4f6"
+                alt=""
+                loading="lazy"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+              />
+            </div>
+            <div className="path-card__wechat-body">
+              <div className="path-card__wechat-kicker">微信 · 扫码咨询</div>
+              <div className="path-card__wechat-text">详情添加老师咨询</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ConversionPaths({ highlightIdx }) {
+  return (
+    <div id="paths" style={{ position: "relative" }}>
+      <section className="section" style={{ paddingBottom: 0 }}>
+        {/* Intro head */}
+        <div className="section__head section__head--center" style={{ paddingBottom: 48 }}>
+          <DripAnchor
+            side="end"
+            block
+            style={{ margin: "0 auto" }}
+            drip={
+              <NoteDrip
+                inline
+                title="六大学习路径"
+                body={"【结构】6 条路径 ↔ 6 张痛点卡（hookIdx 一一对应）\n· 索引条 01–06 + 详情区媒体/文案交替\n· 匹配后：索引 + 详情背景高亮（无「推荐给你」角标）\n\n【CTA】\n· 路径 02：内嵌 AI 方案弹窗\n· 其余 5 条：deep link（T-002）\n· 全部须登录拦截（见导航登录按钮旁标注）\n\n【其他】\n· 每条：主 CTA + 微信咨询卡\n· 右上角「回到路径选择」→ #pain"}
+                prd={["§2.2 功能 5", "§4.2 路径高亮状态机"]}
+                docs={["prd", "todo"]}
+              />
+            }
+          >
+            <h2 className="section__label">学习路径</h2>
+          </DripAnchor>
+          <p className="section__title" style={{ maxWidth: 680 }}>
+            一条路线，对应一种学习状态。
+          </p>
+          <p className="section__sub" style={{ marginTop: 18, textAlign: "center", maxWidth: 680 }}>
+            不需要把六条全部看完。如果你在上面完成了匹配，我们已经把最相关的一条标好了。
+          </p>
+        </div>
+
+        {/* Path index */}
+        <DripAnchor
+          side="end"
+          block
+          style={{ width: "100%" }}
+          drip={
+            <>
+              <NoteDrip
+                inline
+                title="BC GrowingIO 埋点"
+                body={"【强制】GrowingIO Web JS SDK 4.x\n\n【归因】保留 utm_* 与 ut；gdp('identify', ut) 全页仅一次\n\n【转化】\ngdp('track', 'tracker_btn_click', { btn_id })\n含路径 02 专项 btn_id（见 PRD §4.3.1）\n\n【联调】杨效鲁 Yang.Xiaolu@britishcouncil.org.cn\n凭证 → T-010 · 清单验收 → T-011"}
+                prd={["§4.3.1 BC 合作埋点"]}
+                docs={["prd", "tracking", "todo"]}
+                links={[{ label: "BC 对接邮箱", href: "mailto:Yang.Xiaolu@britishcouncil.org.cn" }]}
+              />
+              <TodoDrip inline todoId="T-010" />
+              <TodoDrip inline todoId="T-011" />
+            </>
+          }
+        >
+          <div className="path-index">
+            {PATHS.map((p, i) => {
+              const hi = i === highlightIdx;
+              return (
+                <a
+                  key={i}
+                  href={`#path-${i}`}
+                  className={`path-index__item${hi ? " is-highlight" : ""}`}
+                >
+                  <div className="path-index__num">{p.num}</div>
+                  <div className="path-index__label">{p.kicker}</div>
+                </a>
+              );
+            })}
+          </div>
+        </DripAnchor>
+      </section>
+
+      {PATHS.map((p, i) => (
+        <PathCard key={i} path={p} index={i} highlight={i === highlightIdx} />
+      ))}
+
+    </div>
+  );
+}
+
+/* ============================================================
+   Proof + CTA + Footer
+   ============================================================ */
+
+const TESTIMONIALS = [
+  {
+    name: "Cecilia Z.", role: "申请伦敦大学学院硕士",
+    before: "6.0", after: "7.5", weeks: 8,
+    quote: "上课每周都被老师虐得好爽，被逼着把思路想清楚然后完整写出来，但成绩也就这样慢慢提上来了。",
+    avatar: "https://www.figma.com/api/mcp/asset/b33bcd75-0128-4a52-9c74-e00d02b6028a",
+  },
+  {
+    name: "Jason H.", role: "澳洲技术移民",
+    before: "6.5", after: "8.0", weeks: 12,
+    quote: "我时间特别紧,AI 学习计划每天告诉我 45 分钟该做什么。没有一天浪费在不知道写什么上。",
+    avatar: "https://www.figma.com/api/mcp/asset/feb73d89-df43-4956-8067-b743bf40a3cc",
+  },
+  {
+    name: "Mei R.", role: "国内大三在读",
+    before: "5.5", after: "7.0", weeks: 16,
+    quote: "人工精批报告第一次让我看到自己的句子到底哪里不地道——那种反馈是任何题库都给不了的。",
+    avatar: "https://www.figma.com/api/mcp/asset/d6edaf76-0a8b-4cde-8048-80c6c371a104",
+  },
+];
+
+function Proof() {
+  return (
+    <section id="proof" className="section">
+      <div className="section__head section__head--stack">
+        <DripAnchor
+          side="end"
+          block
+          drip={
+            <NoteDrip
+              inline
+              title="学员故事"
+              body={"【布局】3 列案例卡（Mobile 单列）\n\n【每张含】\n· 入学分（删除线）→ 实考出分（强调）\n· 学习周期：N周\n· 用户引言 + 脱敏姓名 + 身份\n\n【内容】Cecilia / Jason / Mei 三例\n营销表述与提分数据已确认可用（PRD §9.3）"}
+              prd={["§2.2 功能 6"]}
+              docs={["prd"]}
+            />
+          }
+        >
+          <h2 className="section__label">学员故事</h2>
+        </DripAnchor>
+        <p className="section__title">
+          真实反馈，不加修饰
+        </p>
+        <p className="section__sub" style={{ marginTop: 18 }}>
+            三个不同的学员,三种不同的路径,一个共同点:他们都把写作当成可练习的能力,而不是碰运气的考试。
+          </p>
+      </div>
+
+      <div className="proof-grid">
+        {TESTIMONIALS.map((t, i) => (
+          <div key={i} className="proof-card">
+            <div className="proof-scores">
+              <div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)", color: "var(--ink-3)", marginBottom: 4 }}>入学分</div>
+                <div style={{ fontSize: 40, fontWeight: 400, color: "var(--ink-4)", textDecoration: "line-through", textDecorationColor: "var(--accent)" }}>
+                  {t.before}
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  background: "var(--accent-wash)",
+                  color: "var(--accent)",
+                  flexShrink: 0,
+                  marginBottom: 4,
+                }}
+                aria-hidden="true"
+              >
+                <Arrow size={22} />
+              </div>
+              <div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)", color: "var(--accent)", marginBottom: 4 }}>实考出分</div>
+                <div style={{ fontSize: 56, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1 }}>{t.after}</div>
+              </div>
+              <div className="proof-scores__cycle">
+                学习周期：{t.weeks}周
+              </div>
+            </div>
+
+            <div style={{ height: 1, background: "var(--rule-soft)" }} />
+
+            <blockquote style={{ fontFamily: "var(--serif)", fontSize: 18, lineHeight: 1.45, fontStyle: "italic", color: "var(--ink-2)", textWrap: "pretty", flex: 1 }}>
+              "{t.quote}"
+            </blockquote>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 12, paddingTop: 14, borderTop: "1px dashed var(--rule)" }}>
+              <img src={t.avatar} alt={t.name} style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600 }}>{t.name}</div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)", color: "var(--ink-3)", letterSpacing: "0.06em", textTransform: "uppercase" }}>{t.role}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="site-footer">
+      <div className="site-footer__bar">
+        <div className="site-footer__links">
+          <div className="site-footer__link-item">
+            <DripAnchor
+              side="end"
+              drip={
+                <>
+                  <NoteDrip
+                    inline
+                    title="页脚"
+                    body={"对齐 igopx.cn 主站 Footer：\n\n【视觉】全宽深色背景图\n· 含「我们的官方账号」六图标\n· 含「联系我们」客服二维码\n\n【左栏文案】\n· 雅思就要 躺着学\n· 主办单位 / 地址 / ICP（链至 beian.miit.gov.cn）\n\n【联名】BC Logo 仅在导航区；页脚不重复"}
+                    prd={["§2.2 功能 7", "§2.1 联名标识"]}
+                    docs={["prd"]}
+                    links={[{ label: "躺着学主站", href: "https://igopx.cn/index" }]}
+                  />
+                  <TodoDrip inline todoId="T-008" />
+                </>
+              }
+            >
+              <span className="site-footer__name">雅思就要 躺着学</span>
+            </DripAnchor>
+          </div>
+          <div className="site-footer__link-item">
+            <span className="site-footer__label">主办单位名称: </span>
+            <span>杭州天目躺云科技有限公司</span>
+          </div>
+          <div className="site-footer__link-item">
+            <span className="site-footer__label">地址: </span>
+            <span>杭州市西溪路528号新通教育集团总部大厦</span>
+          </div>
+          <div className="site-footer__link-item">
+            <span className="site-footer__label">ICP备案/许可证号: </span>
+            <a href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">浙ICP备2026003261号-1</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ============================================================
+   Left flow axis (journey tracker)
+   ============================================================ */
+
+const FLOW_MAIN_STEPS = [
+  { id: "hero", label: "公开课" },
+  { id: "pain", label: "问题匹配" },
+  { id: "paths", label: "学习路径" },
+  { id: "proof", label: "学员故事" },
+];
+
+function buildFlowTrackItems() {
+  const items = [
+    { id: "hero" },
+    { id: "pain" },
+    { id: "paths" },
+    ...PATHS.map((_, i) => ({ id: `path-${i}` })),
+    { id: "proof" },
+  ];
+  return items;
+}
+
+function getScrollAnchorOffset() {
+  const nav = document.querySelector(".nav");
+  return Math.ceil(nav?.getBoundingClientRect().height ?? 88) + 4;
+}
+
+function getFlowSection(id) {
+  if (id === "paths") return document.getElementById("paths");
+  return document.querySelector(`section#${CSS.escape(id)}`);
+}
+
+function getSectionDocTop(el) {
+  return window.scrollY + el.getBoundingClientRect().top;
+}
+
+function scrollToSection(id) {
+  const el = getFlowSection(id);
+  if (!el) return;
+  const top = getSectionDocTop(el) - getScrollAnchorOffset();
+  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+}
+
+function FlowAxis() {
+  const [activeId, setActiveId] = useState("hero");
+  const trackItems = useMemo(() => buildFlowTrackItems(), []);
+
+  useEffect(() => {
+    const update = () => {
+      const marker = window.scrollY + getScrollAnchorOffset() + 8;
+      let current = trackItems[0].id;
+      for (const item of trackItems) {
+        const el = getFlowSection(item.id);
+        if (el && getSectionDocTop(el) <= marker) current = item.id;
+      }
+      setActiveId(current);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [trackItems]);
+
+  const activeIndex = Math.max(0, trackItems.findIndex(s => s.id === activeId));
+  const progressPct = trackItems.length <= 1
+    ? 0
+    : (activeIndex / (trackItems.length - 1)) * 100;
+
+  const pathActiveIndex = activeId.startsWith("path-") ? Number(activeId.replace("path-", "")) : -1;
+
+  function stepState(stepId) {
+    if (stepId === "paths") {
+      if (activeId === "paths") return "is-active";
+      if (pathActiveIndex >= 0) return "is-active-parent";
+      const pathsIndex = trackItems.findIndex(item => item.id === "paths");
+      if (pathsIndex >= 0 && pathsIndex < activeIndex) return "is-done";
+      return "";
+    }
+    if (activeId === stepId) return "is-active";
+    const stepTrackIndex = trackItems.findIndex(item => item.id === stepId);
+    if (stepTrackIndex >= 0 && stepTrackIndex < activeIndex) return "is-done";
+    return "";
+  }
+
+  return (
+    <nav className="flow-axis" aria-label="页面导航">
+      <div className="flow-axis__inner">
+        <div className="flow-axis__track">
+          <div className="flow-axis__rail" aria-hidden="true" />
+          <div className="flow-axis__progress" style={{ height: `${progressPct}%` }} aria-hidden="true" />
+          {FLOW_MAIN_STEPS.map((step) => {
+            const state = stepState(step.id);
+            return (
+              <React.Fragment key={step.id}>
+                <button
+                  type="button"
+                  className={`flow-axis__step${state ? ` ${state}` : ""}`}
+                  onClick={() => scrollToSection(step.id)}
+                  aria-current={state === "is-active" ? "step" : undefined}
+                >
+                  <span className="flow-axis__dot" aria-hidden="true" />
+                  <span className="flow-axis__label">{step.label}</span>
+                </button>
+                {step.id === "paths" && (
+                  <div className="flow-axis__subs" aria-label="学习路径子项">
+                    {PATHS.map((p, pi) => {
+                      const subId = `path-${pi}`;
+                      const subActive = activeId === subId;
+                      const subDone = pathActiveIndex >= 0 && pi < pathActiveIndex;
+                      return (
+                        <button
+                          key={subId}
+                          type="button"
+                          className={`flow-axis__sub-step${subActive ? " is-active" : ""}${subDone ? " is-done" : ""}`}
+                          data-path-index={pi}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            scrollToSection(subId);
+                          }}
+                          aria-current={subActive ? "step" : undefined}
+                        >
+                          <span className="flow-axis__sub-dot" aria-hidden="true" />
+                          <span className="flow-axis__sub-label">{p.num} · {p.kicker}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+/* ============================================================
+   App root
+   ============================================================ */
+
+const TWEAK_DEFAULTS = {
+  painPattern: "A",
+  accent: "#1e5fd6",
+  highlightPath: -1,
+  darkMode: false,
+};
+
+function TweakField({ label, children }) {
+  return (
+    <div>
+      <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-3)", marginBottom: 8 }}>
+        {label}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function App() {
+  const { openLogin, isLoggedIn, setLoggedInDemo } = useAuth();
+  const { resetPlanDemo, simulateReadyPlan, plan } = usePath02Plan();
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [matchHookIdx, setMatchHookIdx] = useState(TWEAK_DEFAULTS.highlightPath);
+  const [pathToast, setPathToast] = useState("");
+
+  useEffect(() => {
+    const onPathCta = (e) => {
+      const idx = e.detail?.index;
+      if (idx === PATH02_INDEX) return;
+      const label = (e.detail?.label || "").replace(/\s*→\s*$/, "");
+      setPathToast(`登录成功，即将跳转至：${label}`);
+    };
+    window.addEventListener("path-cta-success", onPathCta);
+    return () => window.removeEventListener("path-cta-success", onPathCta);
+  }, []);
+
+  useEffect(() => {
+    if (!pathToast) return;
+    const t = setTimeout(() => setPathToast(""), 3500);
+    return () => clearTimeout(t);
+  }, [pathToast]);
+
+  useEffect(() => {
+    const onTweak = (e) => {
+      setTweaks(prev => ({ ...prev, ...e.detail }));
+    };
+    window.addEventListener("tweak-set", onTweak);
+    return () => window.removeEventListener("tweak-set", onTweak);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--accent", tweaks.accent);
+  }, [tweaks.accent]);
+
+  useEffect(() => {
+    if (tweaks.darkMode) {
+      document.documentElement.style.setProperty("--paper", "#17130c");
+      document.documentElement.style.setProperty("--paper-2", "#221c12");
+      document.documentElement.style.setProperty("--paper-3", "#2c2519");
+      document.documentElement.style.setProperty("--ink", "#f5eadb");
+      document.documentElement.style.setProperty("--ink-2", "#d5c8b3");
+      document.documentElement.style.setProperty("--ink-3", "#9a8c74");
+      document.documentElement.style.setProperty("--ink-4", "#6f6451");
+      document.documentElement.style.setProperty("--rule", "#3b3222");
+      document.documentElement.style.setProperty("--rule-soft", "#2c2519");
+    } else {
+      ["--paper","--paper-2","--paper-3","--ink","--ink-2","--ink-3","--ink-4","--rule","--rule-soft"].forEach(v =>
+        document.documentElement.style.removeProperty(v)
+      );
+    }
+  }, [tweaks.darkMode]);
+
+  function update(edits) {
+    setTweaks(prev => ({ ...prev, ...edits }));
+  }
+
+  function onMatch(p) {
+    if (p) setMatchHookIdx(p.hookIdx);
+  }
+
+  const hi = matchHookIdx >= 0 ? matchHookIdx : (tweaks.highlightPath >= 0 ? tweaks.highlightPath : -1);
+
+  return (
+    <>
+      <FlowAxis />
+      {/* NAV */}
+      <nav className="nav" style={{ position: "relative" }}>
+        <div className="page nav__bar" style={{ width: "100%" }}>
+          <DripAnchor
+            side="end"
+            drip={<TodoDrip inline todoId="T-008" />}
+          >
+            <div className="nav__brand">
+              <img src="https://www.figma.com/api/mcp/asset/45db55a0-f228-4b59-8adc-5a74294d43a0" alt="躺着学" />
+            </div>
+          </DripAnchor>
+          <div className="nav__links">
+            <a href="#hero">公开课</a>
+            <a href="#pain">我的提分需求</a>
+            <a href="#paths">学习路径</a>
+            <a href="#proof">学员故事</a>
+            <NoteDrip
+              inline
+              title="导航 · IA"
+              body={"【Sticky 导航】4 个锚点：\n#hero 公开课 · #pain 我的提分需求\n#paths 学习路径 · #proof 学员故事\n\n【左侧流程轴 · Desktop ≥1280px】\n4 主步 + 学习路径下 6 条子项；滚动追踪 + 点击跳转\n<1280px 隐藏，依赖顶部锚点"}
+              prd={["§2.1 页面 IA"]}
+              docs={["prd"]}
+            />
+          </div>
+          <DripAnchor
+            side="end"
+            drip={
+              <>
+                <NoteDrip
+                  inline
+                  title="登录 / 注册"
+                  body={"【触发】导航按钮 或 任一路径 CTA（未登录）\n\n【弹窗】\n· 注册权益横幅：7 天 SVIP（￥99）\n· 「SVIP」可点开会员介绍弹窗\n· 路径 CTA 触发时显示「登录后继续：{CTA 文案}」\n\n【成功后】\n· 路径 02 → AI 方案弹窗\n· 其余 → deep link\n\n【规则】本页新注册自动送 7 天 SVIP；须携带来源标识\nDemo：点击登录/注册即模拟鉴权"}
+                  prd={["§2.2 功能 5", "§2.2 路径 CTA 登录拦截"]}
+                  docs={["prd", "todo"]}
+                />
+                <TodoDrip inline todoId="T-006" />
+              </>
+            }
+          >
+            <button type="button" className="nav__cta" onClick={() => openLogin()}>
+              {isLoggedIn ? "已登录" : "登录/注册"}
+            </button>
+          </DripAnchor>
+        </div>
+      </nav>
+
+      <main className="page">
+        <Hero />
+        <PainPointsSection pattern={tweaks.painPattern} onMatch={onMatch} />
+      </main>
+
+      <div className="page">
+        <ConversionPaths highlightIdx={hi} />
+        <Proof />
+      </div>
+
+      <Footer />
+
+      {/* Tweaks toggle button — 原型调试，生产环境移除 */}
+      <div
+        style={{
+          position: "fixed", right: 20, bottom: panelOpen ? 420 : 20,
+          zIndex: 1001,
+          transition: "bottom 200ms ease",
+        }}
+      >
+        <DripAnchor
+          side="top"
+          drip={
+            <NoteDrip
+              inline
+              title="Tweaks 调试面板"
+              body={"⚠️ Demo 专用 · 正式版必须移除\n\n【功能】\n· 切换痛点模式 A/B\n· 切换强调色 / 深色模式\n· 手动指定高亮路径\n· 路径 02：模拟方案已就绪 / 重置\n\n【注意】A/B 切换应保留在「问题匹配」正文内，不依赖本面板"}
+              prd={["§2.3 辅助功能", "§8.1 MVP"]}
+              docs={["prd"]}
+            />
+          }
+        >
+          <button
+            onClick={() => setPanelOpen(v => !v)}
+            style={{
+              width: 44, height: 44, borderRadius: "50%",
+              background: "var(--ink)", color: "var(--paper)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+              fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)",
+            }}
+            title="Tweaks（原型调试 · 生产移除）"
+          >
+            ⚙
+          </button>
+        </DripAnchor>
+      </div>
+
+      {/* TWEAKS PANEL */}
+      {panelOpen && (
+        <div style={{
+          position: "fixed", right: 20, bottom: 20,
+          width: 320,
+          background: "var(--paper)",
+          border: "1px solid var(--ink)",
+          boxShadow: "0 20px 50px rgba(0,0,0,0.18)",
+          fontFamily: "var(--sans)",
+          zIndex: 1000,
+          borderRadius: 12,
+          overflow: "hidden",
+        }}>
+          <div style={{
+            padding: "14px 18px",
+            background: "var(--ink)", color: "var(--paper)",
+            display: "flex", justifyContent: "space-between", alignItems: "center",
+          }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", letterSpacing: "0.16em", textTransform: "uppercase" }}>
+              调试面板
+            </div>
+            <button onClick={() => setPanelOpen(false)} style={{ color: "var(--paper)", fontSize: 18, lineHeight: 1 }}>×</button>
+          </div>
+          <div style={{ padding: 18, display: "flex", flexDirection: "column", gap: 20 }}>
+            <TweakField label="痛点模式">
+              <div style={{ display: "flex", gap: 0, border: "1px solid var(--rule)", borderRadius: 8, overflow: "hidden" }}>
+                {["A", "B"].map(k => (
+                  <button key={k}
+                    onClick={() => update({ painPattern: k })}
+                    style={{
+                      flex: 1, padding: "8px 0",
+                      fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", letterSpacing: "0.1em",
+                      background: tweaks.painPattern === k ? "var(--ink)" : "transparent",
+                      color: tweaks.painPattern === k ? "var(--paper)" : "var(--ink)",
+                      borderRight: k === "A" ? "1px solid var(--rule)" : "none",
+                    }}>
+                    {k === "A" ? "A · 选卡" : "B · 问卷"}
+                  </button>
+                ))}
+              </div>
+            </TweakField>
+
+            <TweakField label="强调色">
+              <div style={{ display: "flex", gap: 8 }}>
+                {[["#1e5fd6","蓝色"],["#143f99","深蓝"],["#2b6cb0","钢蓝"],["#0a3d62","藏青"],["#c9580c","赤陶"]].map(([c, name]) => (
+                  <button key={c}
+                    onClick={() => update({ accent: c })}
+                    title={name}
+                    style={{
+                      width: 32, height: 32,
+                      background: c,
+                      border: tweaks.accent === c ? "2px solid var(--ink)" : "1px solid var(--rule)",
+                      cursor: "pointer",
+                      borderRadius: 6,
+                    }}
+                  />
+                ))}
+              </div>
+            </TweakField>
+
+            <TweakField label="高亮路径">
+              <select
+                value={tweaks.highlightPath}
+                onChange={e => { const v = Number(e.target.value); update({ highlightPath: v }); setMatchHookIdx(v); }}
+                style={{ width: "100%", padding: "8px 10px", fontFamily: "var(--sans)", fontSize: 13, border: "1px solid var(--rule)", background: "var(--paper)", color: "var(--ink)", borderRadius: 8 }}>
+                <option value={-1}>无</option>
+                <option value={0}>01 · 课程学习</option>
+                <option value={1}>02 · 专属提分方案</option>
+                <option value={2}>03 · 互动 SVIP</option>
+                <option value={3}>04 · AI 计划</option>
+                <option value={4}>05 · 学习营</option>
+                <option value={5}>06 · 人工精批</option>
+              </select>
+            </TweakField>
+
+            <TweakField label="深色模式">
+              <button
+                onClick={() => update({ darkMode: !tweaks.darkMode })}
+                style={{
+                  width: 50, height: 26, padding: 2,
+                  background: tweaks.darkMode ? "var(--accent)" : "var(--rule)",
+                  borderRadius: 999,
+                  position: "relative",
+                  transition: "background 160ms ease",
+                }}>
+                <div style={{
+                  width: 22, height: 22, borderRadius: "50%",
+                  background: "var(--paper)",
+                  transform: tweaks.darkMode ? "translateX(24px)" : "translateX(0)",
+                  transition: "transform 180ms ease",
+                }} />
+              </button>
+            </TweakField>
+
+            <TweakField label="模拟已登录">
+              <button
+                type="button"
+                onClick={() => setLoggedInDemo(!isLoggedIn)}
+                style={{
+                  width: "100%", padding: "8px 10px",
+                  fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
+                  border: "1px solid var(--rule)", borderRadius: 8,
+                  background: isLoggedIn ? "var(--accent-wash)" : "var(--paper)",
+                  color: isLoggedIn ? "var(--accent-ink)" : "var(--ink)",
+                }}
+              >
+                {isLoggedIn ? "已登录 · 点击退出" : "未登录 · 点击模拟登录"}
+              </button>
+            </TweakField>
+
+            <TweakField label="路径02 方案 Demo">
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <button
+                  type="button"
+                  onClick={simulateReadyPlan}
+                  style={{
+                    width: "100%", padding: "8px 10px",
+                    fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
+                    border: "1px solid var(--rule)", borderRadius: 8,
+                    background: plan.status === "ready" ? "var(--accent-wash)" : "var(--paper)",
+                    color: "var(--ink)",
+                  }}
+                >
+                  模拟方案已就绪
+                </button>
+                <button
+                  type="button"
+                  onClick={resetPlanDemo}
+                  style={{
+                    width: "100%", padding: "8px 10px",
+                    fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
+                    border: "1px solid var(--rule)", borderRadius: 8,
+                    background: "var(--paper)", color: "var(--ink-3)",
+                  }}
+                >
+                  重置路径02 方案状态
+                </button>
+              </div>
+            </TweakField>
+          </div>
+        </div>
+      )}
+
+      {pathToast && (
+        <div className="auth-toast" role="status">{pathToast}</div>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <DripProvider>
+    <AuthProvider>
+      <Path02PlanProvider>
+        <App />
+        <DripToolbar />
+      </Path02PlanProvider>
+    </AuthProvider>
+  </DripProvider>
+);
+</script>
+</body>
+</html>
