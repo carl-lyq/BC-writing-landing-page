@@ -2122,8 +2122,15 @@ body {
 .path-card--media-left .path-card__content { order: 2; }
 .path-card--media-right .path-card__media { order: 2; }
 .path-card--media-right .path-card__content { order: 1; padding-left: 8px; }
+.path-card__media > .proto-anchor {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+}
+.path-card__media > .proto-anchor > div:first-child,
 .path-card__media > div {
   aspect-ratio: 870 / 544 !important;
+  width: 100%;
 }
 .path-card__media .media-ph__stripe,
 .path-card__media .media-ph__label {
@@ -3140,15 +3147,19 @@ button.path-card__wechat {
   box-shadow: 0 12px 40px rgba(11, 31, 58, 0.28);
   animation: toast-in 280ms var(--ease-out-quint) both;
 }
-.svip-modal__list {
+.svip-modal__figure {
   margin: 0;
-  padding-left: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: var(--text-ui);
-  color: var(--ink-2);
-  line-height: 1.5;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--rule-soft);
+  background: var(--paper-2);
+}
+.svip-modal__image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
 }
 
 .plan-modal-backdrop {
@@ -4448,9 +4459,9 @@ function useClickMotionFeedback() {
    ============================================================ */
 
 const DOC_LINKS = {
-  prd: { label: "BC落地页PRD_UI更新.md", href: "./docs/BC落地页PRD_UI更新.md" },
+  prd: { label: "BC落地页PRD_6.5.md", href: "../BC落地页PRD_6.5.md" },
   todo: { label: "BC落地页ToDo.md", href: "../BC落地页ToDo.md" },
-  tracking: { label: "Partner_LandingPage_Tracking_Guide.pdf", href: "./docs/Partner_LandingPage_Tracking_Guide.pdf" },
+  tracking: { label: "Partner_LandingPage_Tracking_Guide.pdf", href: "../Partner_LandingPage_Tracking_Guide.pdf" },
   html: { label: "UI/index.html（交付页）", href: "./index.html" },
 };
 
@@ -4519,7 +4530,7 @@ const PAGE_TODOS = {
   },
   "T-016": {
     title: "路径区视觉素材",
-    detail: "待设计/运营提供：\n· 路径 01–06 详情媒体图各 1 张（16:10）\n· 微信咨询二维码（咨询卡缩略 + 弹窗大图，6 路径共用）\n\nDemo 占位：homepage-banner-790x494.png · wechat-consult-qr.png",
+    detail: "正式版仍待设计/运营：\n· 路径 01–06 详情媒体图各 1 张（16:10）\n· 微信咨询二维码（咨询卡缩略 + 弹窗大图，6 路径共用）\n\nDemo 已占位：path-banner-01.png … path-banner-06.png · wechat-consult-qr.png",
     owner: "设计/运营", status: "待提供", blocker: "路径区正式视觉 / 私域转化",
     prd: ["§2.2 功能 5"],
   },
@@ -5610,6 +5621,15 @@ function PainPointsSection({ pattern, onMatch }) {
    Conversion Paths
    ============================================================ */
 
+const PATH_BANNER_SRC = [
+  "./assets/path-banner-01.png",
+  "./assets/path-banner-02.png",
+  "./assets/path-banner-03.png",
+  "./assets/path-banner-04.png",
+  "./assets/path-banner-05.png",
+  "./assets/path-banner-06.png",
+];
+
 const PATHS = [
   {
     num: "01", kicker: "课程学习路径", indexLabel: "名师课程学习",
@@ -5731,15 +5751,23 @@ function SvipIntroModal() {
           <button type="button" className="auth-modal__close" onClick={closeSvip} aria-label="关闭">×</button>
         </div>
         <div className="auth-modal__body">
-          <p style={{ fontSize: 14, color: "var(--ink-2)", lineHeight: 1.55 }}>
-            SVIP 是躺着学平台的全功能会员档位，覆盖写作、听说读写全科互动学习与 AI 工具。
-          </p>
-          <ul className="svip-modal__list">
-            <li>互动课堂与 CPITS 智能体双师模式</li>
-            <li>全科题库、模考与 AI 学习计划</li>
-            <li>会员专属内容与学习数据报告</li>
-            <li>新用户注册可享 <strong>7 天 SVIP</strong> 体验（价值 ¥99）</li>
-          </ul>
+          <DripAnchor
+            side="end"
+            block
+            drip={
+              <NoteDrip
+                inline
+                title="SVIP 会员权益长图"
+                body={"【正式】复用主站 SVIP 弹窗 + 主站会员权益长图（可滚动）\n\n【Demo】`会员权益-gpt.jpg` 纵向长图占位\n· 表头：会员等级\n· 题库：完整题库（仅 SVIP ✓）\n· 有权益金色 ✓ / 无权益灰色 ✗"}
+                prd={["§2.2 功能 5 · SVIP 会员权益弹窗"]}
+                docs={["prd"]}
+              />
+            }
+          >
+            <figure className="svip-modal__figure">
+              <img className="svip-modal__image" src="./assets/会员权益-gpt.jpg" alt="会员权益" />
+            </figure>
+          </DripAnchor>
           <button type="button" className="btn btn--ink" style={{ width: "100%" }} onClick={closeSvip}>我知道了</button>
         </div>
       </div>
@@ -6821,12 +6849,13 @@ function PathCard({ path, index, highlight, onWechatClick }) {
         <div className="path-card__media" style={{ position: "relative" }}>
           <DripAnchor
             side="end"
+            block
             drip={<TodoDrip inline todoId="T-016" />}
           >
             <MediaPlaceholder
               aspect="16/10"
               tone={path.tone}
-              imageSrc="./assets/homepage-banner-790x494.png"
+              imageSrc={PATH_BANNER_SRC[index]}
             />
           </DripAnchor>
         </div>
@@ -6990,7 +7019,7 @@ function ConversionPaths({ highlightIdx }) {
               <NoteDrip
                 inline
                 title="六大学习路径"
-                body={"【结构】6 路径 ↔ 6 痛点卡（hookIdx）\n· 媒体区按索引奇偶左右交替\n· 匹配后索引 + 详情高亮\n\n【CTA】02 方案弹窗；04 微信弹窗；01/03/05/06 主站 deep link\n【咨询】扫码咨询卡 → 联名弹窗\n【素材】6 路径图 + 微信 QR → T-016"}
+                body={"【结构】6 路径 ↔ 6 痛点卡（hookIdx）\n· 媒体区按索引奇偶左右交替\n· 匹配后索引 + 详情高亮\n\n【CTA】02 方案弹窗；04 微信弹窗；01/03/05/06 主站 deep link\n【咨询】扫码咨询卡 → 联名弹窗\n【Demo 媒体】path-banner-01…06（05 主标题 AI个性化学习日历）\n【正式素材】路径图 + 微信 QR → T-016"}
                 prd={["§2.2 功能 5"]}
                 docs={["prd", "todo"]}
               />
@@ -7562,7 +7591,7 @@ function App() {
                   <NoteDrip
                     inline
                     title="登录 / 注册"
-                        body={"【触发】本按钮 或 路径 01/02/03/05/06 CTA（未登录）→ 网关弹窗\n\n【网关】登录 → 主站登录窗口；注册 → 主站注册窗口\n\n【SVIP】权益文案可点 → 主站会员权益长图\n\n【例外】路径 04 → 微信弹窗\n\n【新注册】学生来源 = BC落地页"}
+                        body={"【触发】本按钮 或 路径 01/02/03/05/06 CTA（未登录）→ 网关弹窗\n\n【网关】登录 → 主站登录窗口；注册 → 主站注册窗口\n\n【SVIP】权益文案可点 → 会员权益长图（Demo：`会员权益-gpt.jpg`）\n\n【例外】路径 04 → 微信弹窗\n\n【新注册】学生来源 = BC落地页"}
                     prd={["§2.2 路径 CTA 登录拦截", "§4.2 注册来源落库"]}
                     docs={["prd", "todo"]}
                   />
