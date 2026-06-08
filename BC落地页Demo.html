@@ -2152,7 +2152,7 @@ const { useState, useEffect, useRef, useMemo, createContext, useContext, useCall
 const DOC_LINKS = {
   prd: { label: "BC落地页PRD.md", href: "./BC落地页PRD.md" },
   todo: { label: "TODO.md", href: "./TODO.md" },
-  tracking: { label: "Partner_LandingPage_Tracking_Guide.pdf", href: "./Partner_LandingPage_Tracking_Guide.pdf" },
+  tracking: { label: "3Ups_Partner_LandingPage_Tracking_Guide.pdf", href: "./3Ups_Partner_LandingPage_Tracking_Guide.pdf" },
   html: { label: "BC落地页Demo.html（本原型）", href: "./BC落地页Demo.html" },
 };
 
@@ -4222,7 +4222,7 @@ function ConversionPaths({ highlightIdx }) {
               <NoteDrip
                 inline
                 title="BC GrowingIO 埋点"
-                body={"【强制】GrowingIO Web JS SDK 4.x\n\n【归因】保留 utm_* 与 ut；gdp('identify', ut) 全页仅一次\n\n【转化】\ngdp('track', 'tracker_btn_click', { btn_id })\n含路径 02 专项 btn_id（见 PRD §4.3.1）\n\n【联调】杨效鲁 Yang.Xiaolu@britishcouncil.org.cn\n凭证 → T-010 · 清单验收 → T-011"}
+                body={"【强制】GrowingIO Web JS SDK 4.x\n\n【归因】保留 utm_* 与 ut；gdp('setUserId', ut) 全页仅一次\n· 紧跟 gdp('track', 'tracker_btn_click', { btn_id: 'set_user_id' })\n\n【转化】\ngdp('track', 'tracker_btn_click', { btn_id })\n含路径 02 专项 btn_id（见 PRD §4.3.1）\n\n【联调】杨效鲁 Yang.Xiaolu@britishcouncil.org.cn\n凭证 → T-010 · 清单验收 → T-011"}
                 prd={["§4.3.1 BC 合作埋点"]}
                 docs={["prd", "tracking", "todo"]}
                 links={[{ label: "BC 对接邮箱", href: "mailto:Yang.Xiaolu@britishcouncil.org.cn" }]}

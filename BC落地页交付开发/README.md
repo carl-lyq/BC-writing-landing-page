@@ -11,7 +11,9 @@ BC落地页交付开发/
 ├── BC落地页PRD_6.5.md                ← 开发验收唯一 PRD
 ├── BC落地页-开发交接.md              ← 开发立项必读
 ├── BC落地页ToDo.md                   ← 待办追踪
-├── Partner_LandingPage_Tracking_Guide.pdf  ← BC 埋点规范
+├── 3Ups_Partner_LandingPage_Tracking_Guide.pdf  ← BC 埋点规范（2026-06 更新版）
+├── BC埋点开发说明.md                            ← 埋点开发实现与联调指引
+├── BC落地页6.8补充/                             ← 6.8 批次图片素材 + 落位说明
 ├── BC备考平台logo/                   ← BC 品牌源文件（T-008）
 └── UI/                               ← 本地预览（站点根目录）
     ├── index.html                    ← UI/交互主参考（含水滴，生产剔除）
@@ -38,7 +40,7 @@ cd UI && python3 -m http.server 5175
 | **开发验收（唯一）** | `BC落地页PRD_6.5.md` + `UI/index.html` + `UI/assets/` |
 | 立项必读 | `BC落地页-开发交接.md` |
 | 阻塞项 | `BC落地页ToDo.md` |
-| BC 埋点 | `Partner_LandingPage_Tracking_Guide.pdf`（PRD §4.3.1 已展开） |
+| BC 埋点 | `BC埋点开发说明.md` + `3Ups_Partner_LandingPage_Tracking_Guide.pdf` |
 
 交付页水滴链接已指向上述包根文档，**不含**产品工作稿或多版本 PRD。
 

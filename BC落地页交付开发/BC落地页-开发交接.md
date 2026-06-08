@@ -27,7 +27,7 @@
 | `UI/assets/` | 静态图（Nav Logo、Hero Banner、**path-banner-01…06**、**会员权益-gpt.jpg**、页脚、学员头像、微信 QR 等） |
 | `UI/vendor/` | 本地 React/Babel，**仅预览**；生产替换为工程化方案 |
 | `BC落地页PRD_6.5.md` | **开发验收唯一 PRD**（产品 + 设计 + 交互 + 验收 + 埋点） |
-| `Partner_LandingPage_Tracking_Guide.pdf` | BC GrowingIO 埋点规范 |
+| `3Ups_Partner_LandingPage_Tracking_Guide.pdf` | BC GrowingIO 埋点规范（2026-06 更新版） |
 | `BC落地页ToDo.md` | 产品/运营/后端仍待补齐项 |
 
 **本地预览**（必须以 `UI/` 为站点根）：
@@ -133,12 +133,19 @@ cd UI && python3 -m http.server 5175
 
 教研须交付方案模版（T-012）；后端须实现上传/任务/PDF 导出（T-013）。
 
+### 5.3.1 6.8 补充素材（图片）
+
+正式素材见 [`BC落地页6.8补充/素材落位说明.md`](./BC落地页6.8补充/素材落位说明.md)：路径 Banner、分路径微信二维码（01/06 销售码，其余运营码）、SVIP 权益长图。复制到 `UI/assets/` 后生效。
+
 ### 5.4 BC GrowingIO 埋点（P0 · 合规 · T-010/T-011）
 
+**开发文档**：[`BC埋点开发说明.md`](./BC埋点开发说明.md)（实现细节、联调清单、自测用例）
+
 - 强制 **GrowingIO Web JS SDK 4.x**
-- 全页一次 `gdp('identify', ut)`（BC 引流 `ut` 参数）
+- 全页一次 `gdp('setUserId', ut)` + `gdp('track', 'tracker_btn_click', { btn_id: 'set_user_id' })`（BC 引流 `ut` 参数）
 - 转化统一 `gdp('track', 'tracker_btn_click', { btn_id })`
-- 完整 `btn_id` 清单见 PRD **§4.3.1**；须与 BC（杨效鲁）联调验收
+- **BC 验收 3 指标（已定）**：① SDK 自动 **PV + UV**；② 仅 6 路径主 CTA → `path_cta_01`…`06`；③ 本页弹窗内新注册 → `register_success`（跳转主站后注册不算）
+- 产品口径见 PRD **§4.3.1**；须与 BC（杨效鲁）联调验收
 - SDK 凭证（Account ID / Data Source ID）待 BC 提供（T-010）
 
 ### 5.5 Hero 视频与播放量（P1）
@@ -265,6 +272,6 @@ graph LR
 |------|------|
 | 完整需求 | [`BC落地页PRD_6.5.md`](./BC落地页PRD_6.5.md) |
 | 待办追踪 | [`BC落地页ToDo.md`](./BC落地页ToDo.md) |
-| BC 埋点对接 | Yang.Xiaolu@britishcouncil.org.cn · PRD §4.3.1 · [`Partner_LandingPage_Tracking_Guide.pdf`](./Partner_LandingPage_Tracking_Guide.pdf) |
+| BC 埋点对接 | Yang.Xiaolu@britishcouncil.org.cn · PRD §4.3.1 · [`3Ups_Partner_LandingPage_Tracking_Guide.pdf`](./3Ups_Partner_LandingPage_Tracking_Guide.pdf) |
 
 有问题先查 PRD 对应 § 的 **Given/When/Then** 验收标准；仍不明确则按 `BC落地页ToDo.md` 找负责人。

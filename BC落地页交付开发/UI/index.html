@@ -5,6 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>躺着学 · 雅思写作</title>
 
+<!-- GrowingIO Analytics WebJS SDK version 4 · BC §4.3.1 · Account/DataSource → T-010 -->
+<script>
+!(function(e, n, t, s) {
+  e[s] = e[s] || function() { (e[s].q = e[s].q || []).push(arguments); };
+  var script = n.createElement("script");
+  var firstScript = n.getElementsByTagName("script")[0];
+  script.async = true;
+  script.src = t;
+  if (firstScript && firstScript.parentNode) firstScript.parentNode.insertBefore(script, firstScript);
+  else n.head.appendChild(script);
+})(window, document, "https://assets.giocdn.com/sdk/webjs/gdp.js", "gdp");
+window.BC_GIO_CONFIG = window.BC_GIO_CONFIG || { accountId: "", dataSourceId: "" };
+(function() {
+  var cfg = window.BC_GIO_CONFIG;
+  if (cfg.accountId && cfg.dataSourceId && typeof gdp === "function") {
+    gdp("init", cfg.accountId, cfg.dataSourceId, {});
+  }
+})();
+</script>
+
 <!-- Local preview package: runtime scripts are vendored under ./vendor. -->
 <script src="./vendor/react.development.js"></script>
 <script src="./vendor/react-dom.development.js"></script>
@@ -4313,6 +4333,61 @@ button:disabled:hover {
 <script type="text/babel">
 const { useState, useEffect, useRef, useMemo, createContext, useContext, useCallback } = React;
 
+/* ============================================================
+   BC GrowingIO tracking (§4.3.1 · 3Ups guide)
+   ============================================================ */
+
+const BC_TRACK_EVENT = "tracker_btn_click";
+const BC_NAV_BTN_IDS = {
+  hero: "nav_anchor_hero",
+  pain: "nav_anchor_pain",
+  paths: "nav_anchor_paths",
+  proof: "nav_anchor_proof",
+};
+
+function getUrlParam(name) {
+  return new URLSearchParams(window.location.search).get(name) || "";
+}
+
+function trackBcBtn(btnId, extra) {
+  if (!btnId || typeof window.gdp !== "function") return;
+  const payload = { btn_id: btnId };
+  if (extra && typeof extra === "object") Object.assign(payload, extra);
+  window.gdp("track", BC_TRACK_EVENT, payload);
+}
+
+function initBcUserId() {
+  if (window.__bcGioUserIdSet) return;
+  const ut = getUrlParam("ut");
+  if (!ut || typeof window.gdp !== "function") return;
+  window.gdp("setUserId", ut);
+  trackBcBtn("set_user_id");
+  window.__bcGioUserIdSet = true;
+}
+
+function useBcGrowingIO() {
+  useEffect(() => { initBcUserId(); }, []);
+}
+
+function trackNavAnchor(sectionId) {
+  const btnId = BC_NAV_BTN_IDS[sectionId];
+  if (btnId) trackBcBtn(btnId);
+}
+
+function trackPathCta(index) {
+  const num = String(index + 1).padStart(2, "0");
+  trackBcBtn(`path_cta_${num}`);
+}
+
+/**
+ * BC 验收：本页弹窗内新用户注册成功。
+ * 仅在本页嵌入的登录/注册弹窗完成新注册时调用；跳转主站后注册不得调用。
+ */
+function bcLandingTrackRegisterSuccess() {
+  trackBcBtn("register_success");
+}
+window.bcLandingTrackRegisterSuccess = bcLandingTrackRegisterSuccess;
+
 const CLICK_FEEDBACK_SELECTOR = [
   "button:not(:disabled)",
   "a[href]",
@@ -4461,7 +4536,8 @@ function useClickMotionFeedback() {
 const DOC_LINKS = {
   prd: { label: "BC落地页PRD_6.5.md", href: "../BC落地页PRD_6.5.md" },
   todo: { label: "BC落地页ToDo.md", href: "../BC落地页ToDo.md" },
-  tracking: { label: "Partner_LandingPage_Tracking_Guide.pdf", href: "../Partner_LandingPage_Tracking_Guide.pdf" },
+  tracking: { label: "3Ups_Partner_LandingPage_Tracking_Guide.pdf", href: "../3Ups_Partner_LandingPage_Tracking_Guide.pdf" },
+  assets: { label: "素材落位说明.md", href: "../BC落地页6.8补充/素材落位说明.md" },
   html: { label: "UI/index.html（交付页）", href: "./index.html" },
 };
 
@@ -4530,9 +4606,10 @@ const PAGE_TODOS = {
   },
   "T-016": {
     title: "路径区视觉素材",
-    detail: "正式版仍待设计/运营：\n· 路径 01–06 详情媒体图各 1 张（16:10）\n· 微信咨询二维码（咨询卡缩略 + 弹窗大图，6 路径共用）\n\nDemo 已占位：path-banner-01.png … path-banner-06.png · wechat-consult-qr.png",
-    owner: "设计/运营", status: "待提供", blocker: "路径区正式视觉 / 私域转化",
+    detail: "6.8 批次已定稿并接入 UI/assets/：\n· path-banner-01…06（路径媒体图）\n· 01/06 → BC落地页-销售码.png；02–05 → BC落地页-运营码.png\n\n落位见 BC落地页6.8补充/素材落位说明.md",
+    owner: "设计/运营", status: "已定稿", blocker: "—",
     prd: ["§2.2 功能 5"],
+    docs: ["prd", "assets"],
   },
 };
 
@@ -5009,6 +5086,11 @@ function Hero() {
   const [activeId, setActiveId] = useState(HERO_VIDEOS[0].id);
   const active = HERO_VIDEOS.find(v => v.id === activeId);
 
+  function selectPlaylistVideo(video) {
+    setActiveId(video.id);
+    trackBcBtn("hero_playlist_item_click", { video_id: video.id });
+  }
+
   return (
     <section id="hero" className="section" style={{ borderTop: "none" }}>
       <div className="hero-tagline" role="banner" aria-label="平台标语">
@@ -5084,7 +5166,12 @@ function Hero() {
                 />
               }
             >
-              <button type="button" className="hero-player__play" aria-label="播放">
+              <button
+                type="button"
+                className="hero-player__play"
+                aria-label="播放"
+                onClick={() => trackBcBtn("hero_video_play", { video_id: active.id })}
+              >
                 <Play size={22} />
               </button>
             </DripAnchor>
@@ -5138,7 +5225,7 @@ function Hero() {
                 <button
                   key={v.id}
                   type="button"
-                  onClick={() => setActiveId(v.id)}
+                  onClick={() => selectPlaylistVideo(v)}
                   className={`playlist-item${isActive ? " is-active" : ""}`}
                 >
                   <span className="playlist-item__index">
@@ -5235,6 +5322,7 @@ function PainPointsA({ onMatch }) {
 
   function selectCard(p) {
     setSelected(p.id);
+    trackBcBtn("pain_card_select", { pain_id: p.id });
     if (onMatch) onMatch(p);
   }
 
@@ -5287,6 +5375,7 @@ function PainPointsA({ onMatch }) {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
+                      trackBcBtn("pain_view_path", { hook_idx: p.hookIdx });
                       scrollToPath(p.hookIdx);
                     }}
                   >
@@ -5365,7 +5454,12 @@ function PainPointsB({ onMatch }) {
 
   const result = PAIN_POINTS.find(p => p.hookIdx === resultIdx) || PAIN_POINTS[0];
 
-  useEffect(() => { if (done && onMatch) onMatch(result); }, [done]);
+  useEffect(() => {
+    if (done) {
+      trackBcBtn("pain_quiz_complete", { hook_idx: resultIdx });
+      if (onMatch) onMatch(result);
+    }
+  }, [done, resultIdx]);
 
   function pickSingle(a) {
     setAnswers(prev => [...prev, { qIdx: step, hook: a.hook, label: a.label }]);
@@ -5444,6 +5538,7 @@ function PainPointsB({ onMatch }) {
                   href={`#path-${result.hookIdx}`}
                   onClick={(e) => {
                     e.preventDefault();
+                    trackBcBtn("pain_view_path", { hook_idx: result.hookIdx });
                     scrollToPath(result.hookIdx);
                   }}
                 >
@@ -5573,7 +5668,10 @@ function PainPointsSection({ pattern, onMatch }) {
                 <button
                   type="button"
                   className={`pain-mode__btn pain-mode__btn--a ${pattern === "A" ? "is-selected" : "is-unselected"}`}
-                  onClick={() => window.dispatchEvent(new CustomEvent("tweak-set", { detail: { painPattern: "A" } }))}
+                  onClick={() => {
+                    if (pattern !== "A") trackBcBtn("pain_switch_to_card");
+                    window.dispatchEvent(new CustomEvent("tweak-set", { detail: { painPattern: "A" } }));
+                  }}
                 >
                   自主选择
                 </button>
@@ -5596,7 +5694,10 @@ function PainPointsSection({ pattern, onMatch }) {
                 <button
                   type="button"
                   className={`pain-mode__btn pain-mode__btn--b ${pattern === "B" ? "is-selected" : "is-unselected"}`}
-                  onClick={() => window.dispatchEvent(new CustomEvent("tweak-set", { detail: { painPattern: "B" } }))}
+                  onClick={() => {
+                    if (pattern !== "B") trackBcBtn("pain_switch_to_quiz");
+                    window.dispatchEvent(new CustomEvent("tweak-set", { detail: { painPattern: "B" } }));
+                  }}
                 >
                   互动诊断
                   <span className="pain-mode__badge">≈1 分钟</span>
@@ -5628,6 +5729,18 @@ const PATH_BANNER_SRC = [
   "./assets/path-banner-04.png",
   "./assets/path-banner-05.png",
   "./assets/path-banner-06.png",
+];
+
+/** 路径咨询二维码：01 / 06 销售码，其余运营码（6.8 补充素材） */
+const PATH_QR_SALES_SRC = "./assets/BC落地页-销售码.png";
+const PATH_QR_OPS_SRC = "./assets/BC落地页-运营码.png";
+const PATH_QR_SRC = [
+  PATH_QR_SALES_SRC, // 路径 01
+  PATH_QR_OPS_SRC,   // 路径 02
+  PATH_QR_OPS_SRC,   // 路径 03
+  PATH_QR_OPS_SRC,   // 路径 04
+  PATH_QR_OPS_SRC,   // 路径 05
+  PATH_QR_SALES_SRC, // 路径 06
 ];
 
 const PATHS = [
@@ -5858,6 +5971,7 @@ function AuthProvider({ children }) {
     try { localStorage.setItem(AUTH_STORAGE_KEY, "1"); } catch { /* ignore */ }
     setIsLoggedIn(true);
     setLoginOpen(false);
+    if (mode === "register") bcLandingTrackRegisterSuccess();
     const idx = pendingPathIndex;
     setPendingPathIndex(null);
     if (idx != null) dispatchPathSuccess(idx);
@@ -6408,6 +6522,7 @@ function Path02PlanUI() {
 
   if (modal === "result" && hasGeneratedPlan(plan)) {
     const downloadPdf = () => {
+      trackBcBtn("path02_download");
       const blob = createDemoPdfBlob(plan.preview);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -6483,7 +6598,12 @@ function Path02PlanProvider({ children }) {
     setTimeout(() => setPlanToast(""), 3200);
   }, []);
 
-  const closeModal = useCallback(() => setModal(null), []);
+  const closeModal = useCallback(() => {
+    setModal((prev) => {
+      if (prev === "generating") trackBcBtn("path02_wait_close");
+      return null;
+    });
+  }, []);
 
   const clearUploadTimers = useCallback(() => {
     Object.values(uploadTimersRef.current).forEach((timer) => clearTimeout(timer));
@@ -6503,10 +6623,14 @@ function Path02PlanProvider({ children }) {
     setFileErrors(["", ""]);
     setUploadItems([]);
     setModal("upload");
+    trackBcBtn("path02_plan_open");
   }, [clearUploadTimers]);
 
   const viewPlan = useCallback(() => {
-    if (hasGeneratedPlan(plan)) setModal("result");
+    if (hasGeneratedPlan(plan)) {
+      trackBcBtn("path02_view");
+      setModal("result");
+    }
   }, [plan]);
 
   const handlePlanRequest = useCallback(() => {
@@ -6522,6 +6646,7 @@ function Path02PlanProvider({ children }) {
   }, [plan, showToast, openUpload]);
 
   const confirmOverwrite = useCallback(() => {
+    trackBcBtn("path02_overwrite_confirm");
     openUpload();
   }, [openUpload]);
 
@@ -6656,6 +6781,7 @@ function Path02PlanProvider({ children }) {
   const submitUpload = useCallback(() => {
     const picked = uploadItems.filter((item) => item.status === "success").map((item) => item.file);
     if (!picked.length) return;
+    trackBcBtn("path02_upload_submit");
     startGeneration(picked.map((file) => file.name));
   }, [startGeneration, uploadItems]);
 
@@ -6771,7 +6897,7 @@ function scrollToPath(index) {
   }
 }
 
-function WeChatConsultModal({ open, onClose }) {
+function WeChatConsultModal({ open, onClose, qrSrc = PATH_QR_OPS_SRC }) {
   if (!open) return null;
 
   return (
@@ -6800,7 +6926,7 @@ function WeChatConsultModal({ open, onClose }) {
         <div className="wechat-consult-modal__body">
           <div className="wechat-consult-modal__qr-frame">
             <div className="wechat-consult-modal__qr">
-              <img src="./assets/wechat-consult-qr.png" alt="微信咨询二维码" />
+              <img src={qrSrc} alt="微信咨询二维码" />
             </div>
             <p className="wechat-consult-modal__scan">长按识别二维码</p>
           </div>
@@ -6829,11 +6955,17 @@ function PathCard({ path, index, highlight, onWechatClick }) {
   const ctaNoteBody = pathCtaNoteBody(index);
 
   const handlePathCta = () => {
+    trackPathCta(index);
     if (PATH_CTA_TARGETS[index]?.type === "wechat") {
-      onWechatClick();
+      onWechatClick(index);
       return;
     }
     requireAuthForPath(index);
+  };
+
+  const handleWechatClick = () => {
+    trackBcBtn("path_wechat_consult");
+    onWechatClick(index);
   };
 
   return (
@@ -6850,7 +6982,15 @@ function PathCard({ path, index, highlight, onWechatClick }) {
           <DripAnchor
             side="end"
             block
-            drip={<TodoDrip inline todoId="T-016" />}
+            drip={
+              <NoteDrip
+                inline
+                title="路径媒体图"
+                body={"6.8 批次已定：path-banner-01…06\n比例 16:10 · 落位见素材落位说明"}
+                prd={["§2.2 功能 5"]}
+                docs={["prd", "assets"]}
+              />
+            }
           >
             <MediaPlaceholder
               aspect="16/10"
@@ -6968,23 +7108,22 @@ function PathCard({ path, index, highlight, onWechatClick }) {
                 <NoteDrip
                   inline
                   title="微信咨询"
-                  body={"【卡片】扫码咨询 · 详情添加老师咨询\n\n【点击】打开弹窗：联名 Logo + 添加老师答疑咨询 + 二维码\n\n【素材】正式 QR 见 T-016\n【埋点】path_wechat_consult（T-011）"}
+                  body={"【卡片】扫码咨询 · 详情添加老师咨询\n\n【二维码 · 已定】\n· 路径 01/06 → 销售码\n· 路径 02–05 → 运营码\n咨询卡缩略与弹窗大图同路径同码\n\n【埋点】path_wechat_consult（BC 六项路径指标不含此卡）"}
                   prd={["§2.2 功能 5"]}
-                  docs={["prd", "tracking", "todo"]}
+                  docs={["prd", "assets", "tracking"]}
                 />
-                <TodoDrip inline todoId="T-016" />
               </>
             }
           >
             <button
               type="button"
               className="path-card__wechat"
-              onClick={onWechatClick}
+              onClick={handleWechatClick}
               aria-label="扫码咨询，添加老师咨询"
             >
               <div className="path-card__wechat-qr">
                 <img
-                  src="./assets/wechat-consult-qr.png"
+                  src={PATH_QR_SRC[index]}
                   alt=""
                   loading="lazy"
                   onError={(e) => { e.currentTarget.style.display = "none"; }}
@@ -7005,6 +7144,16 @@ function PathCard({ path, index, highlight, onWechatClick }) {
 
 function ConversionPaths({ highlightIdx }) {
   const [wechatOpen, setWechatOpen] = useState(false);
+  const [wechatPathIndex, setWechatPathIndex] = useState(3);
+
+  const openWechatConsult = useCallback((pathIndex) => {
+    setWechatPathIndex(pathIndex);
+    setWechatOpen(true);
+  }, []);
+
+  const closeWechatConsult = useCallback(() => {
+    setWechatOpen(false);
+  }, []);
 
   return (
     <div id="paths" className="conversion-paths">
@@ -7019,7 +7168,7 @@ function ConversionPaths({ highlightIdx }) {
               <NoteDrip
                 inline
                 title="六大学习路径"
-                body={"【结构】6 路径 ↔ 6 痛点卡（hookIdx）\n· 媒体区按索引奇偶左右交替\n· 匹配后索引 + 详情高亮\n\n【CTA】02 方案弹窗；04 微信弹窗；01/03/05/06 主站 deep link\n【咨询】扫码咨询卡 → 联名弹窗\n【Demo 媒体】path-banner-01…06（05 主标题 AI个性化学习日历）\n【正式素材】路径图 + 微信 QR → T-016"}
+                body={"【结构】6 路径 ↔ 6 痛点卡（hookIdx）\n· 媒体区按索引奇偶左右交替\n· 匹配后索引 + 详情高亮\n\n【CTA】02 方案弹窗；04 微信弹窗；01/03/05/06 主站 deep link\n【咨询】01/06 销售码 · 02–05 运营码\n【媒体】6.8 批次 path-banner-01…06 已接入"}
                 prd={["§2.2 功能 5"]}
                 docs={["prd", "todo"]}
               />
@@ -7047,7 +7196,7 @@ function ConversionPaths({ highlightIdx }) {
               <NoteDrip
                 inline
                 title="BC GrowingIO 埋点"
-                body={"【强制】GrowingIO Web JS SDK 4.x\n\n【归因】utm_* + ut；gdp('identify', ut) 全页一次\n\n【转化】gdp('track', 'tracker_btn_click', { btn_id })\n\n【联调】杨效鲁 · 凭证 T-010 · 验收 T-011"}
+                body={"【BC 验收 3 指标 · 已定口径】\n1. 访问量 → SDK 自动 PV + UV（无需登录）\n2. 路径点击 → 仅 6 卡片主 CTA：path_cta_01…06\n3. 注册成功 → register_success（本页弹窗内新注册；跳转主站后注册不算）\n\n【归因】utm_* + ut；setUserId + set_user_id\n【联调】杨效鲁 · T-010 / T-011"}
                 prd={["§4.3.1 BC 合作埋点"]}
                 docs={["prd", "tracking", "todo"]}
                 links={[{ label: "BC 对接邮箱", href: "mailto:Yang.Xiaolu@britishcouncil.org.cn" }]}
@@ -7067,6 +7216,7 @@ function ConversionPaths({ highlightIdx }) {
                   className={`path-index__item${hi ? " is-highlight" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
+                    trackBcBtn("path_index_click", { path_idx: i });
                     scrollToPath(i);
                   }}
                 >
@@ -7085,10 +7235,14 @@ function ConversionPaths({ highlightIdx }) {
           path={p}
           index={i}
           highlight={i === highlightIdx}
-          onWechatClick={() => setWechatOpen(true)}
+          onWechatClick={openWechatConsult}
         />
       ))}
-      <WeChatConsultModal open={wechatOpen} onClose={() => setWechatOpen(false)} />
+      <WeChatConsultModal
+        open={wechatOpen}
+        onClose={closeWechatConsult}
+        qrSrc={PATH_QR_SRC[wechatPathIndex] || PATH_QR_OPS_SRC}
+      />
     </div>
   );
 }
@@ -7453,6 +7607,7 @@ function TweakField({ label, children }) {
 
 function App() {
   useClickMotionFeedback();
+  useBcGrowingIO();
   const activeNavSection = useNavActiveSection();
   const { openLogin, isLoggedIn, setLoggedInDemo } = useAuth();
   const { resetPlanDemo, simulateReadyPlan, plan } = usePath02Plan();
@@ -7542,6 +7697,7 @@ function App() {
                   aria-current={isActive ? "page" : undefined}
                   onClick={(e) => {
                     e.preventDefault();
+                    trackNavAnchor(item.id);
                     scrollToSection(item.id);
                   }}
                 >
@@ -7575,6 +7731,7 @@ function App() {
                   aria-current={isActive ? "page" : undefined}
                   onClick={(e) => {
                     e.preventDefault();
+                    trackNavAnchor(item.id);
                     scrollToSection(item.id);
                   }}
                 >
@@ -7599,7 +7756,7 @@ function App() {
                 </>
               }
             >
-              <button type="button" className="nav__cta" onClick={() => openLogin()}>
+              <button type="button" className="nav__cta" onClick={() => { trackBcBtn("nav_login_register"); openLogin(); }}>
                 {isLoggedIn ? "已登录" : "登录/注册"}
               </button>
             </DripAnchor>

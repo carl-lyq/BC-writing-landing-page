@@ -9,7 +9,7 @@
 **历史文档**: [`UI/docs/PRODUCT.md`](./UI/docs/PRODUCT.md)、[`UI/docs/DESIGN.md`](./UI/docs/DESIGN.md) 已合并入本文，勿再单独维护  
 **归档参考**: [`BC落地页PRD.md`](./BC落地页PRD.md)（v0.21 Demo 稿，**勿作验收**）  
 **待办清单**: [`BC落地页ToDo.md`](./BC落地页ToDo.md)  
-**BC 埋点指南**: [`UI/docs/Partner_LandingPage_Tracking_Guide.pdf`](./UI/docs/Partner_LandingPage_Tracking_Guide.pdf)（入库路径以项目为准）
+**BC 埋点指南**: [`3Ups_Partner_LandingPage_Tracking_Guide.pdf`](./3Ups_Partner_LandingPage_Tracking_Guide.pdf)（2026-06 更新版，替代原 Partner 版）
 
 > **开发约定**：正式实现以 **本文 + `UI/index.html` + `UI/assets/`** 为唯一 UI/交互来源；`BC落地页Demo.html` 与根目录主 PRD 不再作为验收基准。
 
@@ -27,7 +27,7 @@
 | **本文档** | 产品 + 设计 + 交互 + 验收 + 埋点的**唯一需求来源** | 全员 |
 | [`BC落地页-开发交接.md`](./BC落地页-开发交接.md) | 开发立项必读：重点说明、阻塞项、Demo/正式差异 | 前端、后端、测试 |
 | [`UI/docs/BC落地页-UI交接.md`](./UI/docs/BC落地页-UI交接.md) | UI 快速自检摘要 | UI、前端 |
-| [`UI/docs/Partner_LandingPage_Tracking_Guide.pdf`](./UI/docs/Partner_LandingPage_Tracking_Guide.pdf) | BC 强制 GrowingIO 规范 | 前端、数据 |
+| [`3Ups_Partner_LandingPage_Tracking_Guide.pdf`](./3Ups_Partner_LandingPage_Tracking_Guide.pdf) | BC 强制 GrowingIO 规范（2026-06 更新版） | 前端、数据 |
 
 ### 0.2 如何预览 UI 交付页
 
@@ -1189,7 +1189,8 @@
 
 #### 4.3.1 BC 合作埋点（强制 · GrowingIO）
 
-**权威文档**：[`Partner_LandingPage_Tracking_Guide.pdf`](./Partner_LandingPage_Tracking_Guide.pdf)  
+**开发实现**：[`BC埋点开发说明.md`](./BC埋点开发说明.md)（SDK 接入、btn_id 清单、代码位置、自测清单）  
+**权威文档**：[`3Ups_Partner_LandingPage_Tracking_Guide.pdf`](./3Ups_Partner_LandingPage_Tracking_Guide.pdf)  
 **对接联系人**：杨效鲁 Yang.Xiaolu@britishcouncil.org.cn  
 **SDK**：GrowingIO Web JS SDK **4.x**（CDN 接入）  
 **凭证**：Account ID、Data Source ID 由 BC 提供，区分生产/非生产环境 → **TODO T-010**
@@ -1214,10 +1215,22 @@ BC 跳转落地页时会携带以下 URL 参数，**任何重定向不得丢弃*
 | `ut` | 用户脱敏唯一值，用作 GrowingIO 用户 ID |
 
 - GrowingIO 4.x 基于访问 URL 采集 `utm_*` 系列  
-- `ut` 用于 `gdp('identify', ut)`，**全页仅可调用一次**，须在页面初始化阶段完成  
-- 实现要求：从 URL 读取 `ut`；若缺失则不上报 identify（或按 BC 联调约定处理，需与 T-011 确认）
+- 实现要求：从 URL 读取 `ut`；若缺失则不上报用户 ID（或按 BC 联调约定处理，需与 T-011 确认）
 
-##### 自定义事件上报
+##### 上报访问用户（§4.1 · BC 强制）
+
+新版文档将用户标识 API 由 `identify` 调整为 `setUserId`，且**须额外发送一条自定义事件**以确保用户 ID 随请求上报：
+
+```javascript
+gdp('setUserId', ut);
+gdp('track', 'tracker_btn_click', { btn_id: 'set_user_id' });
+```
+
+- `ut` 为用户脱敏唯一值，作为 GrowingIO 用户 ID  
+- `setUserId` **全页仅可调用一次**，须在页面初始化阶段完成  
+- 单纯调用 `setUserId` **不会立即触发主动上报**，因此必须紧跟 `btn_id: 'set_user_id'` 事件（BC 文档明确要求）
+
+##### 自定义事件上报（§4.2）
 
 **统一事件名**：`tracker_btn_click`  
 **调用方式**：
@@ -1229,15 +1242,50 @@ gdp('track', 'tracker_btn_click', { btn_id: '<custom_value>' });
 - `btn_id` 为事件级变量，取值由业务定义  
 - **测试阶段须将 btn_id 清单发给 BC 联调**（TODO T-011）  
 - PDF 示例：
+  - `set_user_id` — 页面初始化，`setUserId` 后立即触发（**BC 强制，非业务按钮**）  
   - `form_submit_success` — 留资表单校验通过且服务端返回成功后  
   - `cta_button_click` — 点击核心行动按钮（通用示例名）
 
-##### 本页 `btn_id` 建议清单（待 BC 联调确认 · T-011）
+##### BC 验收指标与埋点对照（给 BC 联调 · T-011）
 
-以下为本页核心转化与互动按钮的**建议** `btn_id`；开发可按此预埋，最终以 BC 联调为准：
+以下为 BC 合作方关注的 **3 项核心指标** 及对应技术实现；联调时优先验收本表。
+
+| BC 指标 | 统计口径 | 技术实现 | `btn_id` / 事件 |
+|---------|----------|----------|-----------------|
+| **网站访问量** | 打开落地页即计，**无需登录**。**PV**：每次打开计 1 次；**UV**：独立访客数（同一访客多次打开只计 1 UV） | GrowingIO SDK **自动采集 PV + UV**（§基础集成）；配合 URL `utm_*` / `ut` 归因 | 无自定义 `btn_id`；BC 后台分别看 **PV** 与 **UV** |
+| **6 条路径主 CTA 点击次数** | 仅统计路径卡片上 **6 个主 CTA 按钮**各计 1 次（含未登录点击；路径 04 打开微信弹窗亦计）。**不含**顶部路径索引条、**不含**「扫码咨询」副按钮 | `tracker_btn_click` | `path_cta_01` … `path_cta_06`（6 个独立值） |
+| **本页注册成功用户数** | 用户经本页 **任意入口**（导航「登录/注册」或路径 CTA 弹窗）在本页内完成 **新用户注册** 且服务端返回成功。**不含**老用户登录；**不含**跳转主站后在主站完成的注册 | `tracker_btn_click` | `register_success` |
+
+**联调必报事件（精简清单）**：
+
+| btn_id | 触发时机 |
+|--------|----------|
+| `set_user_id` | 页面带 `ut` 参数加载时（BC 强制） |
+| `path_cta_01` | 点击路径 01 主 CTA「查看课程详情 →」 |
+| `path_cta_02` | 点击路径 02 主 CTA「获取我的专属方案 →」 |
+| `path_cta_03` | 点击路径 03 主 CTA |
+| `path_cta_04` | 点击路径 04 主 CTA（微信咨询弹窗） |
+| `path_cta_05` | 点击路径 05 主 CTA |
+| `path_cta_06` | 点击路径 06 主 CTA |
+| `register_success` | 本页弹窗内 **新用户注册成功**（见下方口径说明） |
+
+> **访问量说明（已定）**：PV 与 UV **均需**提供给 BC。SDK 初始化后自动上报，无需前端额外埋点；BC 在 GrowingIO 后台分别读取 PV、UV 指标。
+
+> **路径点击说明（已定）**：仅 6 个路径卡片主 CTA 计入 `path_cta_01`…`06`；路径索引条（`path_index_click`）、扫码咨询卡（`path_wechat_consult`）为产品预埋，**不计入 BC 六项路径指标**。
+
+> **注册成功说明（已定）**：须同时满足——① 来源为本 BC 落地页；② **在本页嵌入的登录/注册弹窗内**完成新注册；③ 服务端返回成功。**不触发**情形：老用户仅登录；用户经路径 CTA 登录后 **跳转主站**，在主站或其他页面完成注册。
+>
+> 正式环境：主站注册组件在本页弹窗内鉴权成功后调用 `bcLandingTrackRegisterSuccess()`；**禁止**在 `navigatePathCta` 跳转主站后调用。
+
+##### 本页 `btn_id` 完整清单（产品预埋 · 非 BC 必验）
+
+除上表 BC 必验项外，以下为产品侧预埋的细粒度 `btn_id`，用于内部分析，**联调时可不作为 BC 验收阻塞项**：
 
 | btn_id | 触发时机 | 区块 |
 |--------|----------|------|
+| `set_user_id` | 页面初始化：`setUserId(ut)` 后立即触发 | 全局（BC 强制） |
+| `register_success` | 本页来源新用户注册成功 | 注册转化（BC 必验） |
+| `path_cta_01` … `path_cta_06` | 点击各路径主 CTA 按钮 | 学习路径（BC 必验） |
 | `nav_login_register` | 点击导航「登录/注册」 | 导航 |
 | `nav_anchor_hero` | 点击锚点「公开课」 | 导航 |
 | `nav_anchor_pain` | 点击锚点「我的提分需求」 | 导航 |
@@ -1529,7 +1577,7 @@ graph TB
 
 **数据准确性**：
 - [ ] 问卷计分与推荐路径经 T-001 用例表验证  
-- [ ] BC GrowingIO 埋点：`gdp.js` 加载、`identify(ut)`、各 `tracker_btn_click` 与 T-011 清单一致  
+- [ ] BC GrowingIO 埋点：`gdp.js` 加载、`setUserId(ut)` + `set_user_id`、各 `tracker_btn_click` 与 T-011 清单一致  
 - [ ] 播放量：去重计数、hourly 刷新、展示 = 真实 + 预设（T-004/T-005）  
 
 ---
