@@ -1291,6 +1291,15 @@ body {
 .hero-player__media {
   border-radius: 12px;
 }
+.hero-player__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #000;
+}
 .hero-player__play-wrap {
   position: absolute;
   left: 50%;
@@ -4556,8 +4565,8 @@ const PAGE_TODOS = {
   },
   "T-003b": {
     title: "Hero 视频素材（续）",
-    detail: "T-003a 已定：6 集大/小标题 + 讲师 Icey Zhang。\n\n仍待补充（每集）：\n· 时长\n· 封面图\n· 播放地址 / 资源 ID\n· 主题角标（若独立于标题）\n· 扩展简介",
-    owner: "内容/运营", status: "待补充", blocker: "视频可播",
+    detail: "6.8 批次已接入：各集封面 + MP4 落位 `UI/assets/hero/hero-01`…`06`；时长 2:48 / 2:56 / 2:23 / 2:59 / 3:51 / 3:18（共 18 分钟）。\n主题角标沿用 `topic` 字段；扩展简介沿用小标题。",
+    owner: "内容/运营", status: "已定稿", blocker: "—",
     prd: ["§2.2 功能 1", "§4.1 实体 1"],
   },
   "T-006": {
@@ -4984,61 +4993,73 @@ const HERO_VIDEOS = [
     id: "v1",
     title: "3分钟大作文【连贯与衔接】轻松上6",
     teacher: "Icey Zhang",
-    duration: "8:24",
+    duration: "2:48",
     views: "23,412",
     desc: "雅思作文，你写反了吗？",
     tone: "warm",
     topic: "连贯与衔接• 大作文",
+    coverSrc: "./assets/hero/hero-01-cover.jpg",
+    videoSrc: "./assets/hero/hero-01.mp4",
   },
   {
     id: "v2",
     title: "3分钟拯救大作文【任务与回应】",
     teacher: "Icey Zhang",
-    duration: "3:00",
+    duration: "2:56",
     views: "912",
     desc: "考官为什么会觉得你「答非所问」？",
     tone: "sage",
     topic: "任务与回应 · 大作文",
+    coverSrc: "./assets/hero/hero-02-cover.jpg",
+    videoSrc: "./assets/hero/hero-02.mp4",
   },
   {
     id: "v3",
     title: "3分钟提升小作文【任务完成情况】",
     teacher: "Icey Zhang",
-    duration: "3:00",
+    duration: "2:23",
     views: "816",
     desc: "你又在无脑照抄小作文数据了吗？",
     tone: "cream",
     topic: "任务完成情况 · 小作文",
+    coverSrc: "./assets/hero/hero-03-cover.jpg",
+    videoSrc: "./assets/hero/hero-03.mp4",
   },
   {
     id: "v4",
     title: "3分钟提升小作文【连贯与衔接】",
     teacher: "Icey Zhang",
-    duration: "3:00",
+    duration: "2:59",
     views: "728",
     desc: "写了半天，写出一篇流水账？",
     tone: "ink",
     topic: "连贯与衔接 · 小作文",
+    coverSrc: "./assets/hero/hero-04-cover.jpg",
+    videoSrc: "./assets/hero/hero-04.mp4",
   },
   {
     id: "v5",
     title: "3分钟提升雅思写作【语法】",
     teacher: "Icey Zhang",
-    duration: "3:00",
+    duration: "3:51",
     views: "634",
     desc: "华丽的长难句≠高分",
     tone: "accent",
     topic: "语法",
+    coverSrc: "./assets/hero/hero-05-cover.jpg",
+    videoSrc: "./assets/hero/hero-05.mp4",
   },
   {
     id: "v6",
     title: "3分钟提升雅思写作【词汇】",
     teacher: "Icey Zhang",
-    duration: "3:00",
+    duration: "3:18",
     views: "548",
     desc: "摆脱小学生词汇水平，你要先做对这些",
     tone: "warm",
     topic: "词汇",
+    coverSrc: "./assets/hero/hero-06-cover.jpg",
+    videoSrc: "./assets/hero/hero-06.mp4",
   },
 ];
 
@@ -5080,16 +5101,69 @@ const HERO_FACTS = [
   { icon: "svip", num: "7天", label: "免费", highlight: "SVIP", labelEnd: "全功能体验", accent: true },
 ];
 
-const HERO_COVER_SRC = "./assets/homepage-playlist-cover.png";
+function formatVideoTime(sec) {
+  if (!Number.isFinite(sec) || sec < 0) return "0:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function parseDurationLabel(label) {
+  const [m, s] = String(label).split(":").map(Number);
+  if (!Number.isFinite(m) || !Number.isFinite(s)) return 0;
+  return m * 60 + s;
+}
 
 function Hero() {
   const [activeId, setActiveId] = useState(HERO_VIDEOS[0].id);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playback, setPlayback] = useState({ current: 0, duration: 0 });
+  const videoRef = useRef(null);
   const active = HERO_VIDEOS.find(v => v.id === activeId);
+
+  useEffect(() => {
+    setIsPlaying(false);
+    setPlayback({ current: 0, duration: 0 });
+  }, [activeId]);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const el = videoRef.current;
+    if (!el) return;
+    const playPromise = el.play();
+    if (!playPromise) return;
+    playPromise.catch(() => {
+      setIsPlaying(false);
+      trackBcBtn("hero_video_play_error", { video_id: active.id });
+    });
+  }, [isPlaying, activeId]);
 
   function selectPlaylistVideo(video) {
     setActiveId(video.id);
     trackBcBtn("hero_playlist_item_click", { video_id: video.id });
   }
+
+  function handlePlay() {
+    trackBcBtn("hero_video_play", { video_id: active.id });
+    setIsPlaying(true);
+  }
+
+  function handleTimeUpdate() {
+    const el = videoRef.current;
+    if (!el) return;
+    setPlayback({ current: el.currentTime, duration: el.duration || 0 });
+  }
+
+  function handleVideoEnded() {
+    setIsPlaying(false);
+    setPlayback({ current: 0, duration: playback.duration });
+  }
+
+  const durationSec = playback.duration || parseDurationLabel(active.duration);
+  const progressPct = durationSec > 0 ? Math.min(100, (playback.current / durationSec) * 100) : 0;
+  const timeLabel = isPlaying
+    ? `${formatVideoTime(playback.current)} / ${formatVideoTime(durationSec)}`
+    : `0:00 / ${active.duration}`;
 
   return (
     <section id="hero" className="section" style={{ borderTop: "none" }}>
@@ -5146,40 +5220,55 @@ function Hero() {
         {/* Main player */}
         <div className="hero-main">
           <div className="hero-player">
-            <MediaPlaceholder
-              className="hero-player__media"
-              fill
-              tone={active.tone}
-              badge={active.topic}
-              imageSrc={HERO_COVER_SRC}
-            />
-            <DripAnchor
-              side="end"
-              className="hero-player__play-wrap"
-              drip={
-                <NoteDrip
-                  inline
-                  title="播放量规则"
-                  body={"公式：展示 = 真实 + round(预设)\n\n预设 = 视频预设值 × 随机系数 × 时间系数\n· 预设值：1000→500（6 集递减 100）\n· 随机：∈ [0.9, 1.1]，每集独立，加载时生成\n· 时间：2026-06-01 前=1；之后每天 +0.05\n\n真实值：点击播放 +1；同用户同视频去重；每小时刷新"}
-                  prd={["§2.2 功能 1.2", "§4.2 数据规则"]}
-                  docs={["prd", "todo"]}
-                />
-              }
-            >
-              <button
-                type="button"
-                className="hero-player__play"
-                aria-label="播放"
-                onClick={() => trackBcBtn("hero_video_play", { video_id: active.id })}
+            {isPlaying ? (
+              <video
+                ref={videoRef}
+                key={active.id}
+                className="hero-player__video"
+                src={active.videoSrc}
+                poster={active.coverSrc}
+                playsInline
+                onTimeUpdate={handleTimeUpdate}
+                onEnded={handleVideoEnded}
+              />
+            ) : (
+              <MediaPlaceholder
+                className="hero-player__media"
+                fill
+                tone={active.tone}
+                badge={active.topic}
+                imageSrc={active.coverSrc}
+              />
+            )}
+            {!isPlaying && (
+              <DripAnchor
+                side="end"
+                className="hero-player__play-wrap"
+                drip={
+                  <NoteDrip
+                    inline
+                    title="播放量规则"
+                    body={"公式：展示 = 真实 + round(预设)\n\n预设 = 视频预设值 × 随机系数 × 时间系数\n· 预设值：1000→500（6 集递减 100）\n· 随机：∈ [0.9, 1.1]，每集独立，加载时生成\n· 时间：2026-06-01 前=1；之后每天 +0.05\n\n真实值：点击播放 +1；同用户同视频去重；每小时刷新\n\n【6.8 视频 · 已定】\n· hero-01…06 封面 + MP4\n· 点击播放：挂载 video 并自动播放；进度条实时更新\n· 切换集数：停止播放并重置\n· 本地预览须 HTTP 静态服务（§0.2）；勿 file:// 打开"}
+                    prd={["§2.2 功能 1.2", "§4.2 数据规则", "§0.2"]}
+                    docs={["prd", "todo"]}
+                  />
+                }
               >
-                <Play size={22} />
-              </button>
-            </DripAnchor>
+                <button
+                  type="button"
+                  className="hero-player__play"
+                  aria-label="播放"
+                  onClick={handlePlay}
+                >
+                  <Play size={22} />
+                </button>
+              </DripAnchor>
+            )}
             <div className="hero-player__bar">
               <div className="hero-player__progress">
-                <div className="hero-player__progress-fill" />
+                <div className="hero-player__progress-fill" style={{ width: `${progressPct}%` }} />
               </div>
-              <div className="hero-player__time">02:53 / {active.duration}</div>
+              <div className="hero-player__time">{timeLabel}</div>
             </div>
           </div>
 
@@ -5200,16 +5289,13 @@ function Hero() {
                 side="end"
                 row
                 drip={
-                  <>
-                    <NoteDrip
-                      inline
-                      title="播放列表标题"
-                      body={"无独立眉标「播放列表」\n· 标题「写作免费公开课 · 6 集」\n· 右侧总时长「共 {N} 分钟」\n· 6 集讲师均为 Icey Zhang"}
-                      prd={["§2.2 功能 1.2"]}
-                      docs={["prd"]}
-                    />
-                    <TodoDrip inline todoId="T-003b" />
-                  </>
+                  <NoteDrip
+                    inline
+                    title="播放列表标题"
+                    body={"无独立眉标「播放列表」\n· 标题「写作免费公开课 · 6 集」\n· 右侧总时长「共 18 分钟」\n· 6 集讲师均为 Icey Zhang\n· 各集封面/时长见 HERO_VIDEOS（T-003b 已定）"}
+                    prd={["§2.2 功能 1.2"]}
+                    docs={["prd"]}
+                  />
                 }
               >
                 <h3 className="hero-playlist__head-title">写作免费公开课 · 6 集</h3>
@@ -5236,7 +5322,7 @@ function Hero() {
                       className="media-ph-thumb"
                       aspect="16/9"
                       tone={v.tone}
-                      imageSrc={HERO_COVER_SRC}
+                      imageSrc={v.coverSrc}
                     />
                     <span className="playlist-item__thumb-play" aria-hidden="true">
                       <Play size={12} />
