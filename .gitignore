@@ -15,3 +15,7 @@
 .env.*
 *credentials*
 *secret*
+
+# PDF build (large system font copies)
+scripts/fonts/*.ttc
+scripts/.plan-preview.html

@@ -29,7 +29,7 @@
     <path d="M19 0v9h9" fill="#DDE6F2"/>
   </g>
 
-  <text x="22" y="276" fill="#4F6A8F" font-size="13" font-weight="400">支持 1–2 份 PDF，单文件不超过 5MB。提交后可关闭弹窗，生成将在后台继续。</text>
+  <text x="22" y="276" fill="#4F6A8F" font-size="13" font-weight="400">支持 1 份 PDF，单文件不超过 5MB。提交后可关闭弹窗，生成将在后台继续。</text>
   <rect x="22" y="301" width="476" height="42" rx="16" fill="#0B1F3A"/>
   <text x="212" y="327" fill="#F4F7FB" font-size="14" font-weight="500">开始生成方案</text>
 </svg>

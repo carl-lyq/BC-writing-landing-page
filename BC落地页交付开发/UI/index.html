@@ -3176,6 +3176,10 @@ button.path-card__wechat {
   box-shadow: 0 12px 40px rgba(11, 31, 58, 0.28);
   animation: toast-in 280ms var(--ease-out-quint) both;
 }
+.auth-toast--top {
+  top: calc(var(--nav-height, 65px) + 12px);
+  bottom: auto;
+}
 .svip-modal__figure {
   margin: 0;
   border-radius: 12px;
@@ -4590,7 +4594,7 @@ const PAGE_TODOS = {
   },
   "T-011": {
     title: "btn_id 联调",
-    detail: "步骤：\n1. 将 PRD §4.3.1 btn_id 清单发给 BC（杨效鲁）\n2. 部署测试环境\n3. Network 验证 tracker_btn_click 上报\n4. BC 后台确认接收\n\n含路径 02 专项 btn_id。",
+    detail: "步骤：\n1. 将 PRD §4.3.1 btn_id 清单发给 BC（杨效鲁）\n2. 部署测试环境\n3. Network 验证 tracker_btn_click 上报\n4. BC 后台确认接收\n\n含路径 02：path02_gen_complete / path02_gen_fail 等。",
     owner: "前端 / BC", status: "待联调", blocker: "埋点上线",
     prd: ["§4.3.1 BC 合作埋点"],
     docs: ["tracking"],
@@ -4603,7 +4607,7 @@ const PAGE_TODOS = {
   },
   "T-013": {
     title: "路径02 方案生成后端",
-    detail: "后端需实现：\n· PDF 上传与存储\n· 异步任务队列 + 状态轮询\n· AI 调用 + 模版渲染\n· PDF 导出与下载 URL\n· 账号绑定；保留最近 3 份历史",
+    detail: "后端需实现：\n· 单 PDF 上传与存储\n· 异步任务 + 扣子工作流 → Markdown\n· 前端返回 markdown；同源 Markdown → 品牌 PDF 导出\n· pdfUrl 下载；账号绑定；保留 3 份历史\n· 见 路径02-方案Markdown与PDF开发说明.md",
     owner: "后端", status: "待开发", blocker: "路径02正式能力",
     prd: ["§2.2 功能 5.1"],
   },
@@ -6117,6 +6121,9 @@ function AuthProvider({ children }) {
 
 const PLAN_STORAGE_KEY = "bc-landing-demo-path02-plan";
 const PLAN_MAX_BYTES = 5 * 1024 * 1024;
+const PLAN_MAX_UPLOAD_COUNT = 1;
+const PLAN_FAIL_TOAST_MSG = "方案生成失败，请重试或联系客服";
+const PLAN_FAIL_TOAST_MS = 3000;
 const PLAN_DEMO_GEN_MS = 12000;
 
 const Path02PlanContext = createContext(null);
@@ -6412,7 +6419,7 @@ function PlanUploadCard({ item, onRemove, onRetry }) {
 function PlanUploadArea({ uploadItems, onPickFiles, onRemove, onRetry }) {
   const [drag, setDrag] = useState(false);
   const inputRef = useRef(null);
-  const canAddMore = uploadItems.length < 2;
+  const canAddMore = uploadItems.length < PLAN_MAX_UPLOAD_COUNT;
 
   function handleFiles(list) {
     if (list?.length) onPickFiles(list);
@@ -6435,7 +6442,6 @@ function PlanUploadArea({ uploadItems, onPickFiles, onRemove, onRetry }) {
         <input
           ref={inputRef}
           type="file"
-          multiple
           accept=".pdf,application/pdf"
           onClick={(e) => e.stopPropagation()}
           onChange={(e) => {
@@ -6446,7 +6452,7 @@ function PlanUploadArea({ uploadItems, onPickFiles, onRemove, onRetry }) {
         <div className="plan-upload-slot__icon"><UploadCloud size={24} /></div>
         <div className="plan-upload-slot__text">
           <div className="plan-upload-slot__label">点击或拖拽 PDF</div>
-          <div className="plan-upload-slot__meta">支持1-2份 PDF，单文件不超过 5MB。提交后可关闭弹窗，生成将在后台继续。</div>
+          <div className="plan-upload-slot__meta">支持 1 份 PDF，不超过 5MB。提交后可关闭弹窗，生成将在后台继续。</div>
         </div>
       </div>
       )}
@@ -6640,7 +6646,14 @@ function Path02PlanUI() {
   return (
     <>
       {dialog}
-      {planToast && <div className="auth-toast" role="status">{planToast}</div>}
+      {planToast && (
+        <div
+          className={`auth-toast${planToast.placement === "top" ? " auth-toast--top" : ""}`}
+          role="alert"
+        >
+          {planToast.text}
+        </div>
+      )}
     </>
   );
 }
@@ -6668,8 +6681,10 @@ function Path02PlanProvider({ children }) {
   const [fileErrors, setFileErrors] = useState(["", ""]);
   const [uploadItems, setUploadItems] = useState([]);
   const [genProgress, setGenProgress] = useState(0);
-  const [planToast, setPlanToast] = useState("");
+  const [planToast, setPlanToast] = useState(null);
   const genStartedInSessionRef = useRef(false);
+  const planBeforeGenerationRef = useRef(null);
+  const planToastTimerRef = useRef(null);
   const timerRef = useRef(null);
   const progressRef = useRef(null);
   const uploadTimersRef = useRef({});
@@ -6679,9 +6694,15 @@ function Path02PlanProvider({ children }) {
     saveStoredPlan(next);
   }, []);
 
-  const showToast = useCallback((msg) => {
-    setPlanToast(msg);
-    setTimeout(() => setPlanToast(""), 3200);
+  const showToast = useCallback((msg, opts = {}) => {
+    if (planToastTimerRef.current) clearTimeout(planToastTimerRef.current);
+    const placement = opts.placement || "bottom";
+    const duration = opts.duration ?? 3200;
+    setPlanToast({ text: msg, placement });
+    planToastTimerRef.current = setTimeout(() => {
+      setPlanToast(null);
+      planToastTimerRef.current = null;
+    }, duration);
   }, []);
 
   const closeModal = useCallback(() => {
@@ -6697,10 +6718,10 @@ function Path02PlanProvider({ children }) {
   }, []);
 
   const syncUploadFiles = useCallback((items) => {
-    const successFiles = items.filter((item) => item.status === "success").map((item) => item.file).slice(0, 2);
-    const errors = items.filter((item) => item.status === "error").map((item) => item.error).slice(0, 2);
-    setFiles([successFiles[0] || null, successFiles[1] || null]);
-    setFileErrors([errors[0] || "", errors[1] || ""]);
+    const successFiles = items.filter((item) => item.status === "success").map((item) => item.file).slice(0, PLAN_MAX_UPLOAD_COUNT);
+    const errors = items.filter((item) => item.status === "error").map((item) => item.error).slice(0, PLAN_MAX_UPLOAD_COUNT);
+    setFiles([successFiles[0] || null, null]);
+    setFileErrors([errors[0] || "", ""]);
   }, []);
 
   const openUpload = useCallback(() => {
@@ -6787,9 +6808,9 @@ function Path02PlanProvider({ children }) {
       });
 
     setUploadItems((prev) => {
-      const slotsLeft = Math.max(0, 2 - prev.length);
+      const slotsLeft = Math.max(0, PLAN_MAX_UPLOAD_COUNT - prev.length);
       if (!slotsLeft) {
-        setFileErrors(["最多上传 2 份 PDF", ""]);
+        setFileErrors(["仅支持上传 1 份 PDF，请先删除当前文件", ""]);
         return prev;
       }
       const next = [...prev, ...newItems.slice(0, slotsLeft)];
@@ -6797,7 +6818,7 @@ function Path02PlanProvider({ children }) {
       return next;
     });
 
-    newItems.slice(0, Math.max(0, 2 - uploadItems.length)).forEach((item) => {
+    newItems.slice(0, Math.max(0, PLAN_MAX_UPLOAD_COUNT - uploadItems.length)).forEach((item) => {
       if (item.status !== "uploading") return;
       uploadTimersRef.current[item.id] = setTimeout(() => completeUploadItem(item.id), 700);
     });
@@ -6843,6 +6864,7 @@ function Path02PlanProvider({ children }) {
   }, [completeUploadItem, syncUploadFiles, validateFile]);
 
   const finishGeneration = useCallback((fileNames) => {
+    planBeforeGenerationRef.current = null;
     const preview = buildDemoPlanPreview(fileNames);
     const readyPlan = {
       status: "ready",
@@ -6852,17 +6874,34 @@ function Path02PlanProvider({ children }) {
     };
     persistPlan(readyPlan);
     setGenProgress(100);
+    trackBcBtn("path02_gen_complete");
     if (genStartedInSessionRef.current) {
       setModal("result");
     }
   }, [persistPlan]);
 
+  const failGeneration = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (progressRef.current) clearInterval(progressRef.current);
+    timerRef.current = null;
+    progressRef.current = null;
+    genStartedInSessionRef.current = false;
+    setGenProgress(0);
+    setModal(null);
+    const restore = planBeforeGenerationRef.current;
+    planBeforeGenerationRef.current = null;
+    persistPlan(restore || { status: "none" });
+    trackBcBtn("path02_gen_fail");
+    showToast(PLAN_FAIL_TOAST_MSG, { placement: "top", duration: PLAN_FAIL_TOAST_MS });
+  }, [persistPlan, showToast]);
+
   const startGeneration = useCallback((fileNames) => {
+    planBeforeGenerationRef.current = hasGeneratedPlan(plan) ? { ...plan } : null;
     genStartedInSessionRef.current = true;
     persistPlan({ status: "generating", fileNames, startedAt: Date.now() });
     setGenProgress(0);
     setModal("generating");
-  }, [persistPlan]);
+  }, [persistPlan, plan]);
 
   const submitUpload = useCallback(() => {
     const picked = uploadItems.filter((item) => item.status === "success").map((item) => item.file);
@@ -6882,6 +6921,13 @@ function Path02PlanProvider({ children }) {
     window.addEventListener("bc-landing-auth-logout", onAuthChange);
     return () => window.removeEventListener("bc-landing-auth-logout", onAuthChange);
   }, []);
+
+  useEffect(() => {
+    window.bcLandingPath02GenerationFailed = failGeneration;
+    return () => {
+      delete window.bcLandingPath02GenerationFailed;
+    };
+  }, [failGeneration]);
 
   useEffect(() => {
     if (plan.status !== "generating" || !plan.startedAt) return undefined;
@@ -6953,10 +6999,11 @@ function Path02PlanProvider({ children }) {
     handlePlanRequest,
     resetPlanDemo,
     simulateReadyPlan,
+    failGeneration,
   }), [
     plan, modal, files, fileErrors, uploadItems, genProgress, planToast,
     closeModal, openUpload, viewPlan, confirmOverwrite, submitUpload,
-    setFileAt, setUploadFiles, clearUploadItem, clearFileAt, retryUploadItem, handlePlanRequest, resetPlanDemo, simulateReadyPlan,
+    setFileAt, setUploadFiles, clearUploadItem, clearFileAt, retryUploadItem, handlePlanRequest, resetPlanDemo, simulateReadyPlan, failGeneration,
   ]);
 
   return (
@@ -7136,7 +7183,7 @@ function PathCard({ path, index, highlight, onWechatClick }) {
                     <NoteDrip
                       inline
                       title="路径02 · AI 学习方案"
-                      body={"【入口】路径 02 主 CTA → 内嵌弹窗\n\n【上传】1–2 PDF；满 2 份隐藏上传区，删除后重现\n· 说明语见 §5.1\n\n【流程】异步生成；生成中路径卡 footer 状态条\n\n【待办】T-012 / T-013"}
+                      body={"【入口】路径 02 主 CTA → 内嵌弹窗\n\n【上传】仅 1 份 PDF（≤5MB）；上传后隐藏上传区，删除后可重选\n【正式】扣子 → Markdown 预览 + 后端导出 PDF 下载\n【失败】页顶 Toast「方案生成失败，请重试或联系客服」3 秒\n· 见 路径02-方案Markdown与PDF开发说明.md\n\n【待办】T-012 / T-013"}
                       prd={["§2.2 功能 5.1"]}
                       docs={["prd", "todo"]}
                     />
@@ -7282,7 +7329,7 @@ function ConversionPaths({ highlightIdx }) {
               <NoteDrip
                 inline
                 title="BC GrowingIO 埋点"
-                body={"【BC 验收 3 指标 · 已定口径】\n1. 访问量 → SDK 自动 PV + UV（无需登录）\n2. 路径点击 → 仅 6 卡片主 CTA：path_cta_01…06\n3. 注册成功 → register_success（本页弹窗内新注册；跳转主站后注册不算）\n\n【归因】utm_* + ut；setUserId + set_user_id\n【联调】杨效鲁 · T-010 / T-011"}
+                body={"【BC 验收 3 指标 · 已定口径】\n1. 访问量 → SDK 自动 PV + UV（无需登录）\n2. 路径点击 → 仅 6 卡片主 CTA：path_cta_01…06\n3. 注册成功 → register_success（本页弹窗内新注册；跳转主站后注册不算）\n\n【路径02 预埋】path02_gen_complete / path02_gen_fail 等（非 BC 必验）\n【归因】utm_* + ut；setUserId + set_user_id\n【联调】杨效鲁 · T-010 / T-011"}
                 prd={["§4.3.1 BC 合作埋点"]}
                 docs={["prd", "tracking", "todo"]}
                 links={[{ label: "BC 对接邮箱", href: "mailto:Yang.Xiaolu@britishcouncil.org.cn" }]}
