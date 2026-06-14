@@ -230,7 +230,7 @@ python3 scripts/generate_plan_pdf.py
 | 项 | 规范 |
 | --- | --- |
 | 文案 | **方案生成失败，请重试或联系客服** |
-| 位置 | 页面**顶部** Toast（`auth-toast--top`） |
+| 位置 | 页面**顶部** Toast（`auth-toast`，Nav 下方居中） |
 | 时长 | **3 秒** |
 | 弹窗 | 关闭「生成中」弹窗 |
 | 状态 | 清除 `generating`；覆盖生成失败时恢复原方案 |

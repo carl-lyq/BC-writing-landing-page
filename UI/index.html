@@ -3176,7 +3176,7 @@ button.path-card__wechat {
 }
 .auth-toast {
   position: fixed;
-  bottom: 28px;
+  top: calc(var(--nav-height, 65px) + 12px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 3200;
@@ -3189,10 +3189,6 @@ button.path-card__wechat {
   line-height: 1.45;
   box-shadow: 0 12px 40px rgba(11, 31, 58, 0.28);
   animation: toast-in 280ms var(--ease-out-quint) both;
-}
-.auth-toast--top {
-  top: calc(var(--nav-height, 65px) + 12px);
-  bottom: auto;
 }
 .svip-modal__figure {
   margin: 0;
@@ -4192,6 +4188,276 @@ button:disabled:hover {
   animation: toast-in 280ms var(--ease-out-quint) both;
 }
 
+/* Tweaks debug panel — 交付专用，生产剔除 */
+.tweak-dock {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+}
+.tweak-dock > * { pointer-events: auto; }
+.tweak-dock > .proto-anchor { flex-shrink: 0; }
+.tweak-panel {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  width: min(400px, calc(100vw - 32px));
+  max-height: calc(100vh - 40px);
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+  font-family: var(--sans);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.tweak-panel__head {
+  flex-shrink: 0;
+  padding: 10px 12px;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.tweak-panel__title {
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.tweak-panel__sub {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 2px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-family: var(--sans);
+  line-height: 1.35;
+}
+.tweak-panel__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-4) transparent;
+  background: var(--paper-3);
+}
+.tweak-panel__body::-webkit-scrollbar { width: 7px; }
+.tweak-panel__body::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 2px 0;
+}
+.tweak-panel__body::-webkit-scrollbar-thumb {
+  background: var(--ink-4);
+  border-radius: 999px;
+  border: 2px solid var(--paper-3);
+}
+.tweak-panel__footer {
+  flex-shrink: 0;
+  padding: 8px 10px;
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+}
+.tweak-panel__footer .tweak-btn {
+  padding: 6px 10px;
+  font-size: 10px;
+  text-align: center;
+}
+.tweak-section {
+  flex-shrink: 0;
+  border: 1px solid var(--ink-4);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 1px 0 rgba(11, 31, 58, 0.04), 0 4px 14px rgba(11, 31, 58, 0.05);
+}
+.tweak-section__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--paper);
+  background: var(--ink);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.tweak-section__head::before {
+  content: "";
+  flex-shrink: 0;
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.tweak-section__body {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--paper);
+}
+.tweak-btn {
+  width: 100%;
+  padding: 6px 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.3;
+  text-align: left;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper-2);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.tweak-btn:hover { border-color: var(--ink-3); background: var(--paper-3); }
+.tweak-btn.is-active { background: var(--accent-wash); border-color: var(--accent); color: var(--accent-ink); }
+.tweak-btn--warn { border-color: #e8c4a8; color: #9a3412; background: #fffaf5; }
+.tweak-btn--warn:hover { background: #fef3e2; border-color: #c9580c; }
+.tweak-btn--ghost { color: var(--ink-3); background: transparent; border-color: transparent; }
+.tweak-btn--ghost:hover { background: var(--paper-2); border-color: var(--rule); }
+.tweak-btn-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+.tweak-btn-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tweak-btn-grid .tweak-btn {
+  font-size: 10px;
+  padding: 5px 6px;
+  min-width: 0;
+  white-space: normal;
+  word-break: break-word;
+}
+.tweak-btn-grid__span-2 { grid-column: 1 / -1; }
+.tweak-inline-row {
+  display: flex;
+  gap: 5px;
+  align-items: stretch;
+}
+.tweak-inline-row .tweak-select { flex: 1 1 auto; min-width: 0; }
+.tweak-inline-row .tweak-btn {
+  width: auto;
+  flex: 0 0 auto;
+  align-self: stretch;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+.tweak-field__label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+.tweak-status {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-3);
+  line-height: 1.35;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: var(--paper-2);
+  border: 1px dashed var(--rule);
+}
+.tweak-toggle {
+  width: 50px;
+  height: 26px;
+  padding: 2px;
+  background: var(--rule);
+  border-radius: 999px;
+  position: relative;
+  transition: background 160ms ease;
+}
+.tweak-toggle.is-on { background: var(--accent); }
+.tweak-toggle__knob {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--paper);
+  transition: transform 180ms ease;
+}
+.tweak-toggle.is-on .tweak-toggle__knob { transform: translateX(24px); }
+.tweak-accent-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.tweak-accent-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--rule);
+}
+.tweak-accent-swatch.is-selected { border: 2px solid var(--ink); }
+.tweak-style-row {
+  align-items: center;
+  justify-content: space-between;
+}
+.tweak-style-row .tweak-field__label { margin-bottom: 0; }
+.tweak-mode-tabs {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tweak-mode-tabs__btn {
+  flex: 1;
+  padding: 8px 0;
+  font-family: var(--mono);
+  font-size: var(--text-meta-md);
+  letter-spacing: 0.08em;
+  background: transparent;
+  color: var(--ink);
+}
+.tweak-mode-tabs__btn.is-selected {
+  background: var(--ink);
+  color: var(--paper);
+}
+.tweak-mode-tabs__btn + .tweak-mode-tabs__btn { border-left: 1px solid var(--rule); }
+.tweak-select {
+  width: 100%;
+  padding: 6px 8px;
+  font-family: var(--sans);
+  font-size: 12px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  color: var(--ink);
+  border-radius: 6px;
+}
+.tweak-gear {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  font-family: var(--mono);
+  font-size: var(--text-meta-sm);
+}
+
 .plan-gen-bar {
   animation: gen-bar-in 280ms var(--ease-out-quint) both;
 }
@@ -4313,7 +4579,7 @@ button:disabled:hover {
 }
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
@@ -5277,6 +5543,25 @@ function Hero() {
     trackBcBtn(BC_HERO_VIDEO_SELECT_BTN_IDS[index]);
   }
 
+  useEffect(() => {
+    const onHeroVideo = (e) => {
+      const index = Number(e.detail?.index ?? 0);
+      const video = HERO_VIDEOS[index];
+      if (video) selectPlaylistVideo(video, index);
+    };
+    const onHeroPlay = () => {
+      const index = HERO_VIDEOS.findIndex((v) => v.id === activeId);
+      if (index >= 0) trackBcBtn(BC_HERO_VIDEO_PLAY_BTN_IDS[index]);
+      setIsPlaying(true);
+    };
+    window.addEventListener("tweak-hero-video", onHeroVideo);
+    window.addEventListener("tweak-hero-play", onHeroPlay);
+    return () => {
+      window.removeEventListener("tweak-hero-video", onHeroVideo);
+      window.removeEventListener("tweak-hero-play", onHeroPlay);
+    };
+  }, [activeId]);
+
   function handlePlay() {
     const index = HERO_VIDEOS.findIndex((v) => v.id === activeId);
     if (index >= 0) trackBcBtn(BC_HERO_VIDEO_PLAY_BTN_IDS[index]);
@@ -5541,11 +5826,21 @@ const PAIN_POINTS = [
 function PainPointsA({ onMatch }) {
   const [selected, setSelected] = useState(null);
 
-  function selectCard(p) {
+  function selectCard(p, fromTweak = false) {
     setSelected(p.id);
-    trackBcBtn("bc_pain_card_select_click");
+    if (!fromTweak) trackBcBtn("bc_pain_card_select_click");
     if (onMatch) onMatch(p);
   }
+
+  useEffect(() => {
+    const onSelect = (e) => {
+      const hookIdx = Number(e.detail?.hookIdx ?? 0);
+      const p = PAIN_POINTS.find((x) => x.hookIdx === hookIdx);
+      if (p) selectCard(p, true);
+    };
+    window.addEventListener("tweak-pain-select", onSelect);
+    return () => window.removeEventListener("tweak-pain-select", onSelect);
+  }, [onMatch]);
 
   return (
     <div className="pain-grid">
@@ -5674,6 +5969,33 @@ function PainPointsB({ onMatch }) {
   }, [answers]);
 
   const result = PAIN_POINTS.find(p => p.hookIdx === resultIdx) || PAIN_POINTS[0];
+
+  useEffect(() => {
+    const onComplete = (e) => {
+      const hookIdx = Number(e.detail?.hookIdx ?? 0);
+      const target = PAIN_POINTS.find((p) => p.hookIdx === hookIdx) || PAIN_POINTS[0];
+      const fakeAnswers = QUIZ.map((_, i) => ({
+        qIdx: i,
+        hook: target.hookIdx,
+        label: "（调试预设）",
+      }));
+      setAnswers(fakeAnswers);
+      setMultiSelected([]);
+      setStep(QUIZ.length);
+      if (onMatch) onMatch(target);
+    };
+    const onReset = () => {
+      setAnswers([]);
+      setStep(0);
+      setMultiSelected([]);
+    };
+    window.addEventListener("tweak-quiz-complete", onComplete);
+    window.addEventListener("tweak-quiz-reset", onReset);
+    return () => {
+      window.removeEventListener("tweak-quiz-complete", onComplete);
+      window.removeEventListener("tweak-quiz-reset", onReset);
+    };
+  }, [onMatch]);
 
   useEffect(() => {
     if (done) {
@@ -6818,11 +7140,8 @@ function Path02PlanUI() {
     <>
       {dialog}
       {planToast && (
-        <div
-          className={`auth-toast${planToast.placement === "top" ? " auth-toast--top" : ""}`}
-          role="alert"
-        >
-          {planToast.text}
+        <div className="auth-toast" role="alert">
+          {planToast}
         </div>
       )}
     </>
@@ -6868,9 +7187,8 @@ function Path02PlanProvider({ children }) {
 
   const showToast = useCallback((msg, opts = {}) => {
     if (planToastTimerRef.current) clearTimeout(planToastTimerRef.current);
-    const placement = opts.placement || "bottom";
     const duration = opts.duration ?? 3200;
-    setPlanToast({ text: msg, placement });
+    setPlanToast(msg);
     planToastTimerRef.current = setTimeout(() => {
       setPlanToast(null);
       planToastTimerRef.current = null;
@@ -7072,7 +7390,7 @@ function Path02PlanProvider({ children }) {
     planBeforeGenerationRef.current = null;
     persistPlan(restore || { status: "none" });
     trackBcBtn("bc_path02_gen_fail_click");
-    showToast(PLAN_FAIL_TOAST_MSG, { placement: "top", duration: PLAN_FAIL_TOAST_MS });
+    showToast(PLAN_FAIL_TOAST_MSG, { duration: PLAN_FAIL_TOAST_MS });
   }, [persistPlan, showToast]);
 
   const timeoutGeneration = useCallback(() => {
@@ -7184,6 +7502,38 @@ function Path02PlanProvider({ children }) {
     });
   }, [persistPlan]);
 
+  const simulateGenerating = useCallback((opts = {}) => {
+    planBeforeGenerationRef.current = hasGeneratedPlan(plan) ? { ...plan } : null;
+    genStartedInSessionRef.current = opts.autoPopup !== false;
+    persistPlan({
+      status: "generating",
+      fileNames: opts.fileNames || ["demo-report.pdf"],
+      startedAt: Date.now() - (opts.elapsedMs || 0),
+    });
+    setGenProgress(opts.progress ?? 0);
+    setModal(opts.showModal === false ? null : "generating");
+  }, [persistPlan, plan]);
+
+  const openOverwriteModalDemo = useCallback(() => {
+    if (!hasGeneratedPlan(plan)) {
+      const preview = buildDemoPlanPreview(["demo-report.pdf"]);
+      persistPlan({
+        status: "ready",
+        fileNames: ["demo-report.pdf"],
+        preview,
+        readyAt: Date.now(),
+      });
+    }
+    setModal("overwrite");
+  }, [persistPlan, plan]);
+
+  const simulateGeneratingBlocked = useCallback(() => {
+    if (plan.status !== "generating") {
+      simulateGenerating({ showModal: false, autoPopup: false, elapsedMs: 4000, progress: 40 });
+    }
+    setTimeout(() => showToast("方案生成中，请稍候"), 0);
+  }, [plan.status, simulateGenerating, showToast]);
+
   const value = useMemo(() => ({
     plan,
     modal,
@@ -7205,12 +7555,16 @@ function Path02PlanProvider({ children }) {
     handlePlanRequest,
     resetPlanDemo,
     simulateReadyPlan,
+    simulateGenerating,
+    openOverwriteModalDemo,
+    simulateGeneratingBlocked,
     failGeneration,
     timeoutGeneration,
   }), [
     plan, modal, files, fileErrors, uploadItems, genProgress, planToast,
     closeModal, openUpload, viewPlan, confirmOverwrite, submitUpload,
-    setFileAt, setUploadFiles, clearUploadItem, clearFileAt, retryUploadItem, handlePlanRequest, resetPlanDemo, simulateReadyPlan, failGeneration, timeoutGeneration,
+    setFileAt, setUploadFiles, clearUploadItem, clearFileAt, retryUploadItem, handlePlanRequest, resetPlanDemo, simulateReadyPlan,
+    simulateGenerating, openOverwriteModalDemo, simulateGeneratingBlocked, failGeneration, timeoutGeneration,
   ]);
 
   return (
@@ -7494,6 +7848,15 @@ function ConversionPaths({ highlightIdx }) {
   const closeWechatConsult = useCallback(() => {
     setWechatOpen(false);
   }, []);
+
+  useEffect(() => {
+    const onOpenWechat = (e) => {
+      const idx = Number(e.detail?.pathIndex ?? 3);
+      openWechatConsult(idx);
+    };
+    window.addEventListener("tweak-open-wechat", onOpenWechat);
+    return () => window.removeEventListener("tweak-open-wechat", onOpenWechat);
+  }, [openWechatConsult]);
 
   return (
     <div id="paths" className="conversion-paths">
@@ -7933,17 +8296,57 @@ function FlowAxis() {
 
 const TWEAK_DEFAULTS = {
   painPattern: "A",
-  accent: "#1e5fd6",
   highlightPath: -1,
+  accent: "#1e5fd6",
   darkMode: false,
 };
+
+const TWEAK_ACCENT_SWATCHES = [
+  ["#1e5fd6", "蓝色"],
+  ["#143f99", "深蓝"],
+  ["#2b6cb0", "钢蓝"],
+  ["#0a3d62", "藏青"],
+  ["#c9580c", "赤陶"],
+];
+
+const TWEAK_PATH_LABELS = [
+  "01 · 课程学习",
+  "02 · 专属提分方案",
+  "03 · 互动 SVIP",
+  "04 · 学习营",
+  "05 · AI 计划",
+  "06 · 人工精批",
+];
+
+function dispatchTweak(eventName, detail = {}) {
+  window.dispatchEvent(new CustomEvent(eventName, { detail }));
+}
+
+function TweakSection({ title, children }) {
+  return (
+    <div className="tweak-section">
+      <div className="tweak-section__head">{title}</div>
+      <div className="tweak-section__body">{children}</div>
+    </div>
+  );
+}
+
+function TweakBtn({ children, onClick, active, warn, ghost, className = "" }) {
+  return (
+    <button
+      type="button"
+      className={`tweak-btn${active ? " is-active" : ""}${warn ? " tweak-btn--warn" : ""}${ghost ? " tweak-btn--ghost" : ""} ${className}`.trim()}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
 
 function TweakField({ label, children }) {
   return (
     <div>
-      <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-3)", marginBottom: 8 }}>
-        {label}
-      </div>
+      <div className="tweak-field__label">{label}</div>
       {children}
     </div>
   );
@@ -7954,7 +8357,11 @@ function App() {
   useBcGrowingIO();
   const activeNavSection = useNavActiveSection();
   const { openLogin, isLoggedIn, setLoggedInDemo } = useAuth();
-  const { resetPlanDemo, simulateReadyPlan, timeoutGeneration, plan } = usePath02Plan();
+  const {
+    resetPlanDemo, simulateReadyPlan, simulateGenerating, openOverwriteModalDemo,
+    simulateGeneratingBlocked, failGeneration, timeoutGeneration,
+    viewPlan, plan, modal,
+  } = usePath02Plan();
   const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
   const [panelOpen, setPanelOpen] = useState(false);
   const [matchHookIdx, setMatchHookIdx] = useState(TWEAK_DEFAULTS.highlightPath);
@@ -8007,8 +8414,29 @@ function App() {
     }
   }, [tweaks.darkMode]);
 
+  function clearTweakThemeOverrides() {
+    document.documentElement.style.setProperty("--accent", TWEAK_DEFAULTS.accent);
+    ["--paper","--paper-2","--paper-3","--ink","--ink-2","--ink-3","--ink-4","--rule","--rule-soft"].forEach(v =>
+      document.documentElement.style.removeProperty(v)
+    );
+  }
+
   function update(edits) {
     setTweaks(prev => ({ ...prev, ...edits }));
+  }
+
+  function resetDemoStates() {
+    setTweaks(TWEAK_DEFAULTS);
+    setMatchHookIdx(-1);
+    setLoggedInDemo(false);
+    dispatchTweak("tweak-quiz-reset");
+    resetPlanDemo();
+    clearTweakThemeOverrides();
+  }
+
+  function clearPathHighlight() {
+    update({ highlightPath: -1 });
+    setMatchHookIdx(-1);
   }
 
   function onMatch(p) {
@@ -8139,196 +8567,158 @@ function App() {
 
       <Footer />
 
-      {/* Tweaks toggle button — 原型调试，生产环境移除 */}
-      <div
-        style={{
-          position: "fixed", right: 20, bottom: panelOpen ? 420 : 20,
-          zIndex: 1001,
-          transition: "bottom 200ms ease",
-        }}
-      >
-        <DripAnchor
-          side="top"
-          drip={
-            <NoteDrip
-              inline
-              title="Tweaks 调试面板"
-              body={"⚠️ 交付专用 · 生产剔除\n\n· 切换痛点 A/B、强调色、Dark Mode\n· 手动高亮路径 / 模拟路径 02 方案\n\n产品 A/B 切换在「需求匹配」正文内"}
-              prd={["§2.3 辅助功能"]}
-              docs={["prd"]}
-            />
-          }
-        >
-          <button
-            onClick={() => setPanelOpen(v => !v)}
-            style={{
-              width: 44, height: 44, borderRadius: "50%",
-              background: "var(--ink)", color: "var(--paper)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-              fontFamily: "var(--mono)", fontSize: "var(--text-meta-sm)",
-            }}
-            title="Tweaks（原型调试 · 生产移除）"
-          >
-            ⚙
-          </button>
-        </DripAnchor>
-      </div>
-
-      {/* TWEAKS PANEL */}
-      {panelOpen && (
-        <div style={{
-          position: "fixed", right: 20, bottom: 20,
-          width: 320,
-          background: "var(--paper)",
-          border: "1px solid var(--ink)",
-          boxShadow: "0 20px 50px rgba(0,0,0,0.18)",
-          fontFamily: "var(--sans)",
-          zIndex: 1000,
-          borderRadius: 12,
-          overflow: "hidden",
-        }}>
-          <div style={{
-            padding: "14px 18px",
-            background: "var(--ink)", color: "var(--paper)",
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-          }}>
-            <div style={{ fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", letterSpacing: "0.16em", textTransform: "uppercase" }}>
-              调试面板
+      {/* Tweaks — 原型调试，生产环境移除 */}
+      <div className="tweak-dock">
+        {panelOpen ? (
+          <div className="tweak-panel" role="dialog" aria-label="调试面板">
+          <div className="tweak-panel__head">
+            <div>
+              <div className="tweak-panel__title">调试面板</div>
+              <div className="tweak-panel__sub">页内无入口 · 仅面板可触发</div>
             </div>
-            <button onClick={() => setPanelOpen(false)} style={{ color: "var(--paper)", fontSize: 18, lineHeight: 1 }}>×</button>
+            <DripAnchor
+              side="start"
+              drip={
+                <NoteDrip
+                  inline
+                  title="Tweaks 调试面板"
+                  body={"⚠️ 交付专用 · 生产剔除\n\n收录：页内无入口的状态（边缘态 / 注入态 / Token 预览）\n\n含：匹配快捷演示、手动高亮、登录态、路径02 边缘态、强调色、Dark Mode\n\n页内已有入口的不放：A/B Tab、导航、微信咨询、Hero、登录网关等"}
+                  prd={["§2.3.2 Tweaks 调试面板"]}
+                  docs={["prd"]}
+                />
+              }
+            >
+              <button type="button" onClick={() => setPanelOpen(false)} style={{ color: "var(--paper)", fontSize: 18, lineHeight: 1 }} aria-label="关闭">×</button>
+            </DripAnchor>
           </div>
-          <div style={{ padding: 18, display: "flex", flexDirection: "column", gap: 20 }}>
-            <TweakField label="痛点模式">
-              <div style={{ display: "flex", gap: 0, border: "1px solid var(--rule)", borderRadius: 8, overflow: "hidden" }}>
-                {["A", "B"].map(k => (
-                  <button key={k}
-                    onClick={() => update({ painPattern: k })}
-                    style={{
-                      flex: 1, padding: "8px 0",
-                      fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)", letterSpacing: "0.1em",
-                      background: tweaks.painPattern === k ? "var(--ink)" : "transparent",
-                      color: tweaks.painPattern === k ? "var(--paper)" : "var(--ink)",
-                      borderRight: k === "A" ? "1px solid var(--rule)" : "none",
-                    }}>
-                    {k === "A" ? "A · 选卡" : "B · 问卷"}
-                  </button>
-                ))}
+          <div className="tweak-panel__body">
+            <TweakSection title="需求匹配 · 快捷演示">
+              <div className="tweak-btn-grid">
+                <TweakBtn onClick={() => { update({ painPattern: "A" }); dispatchTweak("tweak-pain-select", { hookIdx: 2 }); }}>
+                  选卡 → 路径03
+                </TweakBtn>
+                <TweakBtn onClick={() => { update({ painPattern: "B" }); dispatchTweak("tweak-quiz-complete", { hookIdx: 0 }); }}>
+                  问卷完成 → 01
+                </TweakBtn>
+                <TweakBtn ghost className="tweak-btn-grid__span-2" onClick={() => dispatchTweak("tweak-quiz-reset")}>重置问卷进度</TweakBtn>
               </div>
-            </TweakField>
+            </TweakSection>
 
-            <TweakField label="强调色">
-              <div style={{ display: "flex", gap: 8 }}>
-                {[["#1e5fd6","蓝色"],["#143f99","深蓝"],["#2b6cb0","钢蓝"],["#0a3d62","藏青"],["#c9580c","赤陶"]].map(([c, name]) => (
-                  <button key={c}
-                    onClick={() => update({ accent: c })}
-                    title={name}
-                    style={{
-                      width: 32, height: 32,
-                      background: c,
-                      border: tweaks.accent === c ? "2px solid var(--ink)" : "1px solid var(--rule)",
-                      cursor: "pointer",
-                      borderRadius: 6,
+            <TweakSection title="路径高亮（无匹配时）">
+              <TweakField label="手动高亮">
+                <div className="tweak-inline-row">
+                  <select
+                    className="tweak-select"
+                    value={tweaks.highlightPath}
+                    onChange={(e) => {
+                      const v = Number(e.target.value);
+                      update({ highlightPath: v });
+                      setMatchHookIdx(v);
                     }}
-                  />
-                ))}
+                  >
+                    <option value={-1}>无高亮</option>
+                    {TWEAK_PATH_LABELS.map((label, i) => (
+                      <option key={i} value={i}>{label}</option>
+                    ))}
+                  </select>
+                  <TweakBtn ghost onClick={clearPathHighlight}>清除</TweakBtn>
+                </div>
+              </TweakField>
+            </TweakSection>
+
+            <TweakSection title="登录态 / 偶发反馈">
+              <div className="tweak-btn-grid">
+                <TweakBtn active={isLoggedIn} onClick={() => setLoggedInDemo(!isLoggedIn)}>
+                  {isLoggedIn ? "已登录 · 退出" : "未登录 · 模拟登录"}
+                </TweakBtn>
+                <TweakBtn onClick={() => setPathToast("登录成功，即将跳转至：查看课程详情")}>
+                  CTA 成功 Toast
+                </TweakBtn>
               </div>
-            </TweakField>
+            </TweakSection>
 
-            <TweakField label="高亮路径">
-              <select
-                value={tweaks.highlightPath}
-                onChange={e => { const v = Number(e.target.value); update({ highlightPath: v }); setMatchHookIdx(v); }}
-                style={{ width: "100%", padding: "8px 10px", fontFamily: "var(--sans)", fontSize: 13, border: "1px solid var(--rule)", background: "var(--paper)", color: "var(--ink)", borderRadius: 8 }}>
-                <option value={-1}>无</option>
-                <option value={0}>01 · 课程学习</option>
-                <option value={1}>02 · 专属提分方案</option>
-                <option value={2}>03 · 互动 SVIP</option>
-                <option value={3}>04 · 学习营</option>
-                <option value={4}>05 · AI 计划</option>
-                <option value={5}>06 · 人工精批</option>
-              </select>
-            </TweakField>
+            <TweakSection title="路径02 · 边缘态">
+              <div className="tweak-btn-grid">
+                <TweakBtn onClick={() => simulateGenerating({ showModal: true })}>生成中 · 弹窗内</TweakBtn>
+                <TweakBtn onClick={() => simulateGenerating({ showModal: false, autoPopup: false, elapsedMs: 50000, progress: 55 })}>
+                  生成中 · 顶栏条
+                </TweakBtn>
+                <TweakBtn active={hasGeneratedPlan(plan)} onClick={simulateReadyPlan}>方案已就绪</TweakBtn>
+                <TweakBtn onClick={openOverwriteModalDemo}>覆盖确认弹窗</TweakBtn>
+                <TweakBtn onClick={() => { if (!hasGeneratedPlan(plan)) simulateReadyPlan(); viewPlan(); }}>
+                  结果预览弹窗
+                </TweakBtn>
+                <TweakBtn warn onClick={failGeneration}>失败 Toast (&lt;5min)</TweakBtn>
+                <TweakBtn warn onClick={timeoutGeneration}>超时弹窗 (≥5min)</TweakBtn>
+                <TweakBtn onClick={simulateGeneratingBlocked}>生成中拦截 Toast</TweakBtn>
+                <TweakBtn ghost onClick={resetPlanDemo}>重置路径02</TweakBtn>
+              </div>
+              {plan.status !== "none" || modal ? (
+                <div className="tweak-status">
+                  plan={plan.status}{modal ? ` · modal=${modal}` : ""}
+                </div>
+              ) : null}
+            </TweakSection>
 
-            <TweakField label="深色模式">
-              <button
-                onClick={() => update({ darkMode: !tweaks.darkMode })}
-                style={{
-                  width: 50, height: 26, padding: 2,
-                  background: tweaks.darkMode ? "var(--accent)" : "var(--rule)",
-                  borderRadius: 999,
-                  position: "relative",
-                  transition: "background 160ms ease",
-                }}>
-                <div style={{
-                  width: 22, height: 22, borderRadius: "50%",
-                  background: "var(--paper)",
-                  transform: tweaks.darkMode ? "translateX(24px)" : "translateX(0)",
-                  transition: "transform 180ms ease",
-                }} />
-              </button>
-            </TweakField>
-
-            <TweakField label="模拟已登录">
-              <button
-                type="button"
-                onClick={() => setLoggedInDemo(!isLoggedIn)}
-                style={{
-                  width: "100%", padding: "8px 10px",
-                  fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
-                  border: "1px solid var(--rule)", borderRadius: 8,
-                  background: isLoggedIn ? "var(--accent-wash)" : "var(--paper)",
-                  color: isLoggedIn ? "var(--accent-ink)" : "var(--ink)",
-                }}
-              >
-                {isLoggedIn ? "已登录 · 点击退出" : "未登录 · 点击模拟登录"}
-              </button>
-            </TweakField>
-
-            <TweakField label="路径02 方案 Demo">
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <TweakSection title="样式预览">
+              <TweakField label="强调色">
+                <div className="tweak-accent-row">
+                  {TWEAK_ACCENT_SWATCHES.map(([c, name]) => (
+                    <button
+                      key={c}
+                      type="button"
+                      className={`tweak-accent-swatch${tweaks.accent === c ? " is-selected" : ""}`}
+                      style={{ background: c }}
+                      title={name}
+                      aria-label={name}
+                      onClick={() => update({ accent: c })}
+                    />
+                  ))}
+                </div>
+              </TweakField>
+              <div className="tweak-inline-row tweak-style-row">
+                <div className="tweak-field__label">深色模式</div>
                 <button
                   type="button"
-                  onClick={simulateReadyPlan}
-                  style={{
-                    width: "100%", padding: "8px 10px",
-                    fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
-                    border: "1px solid var(--rule)", borderRadius: 8,
-	                    background: hasGeneratedPlan(plan) ? "var(--accent-wash)" : "var(--paper)",
-                    color: "var(--ink)",
-                  }}
+                  className={`tweak-toggle${tweaks.darkMode ? " is-on" : ""}`}
+                  onClick={() => update({ darkMode: !tweaks.darkMode })}
+                  aria-pressed={tweaks.darkMode}
+                  aria-label="切换深色模式预览"
                 >
-                  模拟方案已就绪
-                </button>
-                <button
-                  type="button"
-                  onClick={timeoutGeneration}
-                  style={{
-                    width: "100%", padding: "8px 10px",
-                    fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
-                    border: "1px solid var(--rule)", borderRadius: 8,
-                    background: "var(--paper)", color: "var(--ink)",
-                  }}
-                >
-                  模拟生成超时弹窗
-                </button>
-                <button
-                  type="button"
-                  onClick={resetPlanDemo}
-                  style={{
-                    width: "100%", padding: "8px 10px",
-                    fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
-                    border: "1px solid var(--rule)", borderRadius: 8,
-                    background: "var(--paper)", color: "var(--ink-3)",
-                  }}
-                >
-                  重置路径02 方案状态
+                  <div className="tweak-toggle__knob" />
                 </button>
               </div>
-            </TweakField>
+            </TweakSection>
+          </div>
+          <div className="tweak-panel__footer">
+            <TweakBtn ghost onClick={resetDemoStates}>重置全部演示态</TweakBtn>
           </div>
         </div>
-      )}
+        ) : (
+          <DripAnchor
+            side="top"
+            drip={
+              <NoteDrip
+                inline
+                title="Tweaks 调试面板"
+                body={"⚠️ 交付专用 · 生产剔除\n\n页内无入口 · 仅面板可触发（含强调色、Dark Mode）"}
+                prd={["§2.3.2 Tweaks 调试面板"]}
+                docs={["prd"]}
+              />
+            }
+          >
+            <button
+              type="button"
+              className="tweak-gear"
+              onClick={() => setPanelOpen(true)}
+              title="Tweaks（原型调试 · 生产移除）"
+              aria-expanded={false}
+            >
+              ⚙
+            </button>
+          </DripAnchor>
+        )}
+      </div>
 
       {pathToast && (
         <div className="auth-toast" role="status">{pathToast}</div>
