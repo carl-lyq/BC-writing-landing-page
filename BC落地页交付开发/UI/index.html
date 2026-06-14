@@ -2817,6 +2817,8 @@ button.path-card__wechat {
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 2080;
 }
 .proto-anchor__drips--row { flex-direction: row; gap: 6px; flex-wrap: wrap; }
 .proto-drip--inline,
@@ -2830,7 +2832,7 @@ button.path-card__wechat {
 }
 .proto-drip {
   position: absolute;
-  z-index: 40;
+  z-index: 2080;
   width: 26px;
   height: 26px;
   padding: 0;
@@ -2854,6 +2856,47 @@ button.path-card__wechat {
 }
 .proto-drip--note { background: linear-gradient(135deg, #3b82f6, #1e5fd6); }
 .proto-drip--todo { background: linear-gradient(135deg, #f59e0b, #c9580c); }
+/* 系统标注：实心、标准尺寸、蓝/橙标准色 */
+.proto-drip--system.proto-drip--note {
+  background: linear-gradient(145deg, #3b82f6 0%, #1e5fd6 100%);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(30, 95, 214, 0.38);
+}
+.proto-drip--system.proto-drip--todo {
+  background: linear-gradient(145deg, #f59e0b 0%, #c9580c 100%);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(201, 88, 12, 0.38);
+}
+/* 手写标注：更大、紫/珊瑚色、双环描边、不同图标 */
+.proto-drip--manual {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #fff;
+  outline: 2px dashed rgba(255, 255, 255, 0.95);
+  outline-offset: 2px;
+}
+.proto-drip--manual.proto-drip--note {
+  background: linear-gradient(145deg, #a78bfa 0%, #7c3aed 55%, #6d28d9 100%);
+  box-shadow:
+    0 0 0 2px #7c3aed,
+    0 0 0 5px rgba(124, 58, 237, 0.22),
+    0 4px 14px rgba(109, 40, 217, 0.42);
+}
+.proto-drip--manual.proto-drip--todo {
+  background: linear-gradient(145deg, #fdba74 0%, #f97316 55%, #c2410c 100%);
+  box-shadow:
+    0 0 0 2px #ea580c,
+    0 0 0 5px rgba(234, 88, 12, 0.2),
+    0 4px 14px rgba(194, 65, 12, 0.4);
+}
+.proto-drip--manual .proto-drip__icon {
+  font-size: 11px;
+  line-height: 1.65;
+  font-weight: 800;
+}
+.proto-drip--floating.proto-drip--manual:hover {
+  filter: brightness(1.1) saturate(1.05);
+}
 .proto-drip--tl { top: 10px; left: 10px; }
 .proto-drip--tr { top: 10px; right: 10px; }
 .proto-drip--bl { bottom: 10px; left: 10px; }
@@ -2864,7 +2907,7 @@ button.path-card__wechat {
   left: 0;
   top: 38vh;
   transform: translateY(-50%);
-  z-index: 2000;
+  z-index: 2100;
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -3040,6 +3083,218 @@ button.path-card__wechat {
   text-underline-offset: 3px;
 }
 .proto-modal__meta { font-size: var(--text-caption); color: var(--ink-3); line-height: 1.5; }
+.proto-modal__badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.proto-modal__badge {
+  font-family: var(--mono);
+  font-size: var(--text-meta-xs);
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--rule-soft);
+}
+.proto-modal__badge--system { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+.proto-modal__badge--system-todo { background: #ffedd5; color: #9a3412; border-color: #fdba74; }
+.proto-modal__badge--manual { background: #ede9fe; color: #6d28d9; border-color: #a78bfa; font-weight: 600; }
+.proto-modal__badge--todo-manual { background: #fff7ed; color: #c2410c; border-color: #fb923c; font-weight: 600; }
+.proto-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--rule-soft);
+}
+.proto-modal__action-btn {
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: var(--text-caption);
+  font-weight: 500;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink-2);
+}
+.proto-modal__action-btn:hover { border-color: var(--ink-3); }
+.proto-modal__action-btn--danger { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
+.proto-drip--floating {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2080;
+  margin: 0;
+  pointer-events: auto;
+  will-change: transform;
+}
+.proto-drip-top-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2080;
+  pointer-events: none;
+  overflow: visible;
+}
+.proto-drip-top-layer .proto-drip {
+  pointer-events: auto;
+}
+.proto-manual-drip-mount {
+  position: absolute;
+  z-index: 2080;
+  pointer-events: none;
+  line-height: 0;
+}
+.proto-manual-drip-mount--tr { top: 0; right: 0; transform: translate(35%, -35%); }
+.proto-manual-drip-mount--tl { top: 0; left: 0; transform: translate(-35%, -35%); }
+.proto-manual-drip-mount--br { bottom: 0; right: 0; transform: translate(35%, 35%); }
+.proto-manual-drip-mount--bl { bottom: 0; left: 0; transform: translate(-35%, 35%); }
+.proto-manual-drip-mount .proto-drip {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  pointer-events: auto;
+}
+.proto-toolbar__panel { min-width: 168px; }
+.proto-toolbar__sep {
+  height: 1px;
+  background: var(--rule-soft);
+  margin: 4px 0;
+}
+.proto-toolbar__hint {
+  font-size: var(--text-meta-xs);
+  color: var(--ink-3);
+  line-height: 1.45;
+  padding: 0 2px;
+}
+.proto-toolbar__btn--primary {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+}
+.proto-list-panel {
+  position: fixed;
+  right: 0;
+  top: calc(var(--nav-height) + 8px);
+  bottom: 8px;
+  width: min(380px, calc(100vw - 16px));
+  z-index: 2090;
+  display: flex;
+  flex-direction: column;
+  background: rgba(244, 247, 251, 0.98);
+  border: 1px solid var(--rule);
+  border-radius: 14px 0 0 14px;
+  box-shadow: -8px 0 32px rgba(11, 31, 58, 0.1);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+.proto-list-panel__head {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.proto-list-panel__title {
+  font-family: var(--mono);
+  font-size: var(--text-meta-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.proto-list-panel__body {
+  flex: 1;
+  overflow: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.proto-list-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  text-align: left;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+.proto-list-item:hover { border-color: var(--ink-3); background: var(--paper-2); }
+.proto-list-item__row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+.proto-list-item__id {
+  font-family: var(--mono);
+  font-size: var(--text-meta-xs);
+  color: var(--ink-3);
+}
+.proto-list-item__badge {
+  font-size: var(--text-meta-xs);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.proto-list-item__badge--system { background: #dbeafe; color: #1e40af; }
+.proto-list-item__badge--manual-note { background: #ede9fe; color: #6d28d9; }
+.proto-list-item__badge--manual-todo { background: #fff7ed; color: #c2410c; }
+.proto-list-item__title { font-size: var(--text-caption); font-weight: 600; color: var(--ink); line-height: 1.35; }
+.proto-list-item__meta { font-size: var(--text-meta-xs); color: var(--ink-3); margin-top: 4px; }
+.proto-pick-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  background: rgba(11, 31, 58, 0.12);
+  cursor: crosshair;
+  pointer-events: none;
+}
+.proto-pick-banner {
+  position: fixed;
+  top: calc(var(--nav-height) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2501;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: rgba(11, 31, 58, 0.92);
+  color: #fff;
+  font-size: var(--text-caption);
+  box-shadow: 0 8px 24px rgba(11, 31, 58, 0.25);
+  pointer-events: none;
+}
+.proto-editor-backdrop { z-index: 3200; }
+.proto-editor { width: min(520px, 100%); }
+.proto-editor__field { display: flex; flex-direction: column; gap: 6px; }
+.proto-editor__label {
+  font-family: var(--mono);
+  font-size: var(--text-meta-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.proto-editor__input,
+.proto-editor__textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: var(--text-ui);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+.proto-editor__textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+.proto-editor__row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.proto-editor__actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.proto-toast {
+  position: fixed;
+  top: calc(var(--nav-height) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3300;
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: rgba(11, 31, 58, 0.94);
+  color: #fff;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  box-shadow: 0 8px 28px rgba(11, 31, 58, 0.28);
+  text-align: center;
+}
 
 /* Auth / SVIP modals (product UI — formal build reuses main site components) */
 .auth-modal-backdrop {
@@ -4648,6 +4903,8 @@ button:disabled:hover {
 </head>
 <body>
 
+<script type="application/json" id="proto-drip-store">{"version":1,"notes":[],"todos":[]}</script>
+
 <div id="root"></div>
 
 <script type="text/babel">
@@ -4945,6 +5202,8 @@ function useClickMotionFeedback() {
 const DOC_LINKS = {
   prd: { label: "BC落地页PRD_UI更新.md", href: "./docs/BC落地页PRD_UI更新.md" },
   todo: { label: "BC落地页ToDo.md", href: "../BC落地页ToDo.md" },
+  manualNotes: { label: "BC落地页-手写备注.md", href: "./docs/BC落地页-手写备注.md" },
+  manualTodos: { label: "BC落地页ToDo-手写.md", href: "../BC落地页ToDo-手写.md" },
   tracking: { label: "3Ups_Partner_LandingPage_Tracking_Guide.pdf", href: "./docs/3Ups_Partner_LandingPage_Tracking_Guide.pdf" },
   assets: { label: "素材落位说明.md", href: "../BC落地页交付开发/BC落地页6.8补充/素材落位说明.md" },
   html: { label: "UI/index.html（交付页）", href: "./index.html" },
@@ -5022,14 +5281,615 @@ const PAGE_TODOS = {
   },
 };
 
+const PROTO_DRIP_LS_KEY = "proto-drip-store-v1";
+const PROTO_DRIP_USER_KEY = "proto-drip-username";
+
+function protoDripEmptyStore() {
+  return { version: 1, notes: [], todos: [] };
+}
+
+function protoDripLoadEmbedded() {
+  const el = document.getElementById("proto-drip-store");
+  if (!el) return protoDripEmptyStore();
+  try {
+    const data = JSON.parse(el.textContent.trim());
+    return { version: data.version || 1, notes: data.notes || [], todos: data.todos || [] };
+  } catch {
+    return protoDripEmptyStore();
+  }
+}
+
+function protoDripLoadStore() {
+  const embedded = protoDripLoadEmbedded();
+  try {
+    const raw = localStorage.getItem(PROTO_DRIP_LS_KEY);
+    if (!raw) return embedded;
+    const local = JSON.parse(raw);
+    return {
+      version: local.version || 1,
+      notes: Array.isArray(local.notes) ? local.notes : embedded.notes,
+      todos: Array.isArray(local.todos) ? local.todos : embedded.todos,
+    };
+  } catch {
+    return embedded;
+  }
+}
+
+function protoDripSaveStore(store) {
+  try {
+    localStorage.setItem(PROTO_DRIP_LS_KEY, JSON.stringify(store));
+  } catch { /* quota */ }
+}
+
+function protoDripNextId(items, prefix) {
+  const nums = items
+    .map((i) => parseInt(String(i.id || "").replace(prefix, ""), 10))
+    .filter((n) => !Number.isNaN(n));
+  const next = (nums.length ? Math.max(...nums) : 0) + 1;
+  return `${prefix}${String(next).padStart(3, "0")}`;
+}
+
+function protoDripNowIso() {
+  return new Date().toISOString();
+}
+
+function protoDripFmtTime(iso) {
+  if (!iso) return "—";
+  try {
+    const d = new Date(iso);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  } catch {
+    return iso;
+  }
+}
+
+function protoDripGenSelector(el) {
+  if (!(el instanceof Element)) return "";
+  if (el.id) return `#${CSS.escape(el.id)}`;
+  const parts = [];
+  let node = el;
+  while (node && node.nodeType === 1 && node !== document.body) {
+    let part = node.tagName.toLowerCase();
+    if (node.id) {
+      parts.unshift(`#${CSS.escape(node.id)}`);
+      break;
+    }
+    if (node.className && typeof node.className === "string") {
+      const cls = node.className.trim().split(/\s+/).find((c) => c && !c.startsWith("proto-"));
+      if (cls) part += `.${CSS.escape(cls)}`;
+    }
+    const parent = node.parentElement;
+    if (parent) {
+      const idx = [...parent.children].indexOf(node) + 1;
+      part += `:nth-child(${idx})`;
+    }
+    parts.unshift(part);
+    node = parent;
+    if (parts.length >= 5) break;
+  }
+  return parts.join(" > ");
+}
+
+function protoDripHumanizeClass(cls) {
+  const part = (cls.split("__").pop() || cls).split("--")[0];
+  return part.replace(/[-_]+/g, " ").trim();
+}
+
+function protoDripLabelFromElement(el, { shallow = false } = {}) {
+  if (!(el instanceof Element)) return "";
+  const aria = el.getAttribute("aria-label")?.trim();
+  if (aria) return aria.slice(0, 48);
+  const titleAttr = el.getAttribute("title")?.trim();
+  if (titleAttr) return titleAttr.slice(0, 48);
+  const alt = el.getAttribute("alt")?.trim();
+  if (alt) return alt.slice(0, 48);
+  const placeholder = el.getAttribute("placeholder")?.trim();
+  if (placeholder) return placeholder.slice(0, 48);
+
+  if (shallow) {
+    const direct = [...el.childNodes]
+      .filter((n) => n.nodeType === Node.TEXT_NODE)
+      .map((n) => n.textContent.trim())
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (direct) return direct.slice(0, 48);
+  } else {
+    const text = (el.innerText || el.textContent || "").trim().replace(/\s+/g, " ");
+    if (text) return text.slice(0, 48);
+  }
+
+  if (el.id) return el.id;
+  if (typeof el.className === "string" && el.className.trim()) {
+    const cls = el.className.trim().split(/\s+/).find((c) => c && !c.startsWith("proto-"));
+    if (cls) return protoDripHumanizeClass(cls).slice(0, 48);
+  }
+  return el.tagName.toLowerCase();
+}
+
+function protoDripAnchorZone(el) {
+  const zoneEl = el.closest("section[id], nav, footer, header, [id^='path-']");
+  if (!(zoneEl instanceof Element)) return "";
+  const id = zoneEl.id || "";
+  const zoneMap = { hero: "Hero", pain: "问题匹配", paths: "学习路径", proof: "学员故事" };
+  if (zoneMap[id]) return zoneMap[id];
+  if (id.startsWith("path-")) return `路径 ${id.replace("path-", "").padStart(2, "0")}`;
+  if (zoneEl.tagName === "NAV") return "导航";
+  if (zoneEl.tagName === "FOOTER") return "页脚";
+  if (zoneEl.tagName === "HEADER") return "页头";
+  return id;
+}
+
+function protoDripAnchorLabel(el) {
+  if (!(el instanceof Element)) return "页面元素";
+  const zone = protoDripAnchorZone(el);
+  let node = el;
+  for (let i = 0; i < 12 && node && node !== document.body; node = node.parentElement, i += 1) {
+    const label = protoDripLabelFromElement(node, { shallow: i === 0 });
+    const isGeneric = /^(div|span|section|article|main|aside)$/i.test(label);
+    if (label && !isGeneric) {
+      return zone ? `${zone} · ${label}` : label;
+    }
+  }
+  const fallback = protoDripLabelFromElement(el);
+  const isGeneric = /^(div|span|section|article|main|aside)$/i.test(fallback);
+  const text = isGeneric ? (zone ? `${zone} · 区域` : "页面区域") : fallback;
+  return text.slice(0, 64);
+}
+
+function protoDripPickTarget(el) {
+  if (!(el instanceof Element)) return null;
+  if (el === document.body || el === document.documentElement) return null;
+  const semantic = el.closest(
+    "button, a, [role='button'], h1, h2, h3, h4, h5, h6, p, label, li, nav, footer, header, section, article, img, video, input, [class*='btn'], [class*='cta'], [class*='title'], [class*='tagline']"
+  );
+  if (semantic) return semantic;
+  let node = el;
+  for (let i = 0; i < 10 && node && node !== document.body; node = node.parentElement, i += 1) {
+    const label = protoDripLabelFromElement(node, { shallow: true });
+    if (label && !/^(div|span)$/i.test(label)) return node;
+  }
+  return el;
+}
+
+const PROTO_PAGE_MODULES = [
+  { id: "nav", label: "导航", selector: "nav.nav" },
+  { id: "flow-axis", label: "流程导航轴", selector: "nav.flow-axis" },
+  { id: "hero", label: "Hero · 公开课", selector: "#hero" },
+  { id: "pain", label: "问题匹配", selector: "#pain" },
+  { id: "paths", label: "学习路径", selector: "#paths" },
+  { id: "proof", label: "学员故事", selector: "#proof" },
+  { id: "footer", label: "页脚", selector: "footer.site-footer" },
+];
+
+function protoDripPathModuleLabel(pathEl) {
+  const idx = Number(pathEl.id.replace("path-", ""));
+  const n = Number.isFinite(idx) ? String(idx + 1).padStart(2, "0") : pathEl.id.replace("path-", "");
+  return `学习路径 · 路径 ${n}`;
+}
+
+function protoDripModuleContainers() {
+  const list = PROTO_PAGE_MODULES.map((m) => {
+    const el = document.querySelector(m.selector);
+    return el ? { id: m.id, label: m.label, el } : null;
+  }).filter(Boolean);
+  document.querySelectorAll("[id^='path-']").forEach((pathEl) => {
+    if (!/^path-\d+$/.test(pathEl.id)) return;
+    list.push({ id: pathEl.id, label: protoDripPathModuleLabel(pathEl), el: pathEl });
+  });
+  return list;
+}
+
+function protoDripDetectModule(el, clientX, clientY) {
+  if (el instanceof Element) {
+    const pathEl = el.closest("[id^='path-']");
+    if (pathEl?.id && /^path-\d+$/.test(pathEl.id)) {
+      return { moduleId: pathEl.id, moduleLabel: protoDripPathModuleLabel(pathEl) };
+    }
+    for (const mod of PROTO_PAGE_MODULES) {
+      const container = document.querySelector(mod.selector);
+      if (container?.contains(el)) {
+        return { moduleId: mod.id, moduleLabel: mod.label };
+      }
+    }
+  }
+
+  const modules = protoDripModuleContainers();
+  for (const mod of modules) {
+    const r = mod.el.getBoundingClientRect();
+    if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) {
+      return { moduleId: mod.id, moduleLabel: mod.label };
+    }
+  }
+
+  let best = { moduleId: "page", moduleLabel: "页面" };
+  let bestDist = Infinity;
+  modules.forEach((mod) => {
+    const r = mod.el.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const dist = Math.hypot(clientX - cx, clientY - cy);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = { moduleId: mod.id, moduleLabel: mod.label };
+    }
+  });
+  return best;
+}
+
+function protoDripPickBlocked(el) {
+  return !!(el instanceof Element && el.closest(
+    ".proto-toolbar, .proto-list-panel, .proto-modal, .proto-editor, .proto-toast, .proto-pick-banner, .tweak-dock"
+  ));
+}
+
+function protoDripElementFromPoint(clientX, clientY) {
+  const stack = document.elementsFromPoint(clientX, clientY);
+  return stack.find((node) => node instanceof Element && !protoDripPickBlocked(node) && !node.classList.contains("proto-pick-overlay")) || null;
+}
+
+function protoDripCaptureAnchorRect(el) {
+  if (!(el instanceof Element)) return {};
+  const r = el.getBoundingClientRect();
+  return {
+    docX: r.left + window.scrollX,
+    docY: r.top + window.scrollY,
+    w: r.width,
+    h: r.height,
+  };
+}
+
+function protoDripResolveAnchorElement(anchor, id) {
+  if (!anchor && !id) return null;
+  const tries = [
+    id ? `[data-proto-drip-anchor="${id}"]` : null,
+    anchor?.stampedSelector,
+    anchor?.selector,
+    anchor?.fallbackSelector,
+  ].filter(Boolean);
+  for (const sel of tries) {
+    try {
+      const el = document.querySelector(sel);
+      if (el instanceof Element) return el;
+    } catch { /* invalid selector */ }
+  }
+  return null;
+}
+
+function protoDripStampAnchor(anchor, id) {
+  if (!anchor || !id) return anchor;
+  const el = protoDripResolveAnchorElement(anchor, id);
+  if (!(el instanceof Element)) return anchor;
+  el.setAttribute("data-proto-drip-anchor", id);
+  const stampedSelector = `[data-proto-drip-anchor="${id}"]`;
+  return {
+    ...anchor,
+    stampedSelector,
+    selector: stampedSelector,
+    fallbackSelector: anchor.fallbackSelector || anchor.selector,
+  };
+}
+
+function protoDripResolveOrNearest(anchor, id) {
+  const el = protoDripResolveAnchorElement(anchor, id);
+  if (el) return el;
+  if (!anchor || typeof anchor.docX !== "number" || typeof anchor.docY !== "number") return null;
+  const cx = anchor.docX - window.scrollX + (anchor.w || 24) / 2;
+  const cy = anchor.docY - window.scrollY + (anchor.h || 24) / 2;
+  const hit = document.elementFromPoint(cx, cy);
+  if (!(hit instanceof Element) || protoDripPickBlocked(hit)) return null;
+  return protoDripPickTarget(hit) || hit;
+}
+
+function protoDripEnsureMount(anchorEl, dripId, pos) {
+  const posKey = ["tl", "tr", "bl", "br"].includes(pos) ? pos : "tr";
+  const mountId = `proto-drip-mount-${dripId}`;
+  let mount = document.getElementById(mountId);
+  if (mount && mount.parentElement === anchorEl) {
+    mount.className = `proto-manual-drip-mount proto-manual-drip-mount--${posKey}`;
+    return mount;
+  }
+  if (mount) mount.remove();
+
+  const style = getComputedStyle(anchorEl);
+  if (style.position === "static") {
+    anchorEl.style.position = "relative";
+    anchorEl.dataset.protoDripPositioned = "1";
+  }
+
+  mount = document.createElement("span");
+  mount.id = mountId;
+  mount.className = `proto-manual-drip-mount proto-manual-drip-mount--${posKey}`;
+  anchorEl.appendChild(mount);
+  return mount;
+}
+
+function protoDripTeardownMount(dripId) {
+  const mount = document.getElementById(`proto-drip-mount-${dripId}`);
+  if (!mount) return;
+  const parent = mount.parentElement;
+  mount.remove();
+  if (parent?.dataset.protoDripPositioned === "1") {
+    const stillHas = parent.querySelector(".proto-manual-drip-mount");
+    if (!stillHas) {
+      parent.style.position = "";
+      delete parent.dataset.protoDripPositioned;
+    }
+  }
+}
+
+function protoDripScrollTargets(anchor, id) {
+  const targets = new Set();
+  const el = protoDripResolveAnchorElement(anchor, id);
+  let node = el;
+  while (node) {
+    if (node instanceof Element) {
+      const s = getComputedStyle(node);
+      if (/(auto|scroll|overlay)/.test(`${s.overflow}${s.overflowY}${s.overflowX}`)) targets.add(node);
+    }
+    node = node.parentElement;
+  }
+  targets.add(document);
+  return [...targets];
+}
+
+function protoDripAnchorCoords(anchor, pos = "tr", size = 26, offset = 6, id) {
+  const el = protoDripResolveAnchorElement(anchor, id);
+  if (el) {
+    const r = el.getBoundingClientRect();
+    let top = r.top + offset;
+    let left = r.left + offset;
+    if (pos.includes("r")) left = r.right - size - offset;
+    if (pos.includes("b")) top = r.bottom - size - offset;
+    return { top, left };
+  }
+  if (anchor && typeof anchor.docX === "number" && typeof anchor.docY === "number") {
+    const scrollX = window.scrollX || document.documentElement.scrollLeft || 0;
+    const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    let top = anchor.docY - scrollY + offset;
+    let left = anchor.docX - scrollX + offset;
+    const w = anchor.w || 0;
+    const h = anchor.h || 0;
+    if (pos.includes("r")) left = anchor.docX - scrollX + w - size - offset;
+    if (pos.includes("b")) top = anchor.docY - scrollY + h - size - offset;
+    return { top, left };
+  }
+  return null;
+}
+
+function protoDripDownload(filename, content, mime = "text/plain;charset=utf-8") {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function protoDripBuildNotesMd(store) {
+  let md = "# BC落地页 · 手写备注\n\n";
+  md += "> 由原型标注工具导出。合并入仓库请运行 `node scripts/merge-proto-drip-export.mjs proto-drip-export.json`。\n\n";
+  if (!store.notes.length) {
+    md += "_（暂无手写备注）_\n";
+    return md;
+  }
+  store.notes.forEach((n) => {
+    md += `## ${n.id} · ${n.title}\n\n`;
+    md += `- 作者：${n.author || "—"}\n`;
+    md += `- 更新：${protoDripFmtTime(n.updatedAt)}\n`;
+    if (n.anchor?.moduleLabel) md += `- 模块：${n.anchor.moduleLabel}\n`;
+    if (n.anchor?.label) md += `- 锚点：${n.anchor.label}\n`;
+    if (n.anchor?.selector) md += `- 选择器：\`${n.anchor.selector}\`\n`;
+    md += `\n${n.body || ""}\n\n---\n\n`;
+  });
+  return md;
+}
+
+function protoDripBuildTodosMd(store) {
+  let md = "# BC落地页 · 手写待办\n\n";
+  md += "> 由原型标注工具导出。系统待办见 [`BC落地页ToDo.md`](./BC落地页ToDo.md)。\n\n";
+  if (!store.todos.length) {
+    md += "_（暂无手写待办）_\n";
+    return md;
+  }
+  store.todos.forEach((t) => {
+    md += `## ${t.id} · ${t.title}\n\n`;
+    md += `- 作者：${t.author || "—"}\n`;
+    md += `- 更新：${protoDripFmtTime(t.updatedAt)}\n`;
+    md += `- 负责人：${t.owner || "—"}\n`;
+    md += `- 状态：${t.status || "待处理"}\n`;
+    if (t.blocker) md += `- 阻塞：${t.blocker}\n`;
+    if (t.anchor?.moduleLabel) md += `- 模块：${t.anchor.moduleLabel}\n`;
+    if (t.anchor?.label) md += `- 锚点：${t.anchor.label}\n`;
+    if (t.anchor?.selector) md += `- 选择器：\`${t.anchor.selector}\`\n`;
+    md += `\n${t.detail || ""}\n\n---\n\n`;
+  });
+  return md;
+}
+
+function protoDripBuildHtmlSnippet(store) {
+  const json = JSON.stringify(store, null, 2);
+  return '<script type="application/json" id="proto-drip-store">' + json + '</scr' + 'ipt>';
+}
+
+function protoDripExport(store, username) {
+  const stamped = {
+    ...store,
+    notes: store.notes.map((n) => ({ ...n, author: n.author || username, updatedAt: n.updatedAt || protoDripNowIso() })),
+    todos: store.todos.map((t) => ({ ...t, author: t.author || username, updatedAt: t.updatedAt || protoDripNowIso() })),
+    exportedAt: protoDripNowIso(),
+    exportedBy: username,
+  };
+  protoDripDownload("proto-drip-export.json", JSON.stringify(stamped, null, 2), "application/json");
+  protoDripDownload("BC落地页-手写备注.md", protoDripBuildNotesMd(stamped));
+  protoDripDownload("BC落地页ToDo-手写.md", protoDripBuildTodosMd(stamped));
+  return stamped;
+}
+
 const DripContext = createContext(null);
 
 function DripProvider({ children }) {
   const [showNotes, setShowNotes] = useState(false);
   const [showTodos, setShowTodos] = useState(false);
+  const [noteViewMode, setNoteViewMode] = useState("page");
+  const [todoViewMode, setTodoViewMode] = useState("page");
+  const [editMode, setEditMode] = useState(false);
+  const [pickKind, setPickKind] = useState(null);
+  const [store, setStore] = useState(protoDripLoadStore);
   const [active, setActive] = useState(null);
+  const [editor, setEditor] = useState(null);
+  const [submitOpen, setSubmitOpen] = useState(false);
+  const [username, setUsername] = useState(() => localStorage.getItem(PROTO_DRIP_USER_KEY) || "");
+  const [toast, setToast] = useState(null);
+  const toastTimerRef = useRef(null);
+  const [systemNotes, setSystemNotes] = useState([]);
 
   const close = useCallback(() => setActive(null), []);
+
+  const registerSystemNote = useCallback((key, note) => {
+    setSystemNotes((prev) => {
+      const idx = prev.findIndex((n) => n._key === key);
+      const entry = { ...note, _key: key };
+      if (idx === -1) return [...prev, entry];
+      const next = [...prev];
+      next[idx] = entry;
+      return next;
+    });
+  }, []);
+
+  const openSystemNote = useCallback((item) => {
+    setActive({
+      kind: "note",
+      source: "system",
+      title: item.title,
+      body: item.body,
+      prd: item.prd || [],
+      docs: item.docs || [],
+      links: item.links || [],
+      editable: false,
+    });
+  }, []);
+
+  const showDripToast = useCallback((msg) => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    setToast(msg);
+    toastTimerRef.current = setTimeout(() => {
+      setToast(null);
+      toastTimerRef.current = null;
+    }, 4200);
+  }, []);
+
+  const persistStore = useCallback((next) => {
+    setStore(next);
+    protoDripSaveStore(next);
+  }, []);
+
+  const openManualNote = useCallback((item) => {
+    setActive({
+      kind: "note",
+      source: "manual",
+      id: item.id,
+      title: item.title,
+      body: item.body,
+      author: item.author,
+      updatedAt: item.updatedAt,
+      anchor: item.anchor,
+      docs: ["manualNotes"],
+      editable: true,
+    });
+  }, []);
+
+  const openManualTodo = useCallback((item) => {
+    setActive({
+      kind: "todo",
+      source: "manual",
+      id: item.id,
+      title: `${item.id} · ${item.title}`,
+      body: item.detail,
+      author: item.author,
+      updatedAt: item.updatedAt,
+      anchor: item.anchor,
+      meta: { owner: item.owner, status: item.status, blocker: item.blocker },
+      docs: ["manualTodos"],
+      editable: true,
+    });
+  }, []);
+
+  const openSystemTodo = useCallback((todoId) => {
+    const todo = PAGE_TODOS[todoId];
+    if (!todo) return;
+    setActive({
+      kind: "todo",
+      source: "system",
+      todoId,
+      title: `${todoId} · ${todo.title}`,
+      body: todo.detail,
+      prd: todo.prd || [],
+      docs: ["todo", ...(todo.docs || [])],
+      meta: { owner: todo.owner, status: todo.status, blocker: todo.blocker },
+      editable: false,
+    });
+  }, []);
+
+  const deleteManual = useCallback((kind, id) => {
+    if (!window.confirm("确定删除这条手写标注？")) return;
+    persistStore({
+      ...store,
+      notes: kind === "note" ? store.notes.filter((n) => n.id !== id) : store.notes,
+      todos: kind === "todo" ? store.todos.filter((t) => t.id !== id) : store.todos,
+    });
+    setActive(null);
+    showDripToast("已删除");
+  }, [store, persistStore, showDripToast]);
+
+  const handlePick = useCallback((el, clientX, clientY) => {
+    if (!pickKind) return;
+    const cx = typeof clientX === "number" ? clientX : window.innerWidth / 2;
+    const cy = typeof clientY === "number" ? clientY : window.innerHeight / 2;
+    const hit = el instanceof Element ? el : protoDripElementFromPoint(cx, cy);
+    const mod = protoDripDetectModule(hit, cx, cy);
+    const target = hit instanceof Element ? (protoDripPickTarget(hit) || hit) : null;
+    const anchorTarget = target && target !== document.body && target !== document.documentElement ? target : null;
+    const selector = anchorTarget ? protoDripGenSelector(anchorTarget) : "";
+    const elementHint = anchorTarget ? protoDripLabelFromElement(anchorTarget, { shallow: true }) : "点击位置";
+    const isGeneric = /^(div|span|section|article|main|aside|body|html)$/i.test(elementHint);
+    const hint = isGeneric ? "点击位置" : elementHint;
+    const label = `${mod.moduleLabel} · ${hint}`;
+    const rect = anchorTarget
+      ? protoDripCaptureAnchorRect(anchorTarget)
+      : { docX: cx + window.scrollX, docY: cy + window.scrollY, w: 24, h: 24 };
+    setPickKind(null);
+    const anchor = {
+      selector,
+      label,
+      moduleId: mod.moduleId,
+      moduleLabel: mod.moduleLabel,
+      pos: pickKind === "note" ? "tr" : "br",
+      ...rect,
+    };
+    setEditor({
+      mode: "create",
+      kind: pickKind,
+      draft: pickKind === "note"
+        ? { title: label, body: "", anchor }
+        : { title: label, detail: "", owner: "", status: "待处理", blocker: "", anchor },
+    });
+  }, [pickKind]);
+
+  const handleSubmitExport = useCallback((name) => {
+    const trimmed = (name || "").trim();
+    if (!trimmed) {
+      showDripToast("请填写用户名");
+      return;
+    }
+    setUsername(trimmed);
+    localStorage.setItem(PROTO_DRIP_USER_KEY, trimmed);
+    const stamped = protoDripExport(store, trimmed);
+    persistStore({ version: 1, notes: stamped.notes, todos: stamped.todos });
+    setSubmitOpen(false);
+    showDripToast("已导出 JSON 与 Markdown；请运行 merge 脚本写入仓库");
+  }, [store, persistStore, showDripToast]);
 
   useEffect(() => {
     if (!active) return;
@@ -5038,10 +5898,55 @@ function DripProvider({ children }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [active, close]);
 
+  useEffect(() => {
+    if (!pickKind) return;
+    const onKey = (e) => { if (e.key === "Escape") setPickKind(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [pickKind]);
+
+  useEffect(() => {
+    const restamp = () => {
+      store.notes.forEach((n) => protoDripStampAnchor(n.anchor, n.id));
+      store.todos.forEach((t) => protoDripStampAnchor(t.anchor, t.id));
+    };
+    const t = setTimeout(restamp, 400);
+    return () => clearTimeout(t);
+  }, [store]);
+
+  useEffect(() => () => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+  }, []);
+
+  const ctx = {
+    showNotes, setShowNotes,
+    showTodos, setShowTodos,
+    noteViewMode, setNoteViewMode,
+    todoViewMode, setTodoViewMode,
+    editMode, setEditMode,
+    pickKind, setPickKind,
+    store, persistStore,
+    active, setActive, close,
+    editor, setEditor,
+    submitOpen, setSubmitOpen,
+    username, setUsername,
+    openManualNote, openManualTodo, openSystemTodo, openSystemNote,
+    registerSystemNote, systemNotes,
+    deleteManual, handlePick, handleSubmitExport,
+    showDripToast,
+  };
+
   return (
-    <DripContext.Provider value={{ showNotes, setShowNotes, showTodos, setShowTodos, active, setActive, close }}>
+    <DripContext.Provider value={ctx}>
       {children}
+      <ManualDripLayer />
+      <DripListPanel kind="note" />
+      <DripListPanel kind="todo" />
+      <DripPickOverlay />
       <DripModal />
+      <DripEditorModal />
+      <DripSubmitModal />
+      {toast && <div className="proto-toast" role="status">{toast}</div>}
     </DripContext.Provider>
   );
 }
@@ -5068,19 +5973,25 @@ function DripAnchor({ side = "end", gap = 6, row = false, block = false, classNa
 }
 
 function NoteDrip({ pos = "tr", style, inline, title, body, prd = [], docs = [], links = [] }) {
-  const { showNotes, setActive } = useDrip();
-  if (!showNotes) return null;
+  const { showNotes, noteViewMode, setActive, registerSystemNote } = useDrip();
+  const regKey = title;
+
+  useEffect(() => {
+    registerSystemNote(regKey, { title, body, prd, docs, links });
+  }, [regKey, title, body, prd, docs, links, registerSystemNote]);
+
+  if (!showNotes || noteViewMode !== "page") return null;
   const isInline = inline || style;
   return (
     <button
       type="button"
-      className={`proto-drip proto-drip--note${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}`}
+      className={`proto-drip proto-drip--note proto-drip--system${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}`}
       style={style}
       title={title}
       aria-label={`备注：${title}`}
       onClick={(e) => {
         e.stopPropagation();
-        setActive({ kind: "note", title, body, prd, docs, links });
+        setActive({ kind: "note", source: "system", title, body, prd, docs, links, editable: false });
       }}
     >
       <span className="proto-drip__icon">i</span>
@@ -5089,28 +6000,20 @@ function NoteDrip({ pos = "tr", style, inline, title, body, prd = [], docs = [],
 }
 
 function TodoDrip({ pos = "br", style, inline, todoId }) {
-  const { showTodos, setActive } = useDrip();
+  const { showTodos, todoViewMode, openSystemTodo } = useDrip();
   const todo = PAGE_TODOS[todoId];
-  if (!showTodos || !todo) return null;
+  if (!showTodos || todoViewMode !== "page" || !todo) return null;
   const isInline = inline || style;
   return (
     <button
       type="button"
-      className={`proto-drip proto-drip--todo${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}`}
+      className={`proto-drip proto-drip--todo proto-drip--system${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}`}
       style={style}
       title={`${todoId} ${todo.title}`}
       aria-label={`待办：${todoId}`}
       onClick={(e) => {
         e.stopPropagation();
-        setActive({
-          kind: "todo",
-          todoId,
-          title: `${todoId} · ${todo.title}`,
-          body: todo.detail,
-          prd: todo.prd || [],
-          docs: ["todo", ...(todo.docs || [])],
-          meta: { owner: todo.owner, status: todo.status, blocker: todo.blocker },
-        });
+        openSystemTodo(todoId);
       }}
     >
       <span className="proto-drip__icon">!</span>
@@ -5118,22 +6021,233 @@ function TodoDrip({ pos = "br", style, inline, todoId }) {
   );
 }
 
+function ManualDripLayer() {
+  const { store, showNotes, showTodos, openManualNote, openManualTodo } = useDrip();
+  const itemRefs = useRef(new Map());
+  const itemsRef = useRef([]);
+
+  const items = useMemo(() => {
+    const list = [];
+    if (showNotes) {
+      store.notes.forEach((n) => list.push({ item: n, kind: "note", onOpen: () => openManualNote(n) }));
+    }
+    if (showTodos) {
+      store.todos.forEach((t) => list.push({ item: t, kind: "todo", onOpen: () => openManualTodo(t) }));
+    }
+    return list;
+  }, [store, showNotes, showTodos, openManualNote, openManualTodo]);
+
+  itemsRef.current = items;
+
+  useEffect(() => {
+    if (!items.length) return undefined;
+
+    const apply = () => {
+      itemsRef.current.forEach(({ item, kind }) => {
+        const node = itemRefs.current.get(item.id);
+        if (!node) return;
+        const pos = item.anchor?.pos || (kind === "note" ? "tr" : "br");
+        const pt = protoDripAnchorCoords(item.anchor, pos, 30, 6, item.id);
+        if (pt) {
+          node.style.transform = `translate3d(${pt.left}px, ${pt.top}px, 0) rotate(-45deg)`;
+          node.style.visibility = "visible";
+        } else {
+          node.style.visibility = "hidden";
+        }
+      });
+    };
+
+    apply();
+    let rafId = 0;
+    const tick = () => {
+      apply();
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+
+    const scrollers = new Set();
+    items.forEach(({ item }) => {
+      protoDripScrollTargets(item.anchor, item.id).forEach((s) => scrollers.add(s));
+    });
+    scrollers.forEach((s) => s.addEventListener("scroll", apply, { passive: true, capture: true }));
+    window.addEventListener("resize", apply, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      scrollers.forEach((s) => s.removeEventListener("scroll", apply, { capture: true }));
+      window.removeEventListener("resize", apply);
+    };
+  }, [items]);
+
+  if (!items.length) return null;
+
+  return (
+    <div className="proto-drip-top-layer" aria-hidden="false">
+      {items.map(({ item, kind, onOpen }) => (
+        <button
+          key={item.id}
+          ref={(node) => {
+            if (node) itemRefs.current.set(item.id, node);
+            else itemRefs.current.delete(item.id);
+          }}
+          type="button"
+          className={`proto-drip proto-drip--floating proto-drip--manual proto-drip--${kind === "note" ? "note" : "todo"}`}
+          title={item.title}
+          aria-label={`手写${kind === "note" ? "备注" : "待办"}：${item.title}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
+        >
+          <span className="proto-drip__icon">{kind === "note" ? "✎" : "✦"}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function DripListPanel({ kind }) {
+  const {
+    showNotes, showTodos, noteViewMode, todoViewMode,
+    openManualNote, openManualTodo, openSystemTodo, openSystemNote, systemNotes, store,
+  } = useDrip();
+
+  const isNote = kind === "note";
+  const visible = isNote ? showNotes && noteViewMode === "list" : showTodos && todoViewMode === "list";
+  if (!visible) return null;
+
+  const manualItems = isNote ? store.notes : store.todos;
+  const systemItems = isNote
+    ? systemNotes.map((n, i) => ({
+      id: `N-${String(i + 1).padStart(3, "0")}`,
+      title: n.title,
+      body: n.body,
+      prd: n.prd,
+      docs: n.docs,
+      links: n.links,
+      source: "system",
+    }))
+    : Object.entries(PAGE_TODOS).map(([id, t]) => ({ id, ...t, source: "system" }));
+
+  const openItem = (item, source) => {
+    if (isNote) {
+      if (source === "manual") openManualNote(item);
+      else openSystemNote(item);
+      return;
+    }
+    if (source === "system") openSystemTodo(item.id);
+    else openManualTodo(item);
+  };
+
+  return (
+    <aside className="proto-list-panel" aria-label={isNote ? "备注列表" : "待办列表"}>
+      <div className="proto-list-panel__head">
+        <div className="proto-list-panel__title">{isNote ? "备注 · 列表模式" : "待办 · 列表模式"}</div>
+      </div>
+      <div className="proto-list-panel__body">
+        {systemItems.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className="proto-list-item"
+            onClick={() => openItem(item, "system")}
+          >
+            <div className="proto-list-item__row">
+              <span className="proto-list-item__id">{item.id}</span>
+              <span className="proto-list-item__badge proto-list-item__badge--system">系统</span>
+            </div>
+            <div className="proto-list-item__title">{item.title}</div>
+            {!isNote && <div className="proto-list-item__meta">{item.status} · {item.owner}</div>}
+          </button>
+        ))}
+        {manualItems.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className="proto-list-item"
+            onClick={() => openItem(item, "manual")}
+          >
+            <div className="proto-list-item__row">
+              <span className="proto-list-item__id">{item.id}</span>
+              <span className={`proto-list-item__badge ${isNote ? "proto-list-item__badge--manual-note" : "proto-list-item__badge--manual-todo"}`}>手写</span>
+            </div>
+            <div className="proto-list-item__title">{item.title}</div>
+            <div className="proto-list-item__meta">{item.author || "—"} · {protoDripFmtTime(item.updatedAt)}</div>
+          </button>
+        ))}
+        {!systemItems.length && !manualItems.length && (
+          <div className="proto-toolbar__hint">
+            {isNote
+              ? "暂无备注。页面模式请先点「显示备注」；手写备注在编辑模式下添加。"
+              : "暂无待办"}
+          </div>
+        )}
+      </div>
+    </aside>
+  );
+}
+
+function DripPickOverlay() {
+  const { pickKind, setPickKind, handlePick } = useDrip();
+
+  useEffect(() => {
+    if (!pickKind) return;
+    const onPointerDown = (e) => {
+      if (e.button !== 0) return;
+      if (protoDripPickBlocked(e.target)) return;
+      const el = protoDripElementFromPoint(e.clientX, e.clientY);
+      e.preventDefault();
+      e.stopPropagation();
+      handlePick(el, e.clientX, e.clientY);
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+  }, [pickKind, handlePick]);
+
+  if (!pickKind) return null;
+
+  return (
+    <>
+      <div className="proto-pick-banner">
+        点击页面任意位置 · 自动识别所属模块 · Esc 取消
+      </div>
+      <div className="proto-pick-overlay" aria-hidden="true" />
+    </>
+  );
+}
+
 function DripModal() {
-  const { active, close } = useDrip();
-  if (!active) return null;
+  const { active, close, setEditor, deleteManual } = useDrip();
+  if (!active || active._editor) return null;
 
   const docKeys = active.docs || [];
   const prdSections = active.prd || [];
+  const isManual = active.source === "manual";
+  const isNote = active.kind === "note";
 
   return (
     <div className="proto-modal-backdrop" onClick={close}>
       <div className="proto-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
         <div className="proto-modal__head">
           <div>
-            <div className={`proto-modal__kind proto-modal__kind--${active.kind}`}>
-              {active.kind === "note" ? "备注 · PRD / 逻辑说明" : "待办 · TODO"}
+            <div className="proto-modal__badges">
+              <span className={`proto-modal__badge ${isManual ? (isNote ? "proto-modal__badge--manual" : "proto-modal__badge--todo-manual") : (isNote ? "proto-modal__badge--system" : "proto-modal__badge--system-todo")}`}>
+                {isManual ? "手写" : "系统"}{isNote ? "备注" : "待办"}
+              </span>
+              <span className={`proto-modal__kind proto-modal__kind--${active.kind}`}>
+                {isNote ? "备注 · PRD / 逻辑说明" : "待办 · TODO"}
+              </span>
             </div>
             <div className="proto-modal__title">{active.title}</div>
+            {isManual && (
+              <div className="proto-modal__meta" style={{ marginTop: 8 }}>
+                {active.id && <>ID：{active.id}<br /></>}
+                作者：{active.author || "—"}<br />
+                更新：{protoDripFmtTime(active.updatedAt)}
+                {active.anchor?.moduleLabel && <>所属模块：{active.anchor.moduleLabel}<br /></>}
+                {active.anchor?.label && <>锚点：{active.anchor.label}<br /></>}
+              </div>
+            )}
           </div>
           <button type="button" className="proto-modal__close" onClick={close} aria-label="关闭">×</button>
         </div>
@@ -5177,6 +6291,235 @@ function DripModal() {
               </div>
             </div>
           )}
+          {active.editable && (
+            <div className="proto-modal__actions">
+              <button
+                type="button"
+                className="proto-modal__action-btn"
+                onClick={() => setEditor({
+                  mode: "edit",
+                  kind: active.kind,
+                  id: active.id,
+                  draft: active.kind === "note"
+                    ? { title: active.title, body: active.body, anchor: active.anchor }
+                    : {
+                      title: (active.title || "").replace(/^MT-\d+\s·\s/, ""),
+                      detail: active.body,
+                      owner: active.meta?.owner,
+                      status: active.meta?.status,
+                      blocker: active.meta?.blocker,
+                      anchor: active.anchor,
+                    },
+                })}
+              >
+                编辑
+              </button>
+              <button
+                type="button"
+                className="proto-modal__action-btn proto-modal__action-btn--danger"
+                onClick={() => deleteManual(active.kind, active.id)}
+              >
+                删除
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DripEditorModal() {
+  const {
+    editor, setEditor, store, persistStore, username, setUsername, close, showDripToast,
+    openManualNote, openManualTodo, setShowNotes, setShowTodos, setNoteViewMode, setTodoViewMode,
+  } = useDrip();
+  const [draft, setDraft] = useState(null);
+  const [name, setName] = useState(username);
+
+  useEffect(() => {
+    if (editor) {
+      setDraft({ ...editor.draft });
+      setName(username);
+    } else {
+      setDraft(null);
+    }
+  }, [editor, username]);
+
+  if (!editor || !draft) return null;
+
+  const isNote = editor.kind === "note";
+  const save = () => {
+    const author = (name || "").trim();
+    if (!author) {
+      showDripToast("请填写用户名");
+      return;
+    }
+    if (!draft.title?.trim()) {
+      showDripToast("请填写标题");
+      return;
+    }
+    setUsername(author);
+    localStorage.setItem(PROTO_DRIP_USER_KEY, author);
+    const now = protoDripNowIso();
+    let nextStore = { ...store };
+
+    if (isNote) {
+      const id = editor.mode === "edit" ? editor.id : protoDripNextId(store.notes, "MN-");
+      const item = {
+        id,
+        title: draft.title.trim(),
+        body: (draft.body || "").trim(),
+        anchor: protoDripStampAnchor({ ...draft.anchor, label: (draft.anchor?.label || "").trim() }, id),
+        author,
+        updatedAt: now,
+      };
+      nextStore = {
+        ...store,
+        notes: editor.mode === "edit"
+          ? store.notes.map((n) => (n.id === editor.id ? { ...n, ...item } : n))
+          : [...store.notes, item],
+      };
+      persistStore(nextStore);
+      setEditor(null);
+      close();
+      setShowNotes(true);
+      setNoteViewMode("page");
+      openManualNote(item);
+    } else {
+      const id = editor.mode === "edit" ? editor.id : protoDripNextId(store.todos, "MT-");
+      const item = {
+        id,
+        title: draft.title.trim(),
+        detail: (draft.detail || "").trim(),
+        owner: (draft.owner || "").trim() || "—",
+        status: (draft.status || "").trim() || "待处理",
+        blocker: (draft.blocker || "").trim(),
+        anchor: protoDripStampAnchor({ ...draft.anchor, label: (draft.anchor?.label || "").trim() }, id),
+        author,
+        updatedAt: now,
+      };
+      nextStore = {
+        ...store,
+        todos: editor.mode === "edit"
+          ? store.todos.map((t) => (t.id === editor.id ? { ...t, ...item } : t))
+          : [...store.todos, item],
+      };
+      persistStore(nextStore);
+      setEditor(null);
+      close();
+      setShowTodos(true);
+      setTodoViewMode("page");
+      openManualTodo(item);
+    }
+    showDripToast(editor.mode === "edit" ? "已保存" : "已添加");
+  };
+
+  return (
+    <div className="proto-modal-backdrop proto-editor-backdrop" onClick={() => setEditor(null)}>
+      <div className="proto-modal proto-editor" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+        <div className="proto-modal__head">
+          <div>
+            <div className="proto-modal__kind">{editor.mode === "edit" ? "编辑" : "添加"}手写{isNote ? "备注" : "待办"}</div>
+            <div className="proto-modal__title">{isNote ? "备注内容" : "待办内容"}</div>
+          </div>
+          <button type="button" className="proto-modal__close" onClick={() => setEditor(null)} aria-label="关闭">×</button>
+        </div>
+        <div className="proto-modal__body">
+          <div className="proto-editor__field">
+            <label className="proto-editor__label">用户名（必填）</label>
+            <input className="proto-editor__input" value={name} onChange={(e) => setName(e.target.value)} placeholder="协作署名" />
+          </div>
+          <div className="proto-editor__field">
+            <label className="proto-editor__label">标题</label>
+            <input className="proto-editor__input" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+          </div>
+          <div className="proto-editor__field">
+            <label className="proto-editor__label">{isNote ? "说明正文" : "待办详情"}</label>
+            <textarea
+              className="proto-editor__textarea"
+              value={isNote ? draft.body : draft.detail}
+              onChange={(e) => setDraft(isNote ? { ...draft, body: e.target.value } : { ...draft, detail: e.target.value })}
+            />
+          </div>
+          {!isNote && (
+            <div className="proto-editor__row">
+              <div className="proto-editor__field">
+                <label className="proto-editor__label">负责人</label>
+                <input className="proto-editor__input" value={draft.owner || ""} onChange={(e) => setDraft({ ...draft, owner: e.target.value })} />
+              </div>
+              <div className="proto-editor__field">
+                <label className="proto-editor__label">状态</label>
+                <input className="proto-editor__input" value={draft.status || ""} onChange={(e) => setDraft({ ...draft, status: e.target.value })} />
+              </div>
+            </div>
+          )}
+          {!isNote && (
+            <div className="proto-editor__field">
+              <label className="proto-editor__label">阻塞项</label>
+              <input className="proto-editor__input" value={draft.blocker || ""} onChange={(e) => setDraft({ ...draft, blocker: e.target.value })} />
+            </div>
+          )}
+          <div className="proto-editor__field">
+            <label className="proto-editor__label">所属模块</label>
+            <input className="proto-editor__input" value={draft.anchor?.moduleLabel || ""} readOnly />
+          </div>
+          <div className="proto-editor__field">
+            <label className="proto-editor__label">锚点说明</label>
+            <input
+              className="proto-editor__input"
+              value={draft.anchor?.label || ""}
+              onChange={(e) => setDraft({ ...draft, anchor: { ...draft.anchor, label: e.target.value } })}
+              placeholder="如：Hero · 播放按钮"
+            />
+            <div className="proto-toolbar__hint">根据点击位置自动识别模块；可修改锚点说明。</div>
+          </div>
+          <div className="proto-editor__actions">
+            <button type="button" className="proto-modal__action-btn" onClick={() => setEditor(null)}>取消</button>
+            <button type="button" className="proto-toolbar__btn proto-toolbar__btn--primary" onClick={save}>保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DripSubmitModal() {
+  const { submitOpen, setSubmitOpen, username, setUsername, store, handleSubmitExport } = useDrip();
+  const [name, setName] = useState(username);
+
+  useEffect(() => {
+    if (submitOpen) setName(username);
+  }, [submitOpen, username]);
+
+  if (!submitOpen) return null;
+
+  return (
+    <div className="proto-modal-backdrop" onClick={() => setSubmitOpen(false)}>
+      <div className="proto-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+        <div className="proto-modal__head">
+          <div>
+            <div className="proto-modal__kind">提交到文档</div>
+            <div className="proto-modal__title">导出手写标注</div>
+          </div>
+          <button type="button" className="proto-modal__close" onClick={() => setSubmitOpen(false)} aria-label="关闭">×</button>
+        </div>
+        <div className="proto-modal__body">
+          <div className="proto-modal__text">
+            将下载 JSON 与 Markdown 文件。在本地运行合并脚本写入 HTML 与文档后提交 Git。
+            GitHub Pages 为静态托管，浏览器无法直接写仓库。
+          </div>
+          <div className="proto-modal__meta">
+            手写备注 {store.notes.length} 条 · 手写待办 {store.todos.length} 条
+          </div>
+          <div className="proto-editor__field">
+            <label className="proto-editor__label">用户名（必填）</label>
+            <input className="proto-editor__input" value={name} onChange={(e) => setName(e.target.value)} placeholder="本次提交署名" />
+          </div>
+          <div className="proto-editor__actions">
+            <button type="button" className="proto-modal__action-btn" onClick={() => setSubmitOpen(false)}>取消</button>
+            <button type="button" className="proto-toolbar__btn proto-toolbar__btn--primary" onClick={() => handleSubmitExport(name)}>导出并提交</button>
+          </div>
         </div>
       </div>
     </div>
@@ -5184,7 +6527,11 @@ function DripModal() {
 }
 
 function DripToolbar() {
-  const { showNotes, setShowNotes, showTodos, setShowTodos } = useDrip();
+  const {
+    showNotes, setShowNotes, showTodos, setShowTodos,
+    noteViewMode, setNoteViewMode, todoViewMode, setTodoViewMode,
+    editMode, setEditMode, setPickKind, setSubmitOpen, store,
+  } = useDrip();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -5218,6 +6565,47 @@ function DripToolbar() {
           <span className="proto-toolbar__dot proto-toolbar__dot--todo" />
           {showTodos ? "隐藏待办" : "显示待办"}
         </button>
+        <div className="proto-toolbar__sep" />
+        <button
+          type="button"
+          className={`proto-toolbar__btn ${noteViewMode === "list" ? "is-on is-on--note" : ""}`}
+          onClick={() => setNoteViewMode((m) => (m === "page" ? "list" : "page"))}
+        >
+          备注：{noteViewMode === "page" ? "页面模式" : "列表模式"}
+        </button>
+        <button
+          type="button"
+          className={`proto-toolbar__btn ${todoViewMode === "list" ? "is-on is-on--todo" : ""}`}
+          onClick={() => setTodoViewMode((m) => (m === "page" ? "list" : "page"))}
+        >
+          待办：{todoViewMode === "page" ? "页面模式" : "列表模式"}
+        </button>
+        <div className="proto-toolbar__sep" />
+        <button
+          type="button"
+          className={`proto-toolbar__btn ${editMode ? "is-on" : ""}`}
+          onClick={() => setEditMode((v) => !v)}
+        >
+          {editMode ? "退出编辑" : "编辑模式"}
+        </button>
+        {editMode && (
+          <>
+            <button type="button" className="proto-toolbar__btn" onClick={() => setPickKind("note")}>+ 添加备注</button>
+            <button type="button" className="proto-toolbar__btn" onClick={() => setPickKind("todo")}>+ 添加待办</button>
+          </>
+        )}
+        <button
+          type="button"
+          className="proto-toolbar__btn proto-toolbar__btn--primary"
+          onClick={() => setSubmitOpen(true)}
+        >
+          提交到文档 ({store.notes.length + store.todos.length})
+        </button>
+        <div className="proto-toolbar__hint">
+          系统备注 <span style={{ color: "#1e5fd6" }}>● i</span> · 手写备注 <span style={{ color: "#7c3aed" }}>● ✎</span>
+          <br />
+          手写 {store.notes.length} 备注 · {store.todos.length} 待办。GH Pages 需导出后本地 merge。
+        </div>
       </div>
     </div>
   );
@@ -8582,7 +9970,7 @@ function App() {
                 <NoteDrip
                   inline
                   title="Tweaks 调试面板"
-                  body={"⚠️ 交付专用 · 生产剔除\n\n边缘态 / 偶发态 / 多步演示 + 样式预览（强调色、Dark Mode）\n\n页内可直接体验：A/B Tab、导航、微信咨询、Hero 等不在此面板"}
+                  body={"⚠️ 交付专用 · 生产剔除\n\n收录：页内无入口的状态（边缘态 / 注入态 / Token 预览）\n\n含：匹配快捷演示、手动高亮、登录态、路径02 边缘态、强调色、Dark Mode\n\n页内已有入口的不放：A/B Tab、导航、微信咨询、Hero、登录网关等"}
                   prd={["§2.3.2 Tweaks 调试面板"]}
                   docs={["prd"]}
                 />
@@ -8701,7 +10089,7 @@ function App() {
               <NoteDrip
                 inline
                 title="Tweaks 调试面板"
-                body={"⚠️ 交付专用 · 生产剔除\n\n边缘态 / 偶发态演示 + 样式预览（强调色、Dark Mode）"}
+                body={"⚠️ 交付专用 · 生产剔除\n\n页内无入口 · 仅面板可触发（含强调色、Dark Mode）"}
                 prd={["§2.3.2 Tweaks 调试面板"]}
                 docs={["prd"]}
               />
