@@ -6037,6 +6037,13 @@ const PATHS = [
 
 /** 路径主 CTA 目标（路径 02 = 内嵌弹窗；路径 04 = 微信咨询弹窗） */
 const MAIN_SITE_HOME_URL = "https://igopx.cn/";
+
+/** 出站主站链接：新标签打开，落地页保留 */
+function openMainSiteUrl(href) {
+  if (!href) return;
+  window.open(href, "_blank", "noopener,noreferrer");
+}
+
 const PATH_CTA_TARGETS = {
   0: { type: "url", href: "https://www.igopx.cn/course/713?nav=13&name=%E8%AF%BE%E7%A8%8B%E5%B9%BF%E5%9C%BA&url=%2FcourseSquare%3Fnav%3D13" },
   2: { type: "url", href: "https://www.igopx.cn/courses?nav=1" },
@@ -6048,7 +6055,7 @@ const PATH_CTA_TARGETS = {
 function navigatePathCta(pathIndex) {
   const target = PATH_CTA_TARGETS[pathIndex];
   if (target?.type === "url" && target.href) {
-    window.location.assign(target.href);
+    openMainSiteUrl(target.href);
   }
 }
 
@@ -7273,7 +7280,7 @@ function pathCtaNoteBody(index) {
   const target = PATH_CTA_TARGETS[index];
   if (index === PATH02_INDEX) return null;
   if (target?.type === "wechat") return "主 CTA → 微信咨询弹窗\n与扫码咨询卡同弹窗；无需登录";
-  if (target?.type === "url") return `登录后跳转主站\n· ${target.href}`;
+  if (target?.type === "url") return `登录后新标签打开主站\n· ${target.href}`;
   return "deep link 待配置（T-002）";
 }
 
@@ -8020,7 +8027,7 @@ function App() {
             side="end"
             drip={<TodoDrip inline todoId="T-008" />}
           >
-            <a className="nav__brand nav__start" href={MAIN_SITE_HOME_URL} aria-label="返回躺着学主站">
+            <a className="nav__brand nav__start" href={MAIN_SITE_HOME_URL} target="_blank" rel="noopener noreferrer" aria-label="返回躺着学主站（新标签页打开）">
               <img className="nav__brand-logo nav__brand-logo--txx" src="./assets/tangzhexue-logo.png" alt="躺着学" />
             </a>
           </DripAnchor>
@@ -8050,7 +8057,7 @@ function App() {
                       <NoteDrip
                         inline
                         title="导航 · IA"
-                        body={"4 锚点：#hero / #pain / #paths / #proof\n\n布局：左躺着学 Logo → igopx.cn · 中锚点 · 右登录+BC Logo\n\nBC Logo 高度与躺着学一致（34/28），宽等比\n\n宽屏 ≥1820px 流程轴；<1820px 隐藏"}
+                        body={"4 锚点：#hero / #pain / #paths / #proof\n\n布局：左躺着学 Logo → igopx.cn（**新标签**）· 中锚点 · 右登录+BC Logo\n\nBC Logo 高度与躺着学一致（34/28），宽等比\n\n宽屏 ≥1820px 流程轴；<1820px 隐藏"}
                         prd={["§2.1 页面 IA", "§1.1 页面入口与主站可见性"]}
                         docs={["prd"]}
                       />
