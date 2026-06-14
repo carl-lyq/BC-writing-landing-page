@@ -15,7 +15,7 @@
 | BC 验收指标 | 开发侧实现方式 |
 |------------|----------------|
 | 网站访问量（PV + UV） | SDK 初始化后 **自动采集**，无需自定义事件 |
-| 6 条路径主 CTA 点击 | `tracker_btn_click` + `path_cta_01` … `path_cta_06` |
+| 6 条路径主 CTA 点击 | `tracker_btn_click` + `bc_path_*_cta_click`（6 个语义化 `btn_id`，见 §3.2） |
 | 本页注册成功用户数 | `tracker_btn_click` + `register_success` |
 
 ---
@@ -82,22 +82,27 @@ BC 侧自行在 GrowingIO 看板取 PV、UV，前端不提供对应 `btn_id`。
 
 | btn_id | 路径 | 说明 |
 |--------|------|------|
-| `path_cta_01` | 01 名师课程 | 含未登录点击（会先弹登录窗） |
-| `path_cta_02` | 02 专属方案 | 登录后打开方案弹窗 |
-| `path_cta_03` | 03 自学录播 | — |
-| `path_cta_04` | 04 训练营 | 打开微信咨询弹窗 |
-| `path_cta_05` | 05 学习日历 | — |
-| `path_cta_06` | 06 精批诊断 | — |
+| `bc_path_course_detail_cta_click` | 01 名师课程 | 含未登录点击（会先弹登录窗） |
+| `bc_path_ai_plan_cta_click` | 02 专属方案 | 登录后打开方案弹窗 |
+| `bc_path_self_study_course_cta_click` | 03 自学录播 | — |
+| `bc_path_camp_cta_click` | 04 训练营 | 打开微信咨询弹窗 |
+| `bc_path_ai_calendar_cta_click` | 05 学习日历 | — |
+| `bc_path_1v1_review_cta_click` | 06 精批诊断 | — |
 
-**不计入 BC 六项指标**（产品预埋，可保留代码但联调不验收）：
+**与六项指标分开统计**（独立 `btn_id`，BC 亦建议采集）：
 
-- 顶部路径索引条 → `path_index_click`
-- 各路径「扫码咨询」副按钮 → `path_wechat_consult`
+- 导航「登录/注册」→ `bc_nav_login_register_click`
+- 各路径「扫码咨询」→ `bc_path_01_wechat_consult_click` … `bc_path_06_wechat_consult_click`
+- 顶部路径索引 → `bc_path_index_01_click` … `06`
+- Hero 视频切换 → `bc_hero_video_01_select_click` … `06`
+- 痛点「查看路径」→ `bc_pain_card_01_view_path_click` … `06`
+- 互动诊断提交 → `bc_pain_quiz_submit_click`
+- 顶栏 / 左侧流程轴锚点 → `bc_nav_anchor_*` / `bc_flow_axis_*`
 
 **调用示例**：
 
 ```javascript
-gdp('track', 'tracker_btn_click', { btn_id: 'path_cta_03' });
+gdp('track', 'tracker_btn_click', { btn_id: 'bc_path_self_study_course_cta_click' });
 ```
 
 交付页封装：`trackPathCta(pathIndex)`，`pathIndex` 为 0–5。
@@ -131,21 +136,39 @@ window.bcLandingTrackRegisterSuccess();
 
 ## 4. 联调事件清单（发给 BC）
 
-以下为 T-011 联调时须与 BC 确认的 **完整自定义事件列表**：
+**上报规范**：`tracker_btn_click` **仅传** `{ btn_id: '...' }`；**不传** `cta_label`、`path_idx`、`video_id` 等。行为区分靠不同 `btn_id`。
 
-| btn_id | 触发时机 | BC 验收 |
-|--------|----------|---------|
-| `set_user_id` | 页面加载且 URL 含 `ut` | 强制（BC 文档） |
-| `path_cta_01` | 路径 01 主 CTA 点击 | ✅ |
-| `path_cta_02` | 路径 02 主 CTA 点击 | ✅ |
-| `path_cta_03` | 路径 03 主 CTA 点击 | ✅ |
-| `path_cta_04` | 路径 04 主 CTA 点击 | ✅ |
-| `path_cta_05` | 路径 05 主 CTA 点击 | ✅ |
-| `path_cta_06` | 路径 06 主 CTA 点击 | ✅ |
-| `register_success` | 本页弹窗内新用户注册成功 | ✅ |
+### 4.1 BC 验收必报
 
-统一事件名：`tracker_btn_click`  
-事件级变量：`{ btn_id: '<上表取值>' }`（可按需附加 `video_id`、`path_idx` 等，BC 验收不依赖）
+| btn_id | 触发时机 |
+|--------|----------|
+| `set_user_id` | 页面加载且 URL 含 `ut` |
+| `bc_path_course_detail_cta_click` | 路径 01 主 CTA |
+| `bc_path_ai_plan_cta_click` | 路径 02 主 CTA |
+| `bc_path_self_study_course_cta_click` | 路径 03 主 CTA |
+| `bc_path_camp_cta_click` | 路径 04 主 CTA |
+| `bc_path_ai_calendar_cta_click` | 路径 05 主 CTA |
+| `bc_path_1v1_review_cta_click` | 路径 06 主 CTA |
+| `register_success` | 本页弹窗内新用户注册成功 |
+
+### 4.2 建议一并联调（BC 反馈补充）
+
+| 分组 | btn_id 模式 |
+|------|-------------|
+| 登录注册 | `bc_nav_login_register_click` |
+| 扫码咨询 | `bc_path_01_wechat_consult_click` … `bc_path_06_wechat_consult_click` |
+| 视频播放 | `bc_hero_video_01_play_click` … `06`（**每次点击计 1 次，不做用户去重**） |
+| 视频切换 | `bc_hero_video_01_select_click` … `bc_hero_video_06_select_click` |
+| 痛点模式切换 | `bc_pain_switch_to_card_click` / `bc_pain_switch_to_quiz_click` |
+| 痛点选卡 | `bc_pain_card_select_click` |
+| 痛点查看路径 | `bc_pain_card_01_view_path_click` … `bc_pain_card_06_view_path_click` |
+| 问卷提交 | `bc_pain_quiz_submit_click` |
+| 路径索引 | `bc_path_index_01_click` … `bc_path_index_06_click` |
+| 顶栏锚点 | `bc_nav_anchor_hero_click` / `_pain_` / `_paths_` / `_proof_` |
+| 左侧流程轴 | `bc_flow_axis_hero_click` … + `bc_flow_axis_path_01_click` … `06` |
+| 路径 02 方案链路 | `bc_path02_plan_open_click` / `upload_submit` / `wait_close` / `gen_complete` / `gen_fail` / `view` / `download` / `overwrite_confirm` |
+
+完整表见主 PRD §4.3.1。
 
 ---
 
@@ -158,20 +181,24 @@ window.bcLandingTrackRegisterSuccess();
 | SDK 加载与 init | `<head>` 内 GrowingIO 脚本 | §2.1 |
 | 工具函数 | `trackBcBtn` / `initBcUserId` / `useBcGrowingIO` | 统一上报入口 |
 | 用户 ID | `initBcUserId()` | `App` 挂载时 `useBcGrowingIO()` 触发 |
-| 路径 CTA | `trackPathCta(index)` → `PathCard.handlePathCta` | index 0–5 |
+| 路径 CTA | `trackPathCta(index)` → `BC_PATH_CTA_BTN_IDS` | index 0–5 |
+| 扫码咨询 | `trackPathWechatConsult(pathIndex)` | 按路径 01–06 |
+| 路径索引 | `trackPathIndexClick(i)` | |
+| 导航锚点 | `trackNavAnchor(sectionId)` | |
+| 流程轴 | `trackFlowAxisSection` / `trackFlowAxisPath` | |
 | 注册成功 | `bcLandingTrackRegisterSuccess()` | 暴露到 `window`，供主站回调 |
 | Demo 模拟注册 | `completeAuth('register')` | 演示环境内触发 `register_success` |
 
 ### 5.1 核心 API（交付页已实现）
 
 ```javascript
-// 通用上报
-function trackBcBtn(btnId, extra?) {
-  gdp('track', 'tracker_btn_click', { btn_id: btnId, ...extra });
+// 通用上报（仅 btn_id）
+function trackBcBtn(btnId) {
+  gdp('track', 'tracker_btn_click', { btn_id: btnId });
 }
 
-// 路径主 CTA（index: 0–5）
-function trackPathCta(index) { /* → path_cta_01…06 */ }
+// 路径主 CTA（index: 0–5）→ bc_path_*_cta_click
+function trackPathCta(index) { /* … */ }
 
 // 注册成功（仅本页弹窗内新注册）
 function bcLandingTrackRegisterSuccess() { trackBcBtn('register_success'); }
@@ -203,23 +230,35 @@ window.bcLandingTrackRegisterSuccess = bcLandingTrackRegisterSuccess;
 ### 7.2 BC 三项指标
 
 - [ ] **PV / UV**：刷新页面、换浏览器 / 隐身窗口，BC 后台可看到 PV、UV 变化（无需自定义事件）  
-- [ ] **路径 CTA**：依次点击 6 条路径主按钮，Network 中分别出现 `path_cta_01` … `path_cta_06`  
+- [ ] **路径 CTA**：依次点击 6 条路径主按钮，Network 中分别出现 `bc_path_course_detail_cta_click` … `bc_path_1v1_review_cta_click`  
 - [ ] **注册成功**：在本页弹窗点「注册」并完成（Demo 或联调环境），出现 `register_success`  
 - [ ] 点「登录」或跳转主站后注册：**不出现** `register_success`  
 
-### 7.3 负向用例
+### 7.3 补充点击（BC 建议联调）
 
-- [ ] 点击路径索引条：若有 `path_index_click`，BC 验收指标**不应**依赖此事件  
-- [ ] 点击扫码咨询副按钮：若有 `path_wechat_consult`，同上  
+- [ ] 导航「登录/注册」→ `bc_nav_login_register_click`  
+- [ ] 6 个「扫码咨询」→ `bc_path_0N_wechat_consult_click`  
+- [ ] 播放列表切换 → `bc_hero_video_0N_select_click`  
+- [ ] 主播放器点击播放 → `bc_hero_video_0N_play_click`（同一用户重复播放仍每次上报）  
+- [ ] 痛点模式切换 / 选卡 → `bc_pain_switch_to_*` / `bc_pain_card_select_click`  
+- [ ] 痛点「查看路径」→ `bc_pain_card_0N_view_path_click`  
+- [ ] 互动诊断提交 → `bc_pain_quiz_submit_click`  
+- [ ] 路径索引 6 标签 → `bc_path_index_0N_click`  
+- [ ] 顶栏 / 左侧流程轴锚点 → `bc_nav_anchor_*` / `bc_flow_axis_*`  
+
+### 7.4 负向用例
+
+- [ ] 点击路径索引条：出现 `bc_path_index_0N_click`，**不计入** BC 六项主 CTA 指标  
+- [ ] 点击扫码咨询副按钮：出现 `bc_path_0N_wechat_consult_click`，**不计入** BC 六项主 CTA 指标  
 - [ ] 无 `ut` 参数访问：不报错；`set_user_id` 不上报（或按联调约定）  
 
 ---
 
 ## 8. 产品预埋事件（非 BC 阻塞）
 
-以下事件已在交付页预埋，供躺着学内部分析，**T-011 不必作为 BC 验收阻塞**：
+以下事件已在交付页预埋，**BC 联调建议一并验收**（见 §4.2），但不计入 BC 三项核心指标：
 
-`nav_login_register`、`nav_anchor_*`、`hero_video_play`、`hero_playlist_item_click`、`pain_*`、`path_index_click`、`path02_*`、`path_wechat_consult` 等。
+`bc_nav_login_register_click`、`bc_nav_anchor_*`、`bc_flow_axis_*`、`bc_hero_video_*`、`bc_pain_*`、`bc_path_index_*`、`bc_path_*_wechat_consult_click`、`bc_path02_*_click` 等。
 
 完整列表见 PRD §4.3.1「完整清单」表。
 
@@ -236,4 +275,4 @@ UI/index.html                                 ← 交付页实现
 
 ---
 
-*最后更新：2026-06-08 · 口径：PV+UV / 仅 6 路径主 CTA / 本页弹窗内新注册*
+*最后更新：2026-06-09 · 口径：语义化 `btn_id`、仅传 `btn_id`、视频播放每次点击计次、PV+UV / 6 路径主 CTA / 本页弹窗内新注册*

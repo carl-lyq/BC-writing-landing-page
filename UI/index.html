@@ -176,6 +176,12 @@ body {
   gap: 12px;
   min-width: 0;
 }
+a.nav__brand {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity var(--motion-standard) var(--ease-out-quart);
+}
+a.nav__brand:hover { opacity: 0.86; }
 .nav__brand-logo {
   display: block;
   object-fit: contain;
@@ -1319,13 +1325,13 @@ body {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(11, 31, 58, 0.82);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: none;
-  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(11, 31, 58, 0.28);
+  backdrop-filter: blur(8px);
 }
 .hero-player__bar {
   position: absolute;
@@ -1485,12 +1491,12 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(11, 31, 58, 0.78);
   color: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(6px);
   z-index: 2;
   pointer-events: none;
 }
@@ -3091,6 +3097,14 @@ button.path-card__wechat {
   text-align: center;
 }
 .auth-modal__promo strong { color: var(--accent-ink); font-weight: 800; }
+.auth-modal__promo-note {
+  margin: 8px 0 0;
+  font-size: var(--text-meta);
+  line-height: 1.45;
+  color: var(--ink-3);
+  font-weight: 400;
+  text-align: center;
+}
 .auth-modal__svip-link {
   display: inline;
   padding: 0;
@@ -3253,6 +3267,23 @@ button.path-card__wechat {
 .plan-modal__status-icon svg {
   width: 24px;
   height: 24px;
+}
+.plan-modal__status-icon--error {
+  background: #ffebee;
+  color: #e53935;
+}
+.plan-modal__status-qr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 20px 12px;
+  background: #fff;
+}
+.plan-modal__status-qr img {
+  width: 168px;
+  height: 168px;
+  border-radius: 4px;
+  object-fit: contain;
 }
 .plan-modal__status-text {
   display: flex;
@@ -3935,6 +3966,11 @@ a[data-motion-pressing="true"],
   transform: translate(-50%, -50%) scale(0.94);
 }
 
+.hero-player__play-wrap .hero-player__play.is-pressing,
+.hero-player__play-wrap .hero-player__play[data-motion-pressing="true"] {
+  transform: scale(0.94);
+}
+
 .proto-drip.is-pressing,
 .proto-drip[data-motion-pressing="true"] {
   transform: rotate(-45deg) scale(0.94);
@@ -4069,7 +4105,7 @@ button:disabled:hover {
   position: absolute;
   inset: -7px;
   border-radius: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   opacity: 0;
   animation: play-ring 2.8s var(--ease-out-quart) 1.2s infinite;
   pointer-events: none;
@@ -4081,7 +4117,12 @@ button:disabled:hover {
 }
 
 .hero-player__play:hover {
+  background: rgba(11, 31, 58, 0.92);
   transform: translate(-50%, -50%) scale(1.04);
+}
+
+.hero-player__play-wrap .hero-player__play:hover {
+  transform: scale(1.04);
 }
 
 .playlist-item.is-active {
@@ -4351,22 +4392,93 @@ const { useState, useEffect, useRef, useMemo, createContext, useContext, useCall
    ============================================================ */
 
 const BC_TRACK_EVENT = "tracker_btn_click";
-const BC_NAV_BTN_IDS = {
-  hero: "nav_anchor_hero",
-  pain: "nav_anchor_pain",
-  paths: "nav_anchor_paths",
-  proof: "nav_anchor_proof",
+const BC_NAV_ANCHOR_BTN_IDS = {
+  hero: "bc_nav_anchor_hero_click",
+  pain: "bc_nav_anchor_pain_click",
+  paths: "bc_nav_anchor_paths_click",
+  proof: "bc_nav_anchor_proof_click",
 };
+
+/** BC 验收：6 条路径主 CTA（index 0–5 对应路径 01–06） */
+const BC_PATH_CTA_BTN_IDS = [
+  "bc_path_course_detail_cta_click",
+  "bc_path_ai_plan_cta_click",
+  "bc_path_self_study_course_cta_click",
+  "bc_path_camp_cta_click",
+  "bc_path_ai_calendar_cta_click",
+  "bc_path_1v1_review_cta_click",
+];
+
+const BC_PATH_WECHAT_BTN_IDS = [
+  "bc_path_01_wechat_consult_click",
+  "bc_path_02_wechat_consult_click",
+  "bc_path_03_wechat_consult_click",
+  "bc_path_04_wechat_consult_click",
+  "bc_path_05_wechat_consult_click",
+  "bc_path_06_wechat_consult_click",
+];
+
+const BC_PATH_INDEX_BTN_IDS = [
+  "bc_path_index_01_click",
+  "bc_path_index_02_click",
+  "bc_path_index_03_click",
+  "bc_path_index_04_click",
+  "bc_path_index_05_click",
+  "bc_path_index_06_click",
+];
+
+const BC_HERO_VIDEO_SELECT_BTN_IDS = [
+  "bc_hero_video_01_select_click",
+  "bc_hero_video_02_select_click",
+  "bc_hero_video_03_select_click",
+  "bc_hero_video_04_select_click",
+  "bc_hero_video_05_select_click",
+  "bc_hero_video_06_select_click",
+];
+
+/** BC：主播放器点击播放（按当前集 01–06；每次点击计 1 次，不做用户去重） */
+const BC_HERO_VIDEO_PLAY_BTN_IDS = [
+  "bc_hero_video_01_play_click",
+  "bc_hero_video_02_play_click",
+  "bc_hero_video_03_play_click",
+  "bc_hero_video_04_play_click",
+  "bc_hero_video_05_play_click",
+  "bc_hero_video_06_play_click",
+];
+
+const BC_PAIN_VIEW_PATH_BTN_IDS = [
+  "bc_pain_card_01_view_path_click",
+  "bc_pain_card_02_view_path_click",
+  "bc_pain_card_03_view_path_click",
+  "bc_pain_card_04_view_path_click",
+  "bc_pain_card_05_view_path_click",
+  "bc_pain_card_06_view_path_click",
+];
+
+const BC_FLOW_AXIS_BTN_IDS = {
+  hero: "bc_flow_axis_hero_click",
+  pain: "bc_flow_axis_pain_click",
+  paths: "bc_flow_axis_paths_click",
+  proof: "bc_flow_axis_proof_click",
+};
+
+const BC_FLOW_AXIS_PATH_BTN_IDS = [
+  "bc_flow_axis_path_01_click",
+  "bc_flow_axis_path_02_click",
+  "bc_flow_axis_path_03_click",
+  "bc_flow_axis_path_04_click",
+  "bc_flow_axis_path_05_click",
+  "bc_flow_axis_path_06_click",
+];
 
 function getUrlParam(name) {
   return new URLSearchParams(window.location.search).get(name) || "";
 }
 
-function trackBcBtn(btnId, extra) {
+/** BC 统一上报：仅传 btn_id，不传 cta_label / path_idx 等附加属性 */
+function trackBcBtn(btnId) {
   if (!btnId || typeof window.gdp !== "function") return;
-  const payload = { btn_id: btnId };
-  if (extra && typeof extra === "object") Object.assign(payload, extra);
-  window.gdp("track", BC_TRACK_EVENT, payload);
+  window.gdp("track", BC_TRACK_EVENT, { btn_id: btnId });
 }
 
 function initBcUserId() {
@@ -4383,13 +4495,31 @@ function useBcGrowingIO() {
 }
 
 function trackNavAnchor(sectionId) {
-  const btnId = BC_NAV_BTN_IDS[sectionId];
-  if (btnId) trackBcBtn(btnId);
+  trackBcBtn(BC_NAV_ANCHOR_BTN_IDS[sectionId]);
 }
 
 function trackPathCta(index) {
-  const num = String(index + 1).padStart(2, "0");
-  trackBcBtn(`path_cta_${num}`);
+  trackBcBtn(BC_PATH_CTA_BTN_IDS[index]);
+}
+
+function trackPathWechatConsult(pathIndex) {
+  trackBcBtn(BC_PATH_WECHAT_BTN_IDS[pathIndex]);
+}
+
+function trackPathIndexClick(pathIndex) {
+  trackBcBtn(BC_PATH_INDEX_BTN_IDS[pathIndex]);
+}
+
+function trackPainViewPath(hookIdx) {
+  trackBcBtn(BC_PAIN_VIEW_PATH_BTN_IDS[hookIdx]);
+}
+
+function trackFlowAxisSection(sectionId) {
+  trackBcBtn(BC_FLOW_AXIS_BTN_IDS[sectionId]);
+}
+
+function trackFlowAxisPath(pathIndex) {
+  trackBcBtn(BC_FLOW_AXIS_PATH_BTN_IDS[pathIndex]);
 }
 
 /**
@@ -4563,8 +4693,8 @@ const PAGE_TODOS = {
   },
   "T-002": {
     title: "CTA 跳转 URL 配置表",
-    detail: "路径 CTA（已定）：\n· 01 → course/713\n· 03 → courses?nav=1\n· 04 → 微信咨询弹窗（非外链）\n· 05 → myaIPlan\n· 06 → course/714\n· 02 → 内嵌方案弹窗\n\n仍待：导航 Logo 点击 URL",
-    owner: "产品/运营", status: "部分已定", blocker: "Logo URL + 联调",
+    detail: "路径 CTA（已定）：\n· 01 → course/713\n· 03 → courses?nav=1\n· 04 → 微信咨询弹窗（非外链）\n· 05 → myaIPlan\n· 06 → course/714\n· 02 → 内嵌方案弹窗\n\n导航左侧躺着学 Logo → https://igopx.cn/（已定）",
+    owner: "产品/运营", status: "已定稿", blocker: "—",
     prd: ["§2.2 功能 5", "§2.1 导航"],
   },
   "T-003b": {
@@ -4575,7 +4705,7 @@ const PAGE_TODOS = {
   },
   "T-006": {
     title: "登录点位确认",
-    detail: "已定交互：\n· 导航/路径 CTA → 登录注册网关弹窗\n· 网关「登录」→ 主站登录窗口\n· 网关「注册」→ 主站注册窗口\n· 权益文案「SVIP」→ 主站会员权益长图弹窗\n· 路径 04 → 微信弹窗（不拦截）\n· 新注册：学生来源 = BC落地页\n\nDemo 点击即模拟鉴权；正式版接主站组件。",
+    detail: "已定交互：\n· 导航/路径 CTA → 登录注册网关弹窗\n· 网关「登录」→ 主站登录窗口\n· 网关「注册」→ 主站注册窗口\n· 权益文案「SVIP」→ 主站会员权益长图弹窗\n· 本页 7 天 SVIP 与主站注册新人礼**叠加**（非二选一）\n· 路径 04 → 微信弹窗（不拦截）\n· 新注册：学生来源 = BC落地页\n\nDemo 点击即模拟鉴权；正式版接主站组件。",
     owner: "产品", status: "交互已定", blocker: "账号跳转验收 + 学生来源落库",
     prd: ["§2.1 导航", "§2.2 功能 5", "§4.2 注册来源落库", "§7.3 前置条件"],
   },
@@ -4594,7 +4724,7 @@ const PAGE_TODOS = {
   },
   "T-011": {
     title: "btn_id 联调",
-    detail: "步骤：\n1. 将 PRD §4.3.1 btn_id 清单发给 BC（杨效鲁）\n2. 部署测试环境\n3. Network 验证 tracker_btn_click 上报\n4. BC 后台确认接收\n\n含路径 02：path02_gen_complete / path02_gen_fail 等。",
+    detail: "步骤：\n1. 将 PRD §4.3.1 + BC埋点开发说明.md §4 清单发给 BC（杨效鲁）\n2. 部署测试环境\n3. Network 验证 tracker_btn_click 仅含 btn_id\n4. BC 后台确认接收\n\n已定：语义化 bc_path_*；bc_path02_*；bc_hero_video_0N_play_click（每次计次）；痛点切换/选卡/提交；路径 04 主 CTA 与扫码咨询分别上报",
     owner: "前端 / BC", status: "待联调", blocker: "埋点上线",
     prd: ["§4.3.1 BC 合作埋点"],
     docs: ["tracking"],
@@ -4607,7 +4737,7 @@ const PAGE_TODOS = {
   },
   "T-013": {
     title: "路径02 方案生成后端",
-    detail: "后端需实现：\n· 单 PDF 上传与存储\n· 异步任务 + 扣子工作流 → Markdown\n· 前端返回 markdown；同源 Markdown → 品牌 PDF 导出\n· pdfUrl 下载；账号绑定；保留 3 份历史\n· 见 路径02-方案Markdown与PDF开发说明.md",
+    detail: "后端需实现：\n· 单 PDF 上传与存储\n· 扣子 workflow_id 7649238221377912882（入参 pdf → 返参 Markdown）\n· 扣子鉴权：从历史雅思写作项目复用（无需本期新增）\n· 前端 markdown 预览 + 品牌 PDF 导出 + pdfUrl\n· 见 路径02-方案Markdown与PDF开发说明.md §2",
     owner: "后端", status: "待开发", blocker: "路径02正式能力",
     prd: ["§2.2 功能 5.1"],
   },
@@ -5138,17 +5268,18 @@ function Hero() {
     if (!playPromise) return;
     playPromise.catch(() => {
       setIsPlaying(false);
-      trackBcBtn("hero_video_play_error", { video_id: active.id });
+      trackBcBtn("bc_hero_video_play_error_click");
     });
   }, [isPlaying, activeId]);
 
-  function selectPlaylistVideo(video) {
+  function selectPlaylistVideo(video, index) {
     setActiveId(video.id);
-    trackBcBtn("hero_playlist_item_click", { video_id: video.id });
+    trackBcBtn(BC_HERO_VIDEO_SELECT_BTN_IDS[index]);
   }
 
   function handlePlay() {
-    trackBcBtn("hero_video_play", { video_id: active.id });
+    const index = HERO_VIDEOS.findIndex((v) => v.id === activeId);
+    if (index >= 0) trackBcBtn(BC_HERO_VIDEO_PLAY_BTN_IDS[index]);
     setIsPlaying(true);
   }
 
@@ -5252,7 +5383,7 @@ function Hero() {
                   <NoteDrip
                     inline
                     title="播放量规则"
-                    body={"公式：展示 = 真实 + round(预设)\n\n预设 = 视频预设值 × 随机系数 × 时间系数\n· 预设值：1000→500（6 集递减 100）\n· 随机：∈ [0.9, 1.1]，每集独立，加载时生成\n· 时间：2026-06-01 前=1；之后每天 +0.05\n\n真实值：点击播放 +1；同用户同视频去重；每小时刷新\n\n【6.8 视频 · 已定】\n· hero-01…06 封面 + MP4\n· 点击播放：挂载 video 并自动播放；进度条实时更新\n· 切换集数：停止播放并重置\n· 本地预览须 HTTP 静态服务（§0.2）；勿 file:// 打开"}
+                    body={"公式：展示 = 真实 + round(预设)\n\n预设 = 视频预设值 × 随机系数 × 时间系数\n· 预设值：1000→500（6 集递减 100）\n· 随机：∈ [0.9, 1.1]，每集独立，加载时生成\n· 时间：2026-06-01 前=1；之后每天 +0.05\n\n真实值（页面展示）：点击播放 +1；同用户同视频去重；每小时刷新\nBC 埋点：bc_hero_video_0N_play_click，每次点击计 1 次、不去重\n\n【6.8 视频 · 已定】\n· hero-01…06 封面 + MP4\n· 点击播放：挂载 video 并自动播放；进度条实时更新\n· 切换集数：停止播放并重置\n· 本地预览须 HTTP 静态服务（§0.2）；勿 file:// 打开"}
                     prd={["§2.2 功能 1.2", "§4.2 数据规则", "§0.2"]}
                     docs={["prd", "todo"]}
                   />
@@ -5315,7 +5446,7 @@ function Hero() {
                 <button
                   key={v.id}
                   type="button"
-                  onClick={() => selectPlaylistVideo(v)}
+                  onClick={() => selectPlaylistVideo(v, i)}
                   className={`playlist-item${isActive ? " is-active" : ""}`}
                 >
                   <span className="playlist-item__index">
@@ -5412,7 +5543,7 @@ function PainPointsA({ onMatch }) {
 
   function selectCard(p) {
     setSelected(p.id);
-    trackBcBtn("pain_card_select", { pain_id: p.id });
+    trackBcBtn("bc_pain_card_select_click");
     if (onMatch) onMatch(p);
   }
 
@@ -5453,7 +5584,7 @@ function PainPointsA({ onMatch }) {
                     <NoteDrip
                       inline
                       title="查看路径"
-                      body={"【触发】仅选中卡右下角显示\n· 平滑滚动至 #path-{hookIdx}（reduce-motion 时瞬时）\n· 选卡时已设 matchHookIdx → 索引 + 详情高亮\n· stopPropagation，避免重复触发选卡"}
+                      body={"【触发】仅选中卡右下角显示\n· 平滑滚动至 #path-{hookIdx}（reduce-motion 时瞬时）\n· 选卡时已设 matchHookIdx → 索引 + 详情高亮\n· stopPropagation，避免重复触发选卡\n\n【BC 埋点】bc_pain_card_0N_view_path_click（N=hookIdx+1）"}
                       prd={["§2.2 功能 2", "§2.2 功能 5 推荐高亮"]}
                       docs={["prd"]}
                     />
@@ -5465,7 +5596,7 @@ function PainPointsA({ onMatch }) {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      trackBcBtn("pain_view_path", { hook_idx: p.hookIdx });
+                      trackPainViewPath(p.hookIdx);
                       scrollToPath(p.hookIdx);
                     }}
                   >
@@ -5546,7 +5677,7 @@ function PainPointsB({ onMatch }) {
 
   useEffect(() => {
     if (done) {
-      trackBcBtn("pain_quiz_complete", { hook_idx: resultIdx });
+      trackBcBtn("bc_pain_quiz_submit_click");
       if (onMatch) onMatch(result);
     }
   }, [done, resultIdx]);
@@ -5617,7 +5748,7 @@ function PainPointsB({ onMatch }) {
                   <NoteDrip
                     inline
                     title="问卷结果 · 查看专属路径"
-                    body={"平滑滚动至 #path-{hookIdx}，与模式 A「查看路径」同逻辑；问卷完成时已设路径高亮"}
+                    body={"平滑滚动至 #path-{hookIdx}，与模式 A「查看路径」同逻辑；问卷完成时已设路径高亮\n\n【BC 埋点】bc_pain_quiz_submit_click（出结果时）· bc_pain_card_0N_view_path_click"}
                     prd={["§2.2 功能 3", "§2.2 功能 5"]}
                     docs={["prd"]}
                   />
@@ -5628,7 +5759,7 @@ function PainPointsB({ onMatch }) {
                   href={`#path-${result.hookIdx}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    trackBcBtn("pain_view_path", { hook_idx: result.hookIdx });
+                    trackPainViewPath(result.hookIdx);
                     scrollToPath(result.hookIdx);
                   }}
                 >
@@ -5749,8 +5880,8 @@ function PainPointsSection({ pattern, onMatch }) {
                   <NoteDrip
                     inline
                     title="自主选择 · 模式 A"
-                    body={"6 张痛点卡单选 → 选中卡右下角「查看路径」→ 路径高亮\n\n与模式 B 互斥：切换时清空另一侧匹配"}
-                    prd={["§2.2 功能 2", "§2.2 功能 4"]}
+                    body={"6 张痛点卡单选 → 选中卡右下角「查看路径」→ 路径高亮\n\n与模式 B 互斥：切换时清空另一侧匹配\n\n【BC 埋点】bc_pain_switch_to_card_click · bc_pain_card_select_click · bc_pain_card_0N_view_path_click"}
+                    prd={["§2.2 功能 2", "§2.2 功能 4", "§4.3.1 BC 合作埋点"]}
                     docs={["prd"]}
                   />
                 }
@@ -5759,7 +5890,7 @@ function PainPointsSection({ pattern, onMatch }) {
                   type="button"
                   className={`pain-mode__btn pain-mode__btn--a ${pattern === "A" ? "is-selected" : "is-unselected"}`}
                   onClick={() => {
-                    if (pattern !== "A") trackBcBtn("pain_switch_to_card");
+                    if (pattern !== "A") trackBcBtn("bc_pain_switch_to_card_click");
                     window.dispatchEvent(new CustomEvent("tweak-set", { detail: { painPattern: "A" } }));
                   }}
                 >
@@ -5773,8 +5904,8 @@ function PainPointsSection({ pattern, onMatch }) {
                     <NoteDrip
                       inline
                       title="互动诊断 · 模式 B"
-                      body={"4 题问卷 + 右侧诊断表 → 结果页「查看专属路径」\n\n与模式 A 互斥：切换时清空另一侧匹配"}
-                      prd={["§2.2 功能 3", "§2.2 功能 4"]}
+                      body={"4 题问卷 + 右侧诊断表 → 结果页「查看专属路径」\n\n与模式 A 互斥：切换时清空另一侧匹配\n\n【BC 埋点】bc_pain_switch_to_quiz_click · bc_pain_quiz_submit_click（4 题完成出结果）· bc_pain_card_0N_view_path_click"}
+                      prd={["§2.2 功能 3", "§2.2 功能 4", "§4.3.1 BC 合作埋点"]}
                       docs={["prd", "todo"]}
                     />
                     <TodoDrip inline todoId="T-001" />
@@ -5785,7 +5916,7 @@ function PainPointsSection({ pattern, onMatch }) {
                   type="button"
                   className={`pain-mode__btn pain-mode__btn--b ${pattern === "B" ? "is-selected" : "is-unselected"}`}
                   onClick={() => {
-                    if (pattern !== "B") trackBcBtn("pain_switch_to_quiz");
+                    if (pattern !== "B") trackBcBtn("bc_pain_switch_to_quiz_click");
                     window.dispatchEvent(new CustomEvent("tweak-set", { detail: { painPattern: "B" } }));
                   }}
                 >
@@ -5905,6 +6036,7 @@ const PATHS = [
 ];
 
 /** 路径主 CTA 目标（路径 02 = 内嵌弹窗；路径 04 = 微信咨询弹窗） */
+const MAIN_SITE_HOME_URL = "https://igopx.cn/";
 const PATH_CTA_TARGETS = {
   0: { type: "url", href: "https://www.igopx.cn/course/713?nav=13&name=%E8%AF%BE%E7%A8%8B%E5%B9%BF%E5%9C%BA&url=%2FcourseSquare%3Fnav%3D13" },
   2: { type: "url", href: "https://www.igopx.cn/courses?nav=1" },
@@ -6002,6 +6134,7 @@ function LoginRegisterModal() {
             注册即送价值<strong>￥99</strong>的<strong>7 天</strong>
             <button type="button" className="auth-modal__svip-link" onClick={openSvip}>SVIP</button>
             会员，体验平台全部功能
+            <p className="auth-modal__promo-note">可与主站注册赠送的会员权益叠加</p>
           </div>
           {pathHint && (
             <p style={{ fontSize: 13, color: "var(--ink-3)", textAlign: "center", margin: "-6px 0 0" }}>
@@ -6124,7 +6257,12 @@ const PLAN_MAX_BYTES = 5 * 1024 * 1024;
 const PLAN_MAX_UPLOAD_COUNT = 1;
 const PLAN_FAIL_TOAST_MSG = "方案生成失败，请重试或联系客服";
 const PLAN_FAIL_TOAST_MS = 3000;
+const PLAN_TIMEOUT_FAIL_MSG = "专属方案生成失败，请检查网络连接后重试，或扫码联系客服";
+const PLAN_GEN_FAIL_QR_SRC = "./assets/BC落地页-运营码.png";
 const PLAN_DEMO_GEN_MS = 12000;
+const PLAN_GEN_ESTIMATE_LABEL = "1–3 分钟";
+const PLAN_GEN_PROGRESS_MS = 3 * 60 * 1000;
+const PLAN_GEN_TIMEOUT_MS = 5 * 60 * 1000;
 
 const Path02PlanContext = createContext(null);
 
@@ -6148,6 +6286,9 @@ function loadStoredPlan() {
     if (data?.status === "generating") {
       const fileNames = data.fileNames || [];
       const elapsed = Date.now() - (data.startedAt || 0);
+      if (elapsed >= PLAN_GEN_TIMEOUT_MS) {
+        return { status: "none" };
+      }
       if (elapsed >= PLAN_DEMO_GEN_MS) {
         return {
           ...data,
@@ -6256,7 +6397,7 @@ startxref
   return new Blob([pdf], { type: "application/pdf" });
 }
 
-function PlanModalShell({ title, description, icon, wide, result, status, uploadState, generating, onClose, children, footer, footerBar = false }) {
+function PlanModalShell({ title, description, icon, wide, result, status, statusError, uploadState, generating, onClose, children, footer, footerBar = false }) {
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
@@ -6325,7 +6466,7 @@ function PlanModalShell({ title, description, icon, wide, result, status, upload
           <>
             <div className="plan-modal__status-content">
               {icon && (
-                <div className="plan-modal__status-icon" aria-hidden="true">
+                <div className={`plan-modal__status-icon${statusError ? " plan-modal__status-icon--error" : ""}`} aria-hidden="true">
                   {icon}
                 </div>
               )}
@@ -6334,6 +6475,7 @@ function PlanModalShell({ title, description, icon, wide, result, status, upload
                 {description && <p className="plan-modal__status-desc">{description}</p>}
               </div>
             </div>
+            {children}
             {footer && (
               <div className={`plan-modal__footer${footerBar ? " plan-modal__footer--bar" : ""}`}>
                 {footer}
@@ -6573,7 +6715,7 @@ function Path02PlanUI() {
     dialog = (
       <PlanModalShell
         title="正在生成方案"
-        description="AI 正在分析你的报告并生成学习方案，预计约1 分钟内完成。"
+        description={`AI 正在分析你的报告并生成学习方案，预计 ${PLAN_GEN_ESTIMATE_LABEL}内完成。`}
         generating
         onClose={closeModal}
         footerBar
@@ -6587,8 +6729,30 @@ function Path02PlanUI() {
           <div className="plan-progress__fill" style={{ width: `${genProgress}%` }} />
         </div>
         <p className="plan-modal__hint" style={{ textAlign: "center" }}>
-          可关闭此窗口继续浏览•完成后将自动弹出结果
+          预计 {PLAN_GEN_ESTIMATE_LABEL} · 可关闭此窗口继续浏览 · 完成后将自动弹出结果
         </p>
+      </PlanModalShell>
+    );
+  }
+
+  if (modal === "gen_timeout") {
+    dialog = (
+      <PlanModalShell
+        title={PLAN_TIMEOUT_FAIL_MSG}
+        icon={<CircleAlert size={24} />}
+        status
+        statusError
+        onClose={closeModal}
+        footerBar
+        footer={(
+          <button type="button" className="btn btn--ghost" style={{ width: "100%", justifyContent: "center" }} onClick={closeModal}>
+            我知道了
+          </button>
+        )}
+      >
+        <div className="plan-modal__status-qr">
+          <img src={PLAN_GEN_FAIL_QR_SRC} alt="扫码联系客服" width={168} height={168} />
+        </div>
       </PlanModalShell>
     );
   }
@@ -6614,7 +6778,7 @@ function Path02PlanUI() {
 
   if (modal === "result" && hasGeneratedPlan(plan)) {
     const downloadPdf = () => {
-      trackBcBtn("path02_download");
+      trackBcBtn("bc_path02_download_click");
       const blob = createDemoPdfBlob(plan.preview);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -6668,7 +6832,7 @@ function Path02GeneratingBar() {
       <div className="plan-gen-bar__spinner" aria-hidden="true" />
       <div className="plan-gen-bar__text">
         <strong>方案生成中</strong>
-        <div>可继续浏览 · 完成后自动弹出 · {genProgress}%</div>
+        <div>预计 {PLAN_GEN_ESTIMATE_LABEL} · 可继续浏览 · 完成后自动弹出 · {genProgress}%</div>
       </div>
     </div>
   );
@@ -6686,6 +6850,7 @@ function Path02PlanProvider({ children }) {
   const planBeforeGenerationRef = useRef(null);
   const planToastTimerRef = useRef(null);
   const timerRef = useRef(null);
+  const timeoutRef = useRef(null);
   const progressRef = useRef(null);
   const uploadTimersRef = useRef({});
 
@@ -6707,7 +6872,7 @@ function Path02PlanProvider({ children }) {
 
   const closeModal = useCallback(() => {
     setModal((prev) => {
-      if (prev === "generating") trackBcBtn("path02_wait_close");
+      if (prev === "generating") trackBcBtn("bc_path02_wait_close_click");
       return null;
     });
   }, []);
@@ -6730,12 +6895,12 @@ function Path02PlanProvider({ children }) {
     setFileErrors(["", ""]);
     setUploadItems([]);
     setModal("upload");
-    trackBcBtn("path02_plan_open");
+    trackBcBtn("bc_path02_plan_open_click");
   }, [clearUploadTimers]);
 
   const viewPlan = useCallback(() => {
     if (hasGeneratedPlan(plan)) {
-      trackBcBtn("path02_view");
+      trackBcBtn("bc_path02_view_click");
       setModal("result");
     }
   }, [plan]);
@@ -6753,7 +6918,7 @@ function Path02PlanProvider({ children }) {
   }, [plan, showToast, openUpload]);
 
   const confirmOverwrite = useCallback(() => {
-    trackBcBtn("path02_overwrite_confirm");
+    trackBcBtn("bc_path02_overwrite_confirm_click");
     openUpload();
   }, [openUpload]);
 
@@ -6864,6 +7029,12 @@ function Path02PlanProvider({ children }) {
   }, [completeUploadItem, syncUploadFiles, validateFile]);
 
   const finishGeneration = useCallback((fileNames) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (progressRef.current) clearInterval(progressRef.current);
+    timerRef.current = null;
+    timeoutRef.current = null;
+    progressRef.current = null;
     planBeforeGenerationRef.current = null;
     const preview = buildDemoPlanPreview(fileNames);
     const readyPlan = {
@@ -6874,7 +7045,7 @@ function Path02PlanProvider({ children }) {
     };
     persistPlan(readyPlan);
     setGenProgress(100);
-    trackBcBtn("path02_gen_complete");
+    trackBcBtn("bc_path02_gen_complete_click");
     if (genStartedInSessionRef.current) {
       setModal("result");
     }
@@ -6882,8 +7053,10 @@ function Path02PlanProvider({ children }) {
 
   const failGeneration = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (progressRef.current) clearInterval(progressRef.current);
     timerRef.current = null;
+    timeoutRef.current = null;
     progressRef.current = null;
     genStartedInSessionRef.current = false;
     setGenProgress(0);
@@ -6891,9 +7064,25 @@ function Path02PlanProvider({ children }) {
     const restore = planBeforeGenerationRef.current;
     planBeforeGenerationRef.current = null;
     persistPlan(restore || { status: "none" });
-    trackBcBtn("path02_gen_fail");
+    trackBcBtn("bc_path02_gen_fail_click");
     showToast(PLAN_FAIL_TOAST_MSG, { placement: "top", duration: PLAN_FAIL_TOAST_MS });
   }, [persistPlan, showToast]);
+
+  const timeoutGeneration = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (progressRef.current) clearInterval(progressRef.current);
+    timerRef.current = null;
+    timeoutRef.current = null;
+    progressRef.current = null;
+    genStartedInSessionRef.current = false;
+    setGenProgress(0);
+    const restore = planBeforeGenerationRef.current;
+    planBeforeGenerationRef.current = null;
+    persistPlan(restore || { status: "none" });
+    trackBcBtn("bc_path02_gen_fail_click");
+    setModal("gen_timeout");
+  }, [persistPlan]);
 
   const startGeneration = useCallback((fileNames) => {
     planBeforeGenerationRef.current = hasGeneratedPlan(plan) ? { ...plan } : null;
@@ -6906,7 +7095,7 @@ function Path02PlanProvider({ children }) {
   const submitUpload = useCallback(() => {
     const picked = uploadItems.filter((item) => item.status === "success").map((item) => item.file);
     if (!picked.length) return;
-    trackBcBtn("path02_upload_submit");
+    trackBcBtn("bc_path02_upload_submit_click");
     startGeneration(picked.map((file) => file.name));
   }, [startGeneration, uploadItems]);
 
@@ -6924,20 +7113,23 @@ function Path02PlanProvider({ children }) {
 
   useEffect(() => {
     window.bcLandingPath02GenerationFailed = failGeneration;
+    window.bcLandingPath02GenerationTimeout = timeoutGeneration;
     return () => {
       delete window.bcLandingPath02GenerationFailed;
+      delete window.bcLandingPath02GenerationTimeout;
     };
-  }, [failGeneration]);
+  }, [failGeneration, timeoutGeneration]);
 
   useEffect(() => {
     if (plan.status !== "generating" || !plan.startedAt) return undefined;
 
     const fileNames = plan.fileNames || [];
     const remaining = Math.max(0, PLAN_DEMO_GEN_MS - (Date.now() - plan.startedAt));
+    const timeoutRemaining = Math.max(0, PLAN_GEN_TIMEOUT_MS - (Date.now() - plan.startedAt));
 
     const updateProgress = () => {
       const elapsed = Date.now() - plan.startedAt;
-      setGenProgress(Math.min(99, Math.round((elapsed / PLAN_DEMO_GEN_MS) * 100)));
+      setGenProgress(Math.min(99, Math.round((elapsed / PLAN_GEN_PROGRESS_MS) * 100)));
     };
 
     updateProgress();
@@ -6948,14 +7140,21 @@ function Path02PlanProvider({ children }) {
       finishGeneration(fileNames);
     }, remaining);
 
+    timeoutRef.current = setTimeout(() => {
+      if (progressRef.current) clearInterval(progressRef.current);
+      timeoutGeneration();
+    }, timeoutRemaining);
+
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (progressRef.current) clearInterval(progressRef.current);
     };
-  }, [plan.status, plan.startedAt, plan.fileNames, finishGeneration]);
+  }, [plan.status, plan.startedAt, plan.fileNames, finishGeneration, timeoutGeneration]);
 
   const resetPlanDemo = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (progressRef.current) clearInterval(progressRef.current);
     clearUploadTimers();
     genStartedInSessionRef.current = false;
@@ -7000,10 +7199,11 @@ function Path02PlanProvider({ children }) {
     resetPlanDemo,
     simulateReadyPlan,
     failGeneration,
+    timeoutGeneration,
   }), [
     plan, modal, files, fileErrors, uploadItems, genProgress, planToast,
     closeModal, openUpload, viewPlan, confirmOverwrite, submitUpload,
-    setFileAt, setUploadFiles, clearUploadItem, clearFileAt, retryUploadItem, handlePlanRequest, resetPlanDemo, simulateReadyPlan, failGeneration,
+    setFileAt, setUploadFiles, clearUploadItem, clearFileAt, retryUploadItem, handlePlanRequest, resetPlanDemo, simulateReadyPlan, failGeneration, timeoutGeneration,
   ]);
 
   return (
@@ -7097,7 +7297,7 @@ function PathCard({ path, index, highlight, onWechatClick }) {
   };
 
   const handleWechatClick = () => {
-    trackBcBtn("path_wechat_consult");
+    trackPathWechatConsult(index);
     onWechatClick(index);
   };
 
@@ -7164,7 +7364,7 @@ function PathCard({ path, index, highlight, onWechatClick }) {
           {isPlanGenerating && (
             <div className="path-card__plan-status path-card__plan-status--gen" role="status">
               <span className="plan-gen-bar__spinner" style={{ width: 14, height: 14, borderWidth: 2 }} aria-hidden="true" />
-              方案生成中，请稍候…
+              方案生成中，预计 {PLAN_GEN_ESTIMATE_LABEL}…
             </div>
           )}
           {isPlanReady && (
@@ -7183,7 +7383,7 @@ function PathCard({ path, index, highlight, onWechatClick }) {
                     <NoteDrip
                       inline
                       title="路径02 · AI 学习方案"
-                      body={"【入口】路径 02 主 CTA → 内嵌弹窗\n\n【上传】仅 1 份 PDF（≤5MB）；上传后隐藏上传区，删除后可重选\n【正式】扣子 → Markdown 预览 + 后端导出 PDF 下载\n【失败】页顶 Toast「方案生成失败，请重试或联系客服」3 秒\n· 见 路径02-方案Markdown与PDF开发说明.md\n\n【待办】T-012 / T-013"}
+                      body={"【入口】路径 02 主 CTA → 内嵌弹窗\n\n【上传】仅 1 份 PDF（≤5MB）；上传后隐藏上传区，删除后可重选\n【扣子】workflow_id 7649238221377912882；入参 pdf → 返参 Markdown string\n· 鉴权：历史雅思写作项目已有，开发自行复用（§2）\n【展示】Markdown 预览 + 后端导出 PDF 下载\n【失败】<5 分钟：页顶 Toast 3 秒；≥5 分钟：超时弹窗 + 客服二维码\n· 见 路径02-方案Markdown与PDF开发说明.md\n\n【BC 埋点】bc_path02_plan_open / upload_submit / wait_close / gen_complete / gen_fail / view / download / overwrite_confirm\n\n【待办】T-013 后端接入"}
                       prd={["§2.2 功能 5.1"]}
                       docs={["prd", "todo"]}
                     />
@@ -7241,7 +7441,7 @@ function PathCard({ path, index, highlight, onWechatClick }) {
                 <NoteDrip
                   inline
                   title="微信咨询"
-                  body={"【卡片】扫码咨询 · 详情添加老师咨询\n\n【二维码 · 已定】\n· 路径 01/06 → 销售码\n· 路径 02–05 → 运营码\n咨询卡缩略与弹窗大图同路径同码\n\n【埋点】path_wechat_consult（BC 六项路径指标不含此卡）"}
+                  body={"【卡片】扫码咨询 · 详情添加老师咨询\n\n【二维码 · 已定】\n· 路径 01/06 → 销售码\n· 路径 02–05 → 运营码\n\n【埋点】bc_path_0X_wechat_consult_click（按路径区分）"}
                   prd={["§2.2 功能 5"]}
                   docs={["prd", "assets", "tracking"]}
                 />
@@ -7329,7 +7529,7 @@ function ConversionPaths({ highlightIdx }) {
               <NoteDrip
                 inline
                 title="BC GrowingIO 埋点"
-                body={"【BC 验收 3 指标 · 已定口径】\n1. 访问量 → SDK 自动 PV + UV（无需登录）\n2. 路径点击 → 仅 6 卡片主 CTA：path_cta_01…06\n3. 注册成功 → register_success（本页弹窗内新注册；跳转主站后注册不算）\n\n【路径02 预埋】path02_gen_complete / path02_gen_fail 等（非 BC 必验）\n【归因】utm_* + ut；setUserId + set_user_id\n【联调】杨效鲁 · T-010 / T-011"}
+                body={"【BC 验收 3 指标】\n1. PV + UV（SDK 自动）\n2. 6 路径主 CTA：bc_path_*_cta_click\n3. register_success\n\n【建议联调】登录注册、扫码咨询、视频播放/切换、痛点切换/选卡/提交/查看路径、路径索引、顶/左锚点、bc_path02_* 链路\n【视频播放】bc_hero_video_0N_play_click：每次点击计 1 次、不去重\n【规范】仅 btn_id，无 cta_label 等附加属性\n【联调】T-010 / T-011 · 见 BC埋点开发说明.md §4"}
                 prd={["§4.3.1 BC 合作埋点"]}
                 docs={["prd", "tracking", "todo"]}
                 links={[{ label: "BC 对接邮箱", href: "mailto:Yang.Xiaolu@britishcouncil.org.cn" }]}
@@ -7349,7 +7549,7 @@ function ConversionPaths({ highlightIdx }) {
                   className={`path-index__item${hi ? " is-highlight" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    trackBcBtn("path_index_click", { path_idx: i });
+                    trackPathIndexClick(i);
                     scrollToPath(i);
                   }}
                 >
@@ -7675,7 +7875,10 @@ function FlowAxis() {
                   <button
                     type="button"
                     className={`flow-axis__step${state ? ` ${state}` : ""}`}
-                    onClick={() => scrollToSection(step.id)}
+                    onClick={() => {
+                      trackFlowAxisSection(step.id);
+                      scrollToSection(step.id);
+                    }}
                     aria-current={state === "is-active" ? "step" : undefined}
                   >
                     <span className="flow-axis__dot" aria-hidden="true" />
@@ -7695,6 +7898,7 @@ function FlowAxis() {
                             data-path-index={pi}
                             onClick={(e) => {
                               e.stopPropagation();
+                              trackFlowAxisPath(pi);
                               scrollToSection(subId);
                             }}
                             aria-current={subActive ? "step" : undefined}
@@ -7743,7 +7947,7 @@ function App() {
   useBcGrowingIO();
   const activeNavSection = useNavActiveSection();
   const { openLogin, isLoggedIn, setLoggedInDemo } = useAuth();
-  const { resetPlanDemo, simulateReadyPlan, plan } = usePath02Plan();
+  const { resetPlanDemo, simulateReadyPlan, timeoutGeneration, plan } = usePath02Plan();
   const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
   const [panelOpen, setPanelOpen] = useState(false);
   const [matchHookIdx, setMatchHookIdx] = useState(TWEAK_DEFAULTS.highlightPath);
@@ -7816,9 +8020,9 @@ function App() {
             side="end"
             drip={<TodoDrip inline todoId="T-008" />}
           >
-            <div className="nav__brand nav__start">
+            <a className="nav__brand nav__start" href={MAIN_SITE_HOME_URL} aria-label="返回躺着学主站">
               <img className="nav__brand-logo nav__brand-logo--txx" src="./assets/tangzhexue-logo.png" alt="躺着学" />
-            </div>
+            </a>
           </DripAnchor>
           <div className="nav__links">
             {NAV_SECTIONS.map((item) => {
@@ -7846,7 +8050,7 @@ function App() {
                       <NoteDrip
                         inline
                         title="导航 · IA"
-                        body={"4 锚点：#hero / #pain / #paths / #proof\n\n布局：左躺着学 89×34 · 中锚点 · 右登录+BC Logo\n\nBC Logo 高度与躺着学一致（34/28），宽等比\n\n宽屏 ≥1820px 流程轴；<1820px 隐藏"}
+                        body={"4 锚点：#hero / #pain / #paths / #proof\n\n布局：左躺着学 Logo → igopx.cn · 中锚点 · 右登录+BC Logo\n\nBC Logo 高度与躺着学一致（34/28），宽等比\n\n宽屏 ≥1820px 流程轴；<1820px 隐藏"}
                         prd={["§2.1 页面 IA", "§1.1 页面入口与主站可见性"]}
                         docs={["prd"]}
                       />
@@ -7881,15 +8085,15 @@ function App() {
                   <NoteDrip
                     inline
                     title="登录 / 注册"
-                        body={"【触发】本按钮 或 路径 01/02/03/05/06 CTA（未登录）→ 网关弹窗\n\n【网关】登录 → 主站登录窗口；注册 → 主站注册窗口\n\n【SVIP】权益文案可点 → 会员权益长图（Demo：`会员权益-gpt.jpg`）\n\n【例外】路径 04 → 微信弹窗\n\n【新注册】学生来源 = BC落地页"}
-                    prd={["§2.2 路径 CTA 登录拦截", "§4.2 注册来源落库"]}
+                        body={"【触发】本按钮 或 路径 01/02/03/05/06 CTA（未登录）→ 网关弹窗\n\n【网关】登录 → 主站登录窗口；注册 → 主站注册窗口\n\n【SVIP】权益文案可点 → 会员权益长图（Demo：`会员权益-gpt.jpg`）\n· 本页 7 天 SVIP 与主站注册新人礼**叠加**\n\n【例外】路径 04 → 微信弹窗\n\n【新注册】学生来源 = BC落地页\n\n【BC 埋点】bc_nav_login_register_click"}
+                    prd={["§2.2 路径 CTA 登录拦截", "§4.2 注册来源落库", "§4.3.1 BC 合作埋点"]}
                     docs={["prd", "todo"]}
                   />
                   <TodoDrip inline todoId="T-006" />
                 </>
               }
             >
-              <button type="button" className="nav__cta" onClick={() => { trackBcBtn("nav_login_register"); openLogin(); }}>
+              <button type="button" className="nav__cta" onClick={() => { trackBcBtn("bc_nav_login_register_click"); openLogin(); }}>
                 {isLoggedIn ? "已登录" : "登录/注册"}
               </button>
             </DripAnchor>
@@ -8088,6 +8292,18 @@ function App() {
                   }}
                 >
                   模拟方案已就绪
+                </button>
+                <button
+                  type="button"
+                  onClick={timeoutGeneration}
+                  style={{
+                    width: "100%", padding: "8px 10px",
+                    fontFamily: "var(--mono)", fontSize: "var(--text-meta-md)",
+                    border: "1px solid var(--rule)", borderRadius: 8,
+                    background: "var(--paper)", color: "var(--ink)",
+                  }}
+                >
+                  模拟生成超时弹窗
                 </button>
                 <button
                   type="button"

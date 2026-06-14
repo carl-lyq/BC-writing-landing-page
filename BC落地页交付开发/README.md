@@ -49,7 +49,7 @@ cd UI && python3 -m http.server 5175
 | 项 | ID | 说明 |
 |----|-----|------|
 | 问卷正式规则 | T-001 | 模式 B 验收 |
-| 导航 Logo URL | T-002 | 路径 CTA 已定 |
+| ~~导航 Logo URL~~ | ~~T-002~~ | **已定**（`https://igopx.cn/` · v1.0.28） |
 | ~~Hero 视频~~ | ~~T-003b~~ | 已定（6.8 · `UI/assets/hero/`） |
 | 正式品牌素材 | T-008 | 页面已接 Demo 资产 |
 | GrowingIO 凭证 | T-010 | BC 提供 |
