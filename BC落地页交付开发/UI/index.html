@@ -2844,6 +2844,19 @@ button.path-card__wechat {
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 .proto-drip:hover { transform: rotate(-45deg) scale(1.08); box-shadow: 0 4px 16px rgba(11, 31, 58, 0.28); }
+.proto-drip--selected {
+  z-index: 2092;
+  outline: 3px solid #fff;
+  outline-offset: 1px;
+  animation: proto-drip-selected-pulse 1.35s ease-in-out infinite;
+}
+.proto-drip--selected:hover {
+  transform: rotate(-45deg) scale(1.1);
+}
+@keyframes proto-drip-selected-pulse {
+  0%, 100% { filter: brightness(1.05); }
+  50% { filter: brightness(1.18); }
+}
 .proto-drip__icon {
   display: block;
   transform: rotate(45deg);
@@ -2894,6 +2907,64 @@ button.path-card__wechat {
   line-height: 1.65;
   font-weight: 800;
 }
+/* 列表选中 → 页面水滴高亮（需高于系统/手写默认阴影优先级） */
+.proto-drip--system.proto-drip--note.proto-drip--selected {
+  box-shadow:
+    0 0 0 3px #1d4ed8,
+    0 0 0 6px #fff,
+    0 0 0 9px rgba(29, 78, 216, 0.62),
+    0 0 22px rgba(37, 99, 235, 0.55),
+    0 8px 24px rgba(11, 31, 58, 0.34);
+  animation: proto-drip-selected-ring-note 1.35s ease-in-out infinite;
+}
+.proto-drip--system.proto-drip--todo.proto-drip--selected {
+  box-shadow:
+    0 0 0 3px #c2410c,
+    0 0 0 6px #fff,
+    0 0 0 9px rgba(194, 65, 12, 0.58),
+    0 0 22px rgba(249, 115, 22, 0.48),
+    0 8px 24px rgba(11, 31, 58, 0.34);
+  animation: proto-drip-selected-ring-todo 1.35s ease-in-out infinite;
+}
+.proto-drip--manual.proto-drip--note.proto-drip--selected {
+  outline: 3px dashed #fff;
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 3px #6d28d9,
+    0 0 0 7px rgba(124, 58, 237, 0.55),
+    0 0 26px rgba(124, 58, 237, 0.58),
+    0 8px 24px rgba(109, 40, 217, 0.48);
+  animation: proto-drip-selected-ring-note-manual 1.35s ease-in-out infinite;
+}
+.proto-drip--manual.proto-drip--todo.proto-drip--selected {
+  outline: 3px dashed #fff;
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 3px #c2410c,
+    0 0 0 7px rgba(234, 88, 12, 0.52),
+    0 0 26px rgba(249, 115, 22, 0.52),
+    0 8px 24px rgba(194, 65, 12, 0.45);
+  animation: proto-drip-selected-ring-todo-manual 1.35s ease-in-out infinite;
+}
+.proto-drip--floating.proto-drip--selected {
+  z-index: 2095;
+}
+@keyframes proto-drip-selected-ring-note {
+  0%, 100% { box-shadow: 0 0 0 3px #1d4ed8, 0 0 0 6px #fff, 0 0 0 9px rgba(29, 78, 216, 0.62), 0 0 22px rgba(37, 99, 235, 0.55), 0 8px 24px rgba(11, 31, 58, 0.34); }
+  50% { box-shadow: 0 0 0 3px #1d4ed8, 0 0 0 6px #fff, 0 0 0 13px rgba(29, 78, 216, 0.28), 0 0 30px rgba(37, 99, 235, 0.62), 0 8px 28px rgba(11, 31, 58, 0.38); }
+}
+@keyframes proto-drip-selected-ring-todo {
+  0%, 100% { box-shadow: 0 0 0 3px #c2410c, 0 0 0 6px #fff, 0 0 0 9px rgba(194, 65, 12, 0.58), 0 0 22px rgba(249, 115, 22, 0.48), 0 8px 24px rgba(11, 31, 58, 0.34); }
+  50% { box-shadow: 0 0 0 3px #c2410c, 0 0 0 6px #fff, 0 0 0 13px rgba(194, 65, 12, 0.26), 0 0 30px rgba(249, 115, 22, 0.58), 0 8px 28px rgba(11, 31, 58, 0.38); }
+}
+@keyframes proto-drip-selected-ring-note-manual {
+  0%, 100% { box-shadow: 0 0 0 3px #6d28d9, 0 0 0 7px rgba(124, 58, 237, 0.55), 0 0 26px rgba(124, 58, 237, 0.58), 0 8px 24px rgba(109, 40, 217, 0.48); }
+  50% { box-shadow: 0 0 0 3px #6d28d9, 0 0 0 11px rgba(124, 58, 237, 0.32), 0 0 34px rgba(124, 58, 237, 0.66), 0 8px 28px rgba(109, 40, 217, 0.55); }
+}
+@keyframes proto-drip-selected-ring-todo-manual {
+  0%, 100% { box-shadow: 0 0 0 3px #c2410c, 0 0 0 7px rgba(234, 88, 12, 0.52), 0 0 26px rgba(249, 115, 22, 0.52), 0 8px 24px rgba(194, 65, 12, 0.45); }
+  50% { box-shadow: 0 0 0 3px #c2410c, 0 0 0 11px rgba(234, 88, 12, 0.3), 0 0 34px rgba(249, 115, 22, 0.62), 0 8px 28px rgba(194, 65, 12, 0.52); }
+}
 .proto-drip--floating.proto-drip--manual:hover {
   filter: brightness(1.1) saturate(1.05);
 }
@@ -2910,9 +2981,13 @@ button.path-card__wechat {
   z-index: 2100;
   display: flex;
   flex-direction: row;
-  align-items: stretch;
+  align-items: flex-start;
   font-family: var(--sans);
   filter: drop-shadow(0 8px 28px rgba(11, 31, 58, 0.12));
+  opacity: var(--proto-panel-opacity, 1);
+}
+.proto-toolbar.is-expanded {
+  align-items: stretch;
 }
 .proto-toolbar__tab {
   flex-shrink: 0;
@@ -2960,11 +3035,16 @@ button.path-card__wechat {
   transition: min-width 0.28s ease, width 0.28s ease, opacity 0.22s ease, padding 0.28s ease;
 }
 .proto-toolbar.is-collapsed .proto-toolbar__panel {
+  position: absolute;
+  left: 34px;
+  top: 0;
   min-width: 0;
   width: 0;
-  padding-left: 0;
-  padding-right: 0;
+  height: 0;
+  max-height: 0;
+  padding: 0;
   opacity: 0;
+  overflow: hidden;
   pointer-events: none;
   border-color: transparent;
 }
@@ -3121,7 +3201,9 @@ button.path-card__wechat {
   z-index: 2080;
   margin: 0;
   pointer-events: auto;
-  will-change: transform;
+  will-change: left, top;
+  transform: rotate(-45deg);
+  transform-origin: center center;
 }
 .proto-drip-top-layer {
   position: fixed;
@@ -3129,6 +3211,7 @@ button.path-card__wechat {
   z-index: 2080;
   pointer-events: none;
   overflow: visible;
+  contain: layout style;
 }
 .proto-drip-top-layer .proto-drip {
   pointer-events: auto;
@@ -3184,6 +3267,108 @@ button.path-card__wechat {
   box-shadow: -8px 0 32px rgba(11, 31, 58, 0.1);
   backdrop-filter: blur(8px);
   overflow: hidden;
+  opacity: var(--proto-panel-opacity, 1);
+}
+/* 备注列表 · 蓝色系（对齐系统备注水滴） */
+.proto-list-panel--note {
+  background: linear-gradient(180deg, rgba(239, 246, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+  border-color: rgba(59, 130, 246, 0.28);
+  box-shadow: -8px 0 32px rgba(30, 95, 214, 0.12);
+}
+.proto-list-panel--note .proto-list-panel__head {
+  border-bottom-color: rgba(59, 130, 246, 0.2);
+  background: linear-gradient(135deg, rgba(219, 234, 254, 0.65) 0%, rgba(239, 246, 255, 0.35) 100%);
+}
+.proto-list-panel--note .proto-list-panel__title { color: #1e40af; }
+.proto-list-panel--note .proto-list-panel__count {
+  color: #1e5fd6;
+  background: rgba(219, 234, 254, 0.85);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.proto-list-panel--note .proto-list-panel__filters {
+  border-bottom-color: rgba(59, 130, 246, 0.15);
+  background: rgba(239, 246, 255, 0.55);
+}
+.proto-list-panel--note .proto-list-panel__search:focus,
+.proto-list-panel--note .proto-list-panel__select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+.proto-list-panel--note .proto-list-panel__source-btn--active {
+  border-color: #3b82f6;
+  background: rgba(219, 234, 254, 0.9);
+  color: #1e40af;
+}
+.proto-list-panel--note .proto-list-item {
+  border-color: rgba(59, 130, 246, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+}
+.proto-list-panel--note .proto-list-item:hover {
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(239, 246, 255, 0.95);
+}
+.proto-list-panel--note .proto-list-item--selected {
+  border-color: #3b82f6;
+  background: rgba(219, 234, 254, 0.75);
+  box-shadow: inset 3px 0 0 #1e5fd6;
+}
+.proto-list-panel--note .proto-list-item--selected:hover {
+  border-color: #3b82f6;
+  background: rgba(219, 234, 254, 0.85);
+}
+/* 待办列表 · 橙色系（对齐系统待办水滴） */
+.proto-list-panel--todo {
+  background: linear-gradient(180deg, rgba(255, 247, 237, 0.98) 0%, rgba(255, 251, 245, 0.98) 100%);
+  border-color: rgba(245, 158, 11, 0.32);
+  box-shadow: -8px 0 32px rgba(201, 88, 12, 0.12);
+}
+.proto-list-panel--todo .proto-list-panel__head {
+  border-bottom-color: rgba(245, 158, 11, 0.22);
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.7) 0%, rgba(255, 247, 237, 0.4) 100%);
+}
+.proto-list-panel--todo .proto-list-panel__title { color: #c2410c; }
+.proto-list-panel--todo .proto-list-panel__count {
+  color: #c9580c;
+  background: rgba(254, 243, 199, 0.9);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.proto-list-panel--todo .proto-list-panel__filters {
+  border-bottom-color: rgba(245, 158, 11, 0.18);
+  background: rgba(255, 247, 237, 0.55);
+}
+.proto-list-panel--todo .proto-list-panel__search:focus,
+.proto-list-panel--todo .proto-list-panel__select:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.22);
+}
+.proto-list-panel--todo .proto-list-panel__source-btn--active {
+  border-color: #f59e0b;
+  background: rgba(254, 243, 199, 0.95);
+  color: #c2410c;
+}
+.proto-list-panel--todo .proto-list-item {
+  border-color: rgba(245, 158, 11, 0.22);
+  background: rgba(255, 255, 255, 0.88);
+}
+.proto-list-panel--todo .proto-list-item:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: rgba(255, 247, 237, 0.95);
+}
+.proto-list-panel--todo .proto-list-item--selected {
+  border-color: #f59e0b;
+  background: rgba(254, 243, 199, 0.75);
+  box-shadow: inset 3px 0 0 #c9580c;
+}
+.proto-list-panel--todo .proto-list-item--selected:hover {
+  border-color: #f59e0b;
+  background: rgba(254, 243, 199, 0.88);
+}
+.proto-list-panel--todo.proto-list-panel--offset {
+  right: min(388px, calc(100vw - 8px));
 }
 .proto-list-panel__head {
   padding: 14px 16px;
@@ -3193,12 +3378,109 @@ button.path-card__wechat {
   justify-content: space-between;
   gap: 8px;
 }
+.proto-list-panel__head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.proto-list-panel__close {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--ink-3);
+  font-size: 1.125rem;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.proto-list-panel__close:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.95);
+}
+.proto-list-panel--note .proto-list-panel__close:hover {
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #1e40af;
+}
+.proto-list-panel--todo .proto-list-panel__close:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #c2410c;
+}
 .proto-list-panel__title {
   font-family: var(--mono);
   font-size: var(--text-meta-sm);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-3);
+}
+.proto-list-panel__filters {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.55);
+}
+.proto-list-panel__search {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: var(--text-caption);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+.proto-list-panel__search::placeholder { color: var(--ink-3); }
+.proto-list-panel__search:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-wash);
+}
+.proto-list-panel__filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.proto-list-panel__select {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: var(--text-meta-xs);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+.proto-list-panel__source {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.proto-list-panel__source-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: var(--text-meta-xs);
+  color: var(--ink-3);
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
+}
+.proto-list-panel__source-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+.proto-list-panel__source-btn--active {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  color: var(--ink);
+  font-weight: 600;
+}
+.proto-list-panel__count {
+  font-size: var(--text-meta-xs);
+  color: var(--ink-3);
+  font-family: var(--mono);
 }
 .proto-list-panel__body {
   flex: 1;
@@ -3217,6 +3499,12 @@ button.path-card__wechat {
   transition: border-color 140ms ease, background 140ms ease;
 }
 .proto-list-item:hover { border-color: var(--ink-3); background: var(--paper-2); }
+.proto-list-item--selected {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.proto-list-item--selected:hover { border-color: var(--accent); background: var(--accent-wash); }
 .proto-list-item__row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
 .proto-list-item__id {
   font-family: var(--mono);
@@ -3277,6 +3565,47 @@ button.path-card__wechat {
   font-family: var(--sans);
 }
 .proto-editor__textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+.proto-rich-editor-wrap { display: flex; flex-direction: column; gap: 6px; }
+.proto-rich-editor {
+  min-height: 140px;
+  max-height: 320px;
+  overflow: auto;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: var(--text-ui);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.55;
+  outline: none;
+}
+.proto-rich-editor:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-wash);
+}
+.proto-rich-editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--ink-3);
+  pointer-events: none;
+}
+.proto-rich-editor img,
+.proto-modal__rich img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid var(--rule);
+}
+.proto-modal__rich {
+  font-size: var(--text-ui);
+  color: var(--ink-2);
+  line-height: 1.6;
+  word-break: break-word;
+}
+.proto-modal__rich p { margin: 0 0 0.6em; }
+.proto-modal__rich p:last-child { margin-bottom: 0; }
 .proto-editor__row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .proto-editor__actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .proto-toast {
@@ -4457,7 +4786,8 @@ button:disabled:hover {
 .tweak-dock > * { pointer-events: auto; }
 .tweak-dock > .proto-anchor { flex-shrink: 0; }
 .tweak-panel {
-  position: relative;
+  position: fixed;
+  z-index: 2110;
   right: auto;
   bottom: auto;
   width: min(400px, calc(100vw - 32px));
@@ -4471,6 +4801,7 @@ button:disabled:hover {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  opacity: var(--proto-panel-opacity, 1);
 }
 .tweak-panel__head {
   flex-shrink: 0;
@@ -4481,7 +4812,15 @@ button:disabled:hover {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
+.tweak-panel__head:active { cursor: grabbing; }
+.tweak-panel__head button,
+.tweak-panel__head a,
+.tweak-panel__head .proto-drip,
+.tweak-panel__head .proto-anchor { cursor: pointer; }
 .tweak-panel__title {
   font-family: var(--mono);
   font-size: var(--text-meta-md);
@@ -4533,6 +4872,21 @@ button:disabled:hover {
   padding: 6px 10px;
   font-size: 10px;
   text-align: center;
+}
+.tweak-panel__resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  touch-action: none;
+  z-index: 2;
+  background: linear-gradient(135deg, transparent 50%, rgba(11, 31, 58, 0.22) 50%);
+  border-radius: 0 0 10px 0;
+}
+.tweak-panel__resize:hover {
+  background: linear-gradient(135deg, transparent 45%, rgba(11, 31, 58, 0.38) 45%);
 }
 .tweak-section {
   flex-shrink: 0;
@@ -4694,6 +5048,25 @@ button:disabled:hover {
   background: var(--paper-2);
   color: var(--ink);
   border-radius: 6px;
+}
+.tweak-range {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+.tweak-range-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tweak-range-row__value {
+  flex-shrink: 0;
+  min-width: 38px;
+  font-family: var(--mono);
+  font-size: var(--text-meta-xs);
+  color: var(--ink-3);
+  text-align: right;
 }
 .tweak-gear {
   position: relative;
@@ -4908,7 +5281,7 @@ button:disabled:hover {
 <div id="root"></div>
 
 <script type="text/babel">
-const { useState, useEffect, useRef, useMemo, createContext, useContext, useCallback } = React;
+const { useState, useEffect, useLayoutEffect, useRef, useMemo, createContext, useContext, useCallback } = React;
 
 /* ============================================================
    BC GrowingIO tracking (§4.3.1 · 3Ups guide)
@@ -5303,15 +5676,27 @@ function protoDripLoadStore() {
   const embedded = protoDripLoadEmbedded();
   try {
     const raw = localStorage.getItem(PROTO_DRIP_LS_KEY);
-    if (!raw) return embedded;
+    if (!raw) {
+      return {
+        version: embedded.version || 1,
+        notes: embedded.notes.map((n, i) => protoDripEnsureTimestamps(n, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
+        todos: embedded.todos.map((t, i) => protoDripEnsureTimestamps(t, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
+      };
+    }
     const local = JSON.parse(raw);
+    const notes = Array.isArray(local.notes) ? local.notes : embedded.notes;
+    const todos = Array.isArray(local.todos) ? local.todos : embedded.todos;
     return {
       version: local.version || 1,
-      notes: Array.isArray(local.notes) ? local.notes : embedded.notes,
-      todos: Array.isArray(local.todos) ? local.todos : embedded.todos,
+      notes: notes.map((n, i) => protoDripEnsureTimestamps(n, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
+      todos: todos.map((t, i) => protoDripEnsureTimestamps(t, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
     };
   } catch {
-    return embedded;
+    return {
+      version: embedded.version || 1,
+      notes: embedded.notes.map((n, i) => protoDripEnsureTimestamps(n, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
+      todos: embedded.todos.map((t, i) => protoDripEnsureTimestamps(t, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
+    };
   }
 }
 
@@ -5333,6 +5718,29 @@ function protoDripNowIso() {
   return new Date().toISOString();
 }
 
+function protoDripEnsureTimestamps(item, fallbackMs) {
+  if (!item) return item;
+  const fallbackIso = new Date(fallbackMs || Date.now()).toISOString();
+  const createdAt = item.createdAt || item.updatedAt || fallbackIso;
+  const updatedAt = item.updatedAt || createdAt;
+  return { ...item, createdAt, updatedAt };
+}
+
+const PROTO_DRIP_SYSTEM_EPOCH = Date.parse("2026-05-28T08:00:00Z");
+
+function protoDripStampSystemTodos() {
+  Object.entries(PAGE_TODOS).forEach(([, t], i) => {
+    if (!t.updatedAt) {
+      const ts = new Date(PROTO_DRIP_SYSTEM_EPOCH + i * 3600000).toISOString();
+      t.createdAt = ts;
+      t.updatedAt = ts;
+    } else {
+      t.createdAt = t.createdAt || t.updatedAt;
+    }
+  });
+}
+protoDripStampSystemTodos();
+
 function protoDripFmtTime(iso) {
   if (!iso) return "—";
   try {
@@ -5341,6 +5749,194 @@ function protoDripFmtTime(iso) {
   } catch {
     return iso;
   }
+}
+
+function protoDripIsHtmlContent(content) {
+  if (!content || typeof content !== "string") return false;
+  const s = content.trim();
+  return /<img[\s>]/i.test(s) || (s.startsWith("<") && /<\/[a-z][\s\S]*>/i.test(s));
+}
+
+function protoDripContentPlain(content) {
+  if (!content) return "";
+  if (!protoDripIsHtmlContent(content)) return content;
+  const div = document.createElement("div");
+  div.innerHTML = content;
+  return (div.textContent || "").replace(/\s+/g, " ").trim();
+}
+
+function protoDripContentToEditorHtml(content) {
+  if (!content) return "";
+  if (protoDripIsHtmlContent(content)) return content;
+  return content
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\n/g, "<br>");
+}
+
+function protoDripSanitizeRichHtml(html) {
+  if (!html) return "";
+  const doc = new DOMParser().parseFromString(`<div id="proto-rich-root">${html}</div>`, "text/html");
+  const root = doc.getElementById("proto-rich-root");
+  if (!root) return "";
+  const allowed = new Set(["IMG", "BR", "P", "DIV", "B", "STRONG", "I", "EM", "UL", "OL", "LI", "SPAN", "#text"]);
+  const walk = (node) => {
+    if (node.nodeType === Node.TEXT_NODE) return;
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      node.remove();
+      return;
+    }
+    if (!allowed.has(node.tagName)) {
+      const parent = node.parentNode;
+      if (!parent) return;
+      while (node.firstChild) {
+        const child = node.firstChild;
+        parent.insertBefore(child, node);
+        walk(child);
+      }
+      parent.removeChild(node);
+      return;
+    }
+    [...node.attributes].forEach((attr) => {
+      const name = attr.name.toLowerCase();
+      if (name.startsWith("on") || name === "style" || name === "class" || name === "id") {
+        node.removeAttribute(attr.name);
+      }
+    });
+    if (node.tagName === "IMG") {
+      const src = node.getAttribute("src") || "";
+      if (!src.startsWith("data:image/")) {
+        node.remove();
+        return;
+      }
+      node.setAttribute("alt", node.getAttribute("alt") || "粘贴图片");
+    }
+    [...node.childNodes].forEach(walk);
+  };
+  [...root.childNodes].forEach(walk);
+  return root.innerHTML.trim();
+}
+
+function protoDripCompressImageFile(file, maxW = 960, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxW) {
+          height = Math.round((height * maxW) / width);
+          width = maxW;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          reject(new Error("canvas"));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function protoDripInsertImageInEditor(root, dataUrl) {
+  if (!root) return;
+  root.focus();
+  const img = document.createElement("img");
+  img.src = dataUrl;
+  img.alt = "粘贴图片";
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) {
+    root.appendChild(img);
+    return;
+  }
+  const range = sel.getRangeAt(0);
+  if (!root.contains(range.commonAncestorContainer)) {
+    root.appendChild(img);
+    return;
+  }
+  range.deleteContents();
+  range.insertNode(img);
+  const spacer = document.createTextNode("\n");
+  img.after(spacer);
+  range.setStartAfter(spacer);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function DripRichBody({ content, className = "proto-modal__rich" }) {
+  if (!content) return null;
+  if (protoDripIsHtmlContent(content)) {
+    return (
+      <div
+        className={className}
+        dangerouslySetInnerHTML={{ __html: protoDripSanitizeRichHtml(content) }}
+      />
+    );
+  }
+  return <div className="proto-modal__text">{content}</div>;
+}
+
+function DripRichEditor({ value, onChange, editorKey, placeholder }) {
+  const ref = useRef(null);
+  const lastKeyRef = useRef(null);
+
+  useEffect(() => {
+    if (!ref.current || lastKeyRef.current === editorKey) return;
+    lastKeyRef.current = editorKey;
+    ref.current.innerHTML = protoDripContentToEditorHtml(value || "");
+  }, [editorKey, value]);
+
+  const sync = () => {
+    if (!ref.current) return;
+    onChange(protoDripSanitizeRichHtml(ref.current.innerHTML));
+  };
+
+  const onPaste = async (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (!item.type.startsWith("image/")) continue;
+      e.preventDefault();
+      const file = item.getAsFile();
+      if (!file) return;
+      try {
+        const dataUrl = await protoDripCompressImageFile(file);
+        protoDripInsertImageInEditor(ref.current, dataUrl);
+        sync();
+      } catch {
+        /* ignore bad image */
+      }
+      return;
+    }
+  };
+
+  return (
+    <div className="proto-rich-editor-wrap">
+      <div
+        ref={ref}
+        className="proto-rich-editor"
+        contentEditable
+        role="textbox"
+        aria-multiline="true"
+        data-placeholder={placeholder}
+        onInput={sync}
+        onBlur={sync}
+        onPaste={onPaste}
+      />
+      <div className="proto-toolbar__hint">支持直接粘贴截图/图片（Ctrl+V / ⌘V）</div>
+    </div>
+  );
 }
 
 function protoDripGenSelector(el) {
@@ -5461,6 +6057,65 @@ const PROTO_PAGE_MODULES = [
   { id: "proof", label: "学员故事", selector: "#proof" },
   { id: "footer", label: "页脚", selector: "footer.site-footer" },
 ];
+
+function protoDripInferModuleFromPrd(prd = []) {
+  const text = (prd || []).join(" ");
+  if (/§2\.1|导航/.test(text)) return { moduleId: "nav", moduleLabel: "导航" };
+  if (/功能\s*1|Hero|实体\s*1/.test(text)) return { moduleId: "hero", moduleLabel: "Hero · 公开课" };
+  if (/功能\s*3|匹配计分|验算用例/.test(text)) return { moduleId: "pain", moduleLabel: "问题匹配" };
+  if (/路径\s*02|路径02|功能\s*5\.1/.test(text)) return { moduleId: "path-1", moduleLabel: "学习路径 · 路径 02" };
+  if (/路径\s*01|路径01/.test(text)) return { moduleId: "path-0", moduleLabel: "学习路径 · 路径 01" };
+  if (/路径\s*03|路径03/.test(text)) return { moduleId: "path-2", moduleLabel: "学习路径 · 路径 03" };
+  if (/路径\s*04|路径04/.test(text)) return { moduleId: "path-3", moduleLabel: "学习路径 · 路径 04" };
+  if (/路径\s*05|路径05/.test(text)) return { moduleId: "path-4", moduleLabel: "学习路径 · 路径 05" };
+  if (/路径\s*06|路径06/.test(text)) return { moduleId: "path-5", moduleLabel: "学习路径 · 路径 06" };
+  if (/功能\s*5|学习路径|§5/.test(text)) return { moduleId: "paths", moduleLabel: "学习路径" };
+  if (/功能\s*6|学员故事/.test(text)) return { moduleId: "proof", moduleLabel: "学员故事" };
+  if (/功能\s*7|页脚|联名标识/.test(text)) return { moduleId: "footer", moduleLabel: "页脚" };
+  if (/§4\.3|埋点/.test(text)) return { moduleId: "tracking", moduleLabel: "埋点" };
+  return { moduleId: "page", moduleLabel: "页面" };
+}
+
+function protoDripResolveItemModule(item, prd) {
+  if (item?.anchor?.moduleLabel) {
+    return { moduleId: item.anchor.moduleId || item.anchor.moduleLabel, moduleLabel: item.anchor.moduleLabel };
+  }
+  if (item?.moduleLabel) {
+    return { moduleId: item.moduleId || item.moduleLabel, moduleLabel: item.moduleLabel };
+  }
+  return protoDripInferModuleFromPrd(prd || item?.prd || []);
+}
+
+function protoDripListSortTime(item) {
+  if (item?.updatedAt) {
+    const t = new Date(item.updatedAt).getTime();
+    if (!Number.isNaN(t)) return t;
+  }
+  if (item?.createdAt) {
+    const t = new Date(item.createdAt).getTime();
+    if (!Number.isNaN(t)) return t;
+  }
+  if (item?.registeredAt) return item.registeredAt;
+  return 0;
+}
+
+function protoDripModuleFilterOptions() {
+  const opts = [{ id: "", label: "全部模块" }];
+  PROTO_PAGE_MODULES.forEach((m) => opts.push({ id: m.id, label: m.label }));
+  for (let i = 0; i < 6; i += 1) {
+    const id = `path-${i}`;
+    const n = String(i + 1).padStart(2, "0");
+    opts.push({ id, label: `学习路径 · 路径 ${n}` });
+  }
+  opts.push({ id: "tracking", label: "埋点" });
+  return opts;
+}
+
+function protoDripModuleMatches(filterId, itemModuleId) {
+  if (!filterId) return true;
+  if (filterId === "paths") return itemModuleId === "paths" || /^path-\d+$/.test(itemModuleId || "");
+  return itemModuleId === filterId;
+}
 
 function protoDripPathModuleLabel(pathEl) {
   const idx = Number(pathEl.id.replace("path-", ""));
@@ -5619,7 +6274,7 @@ function protoDripTeardownMount(dripId) {
 }
 
 function protoDripScrollTargets(anchor, id) {
-  const targets = new Set();
+  const targets = new Set([window, document, document.documentElement, document.body]);
   const el = protoDripResolveAnchorElement(anchor, id);
   let node = el;
   while (node) {
@@ -5629,8 +6284,100 @@ function protoDripScrollTargets(anchor, id) {
     }
     node = node.parentElement;
   }
-  targets.add(document);
+  if (window.visualViewport) targets.add(window.visualViewport);
   return [...targets];
+}
+
+function protoDripPositionManualNode(node, item, kind) {
+  if (!node) return;
+  const pos = item.anchor?.pos || (kind === "note" ? "tr" : "br");
+  const pt = protoDripAnchorCoords(item.anchor, pos, 30, 6, item.id);
+  if (!pt) {
+    node.style.visibility = "hidden";
+    return;
+  }
+  node.style.left = `${pt.left}px`;
+  node.style.top = `${pt.top}px`;
+  node.style.transform = "rotate(-45deg)";
+  node.style.visibility = "visible";
+}
+
+function protoDripBindManualLayerSync(getItems, getNode, onApply) {
+  let rafId = 0;
+  let scrollActive = false;
+  let scrollEndTimer = 0;
+
+  const apply = () => {
+    getItems().forEach(({ item, kind }) => {
+      protoDripPositionManualNode(getNode(item.id), item, kind);
+    });
+    onApply?.();
+  };
+
+  const startScrollLoop = () => {
+    if (scrollActive) return;
+    scrollActive = true;
+    const tick = () => {
+      apply();
+      if (scrollActive) rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+  };
+
+  const onScrollActivity = () => {
+    apply();
+    startScrollLoop();
+    window.clearTimeout(scrollEndTimer);
+    scrollEndTimer = window.setTimeout(() => {
+      scrollActive = false;
+      window.cancelAnimationFrame(rafId);
+      apply();
+    }, 120);
+  };
+
+  const opts = { passive: true, capture: true };
+  const events = ["scroll", "wheel", "touchmove"];
+  const roots = new Set();
+
+  const bindRoots = () => {
+    roots.forEach((root) => {
+      events.forEach((ev) => {
+        try { root.removeEventListener(ev, onScrollActivity, opts); } catch { /* visualViewport */ }
+      });
+    });
+    roots.clear();
+    const seen = new Set();
+    getItems().forEach(({ item }) => {
+      protoDripScrollTargets(item.anchor, item.id).forEach((t) => {
+        if (seen.has(t)) return;
+        seen.add(t);
+        roots.add(t);
+        events.forEach((ev) => {
+          try { t.addEventListener(ev, onScrollActivity, opts); } catch { /* noop */ }
+        });
+      });
+    });
+  };
+
+  bindRoots();
+  apply();
+  const bootId = requestAnimationFrame(apply);
+  window.addEventListener("resize", onScrollActivity, { passive: true });
+  window.addEventListener("orientationchange", onScrollActivity, { passive: true });
+
+  return () => {
+    window.cancelAnimationFrame(bootId);
+    scrollActive = false;
+    window.cancelAnimationFrame(rafId);
+    window.clearTimeout(scrollEndTimer);
+    roots.forEach((root) => {
+      events.forEach((ev) => {
+        try { root.removeEventListener(ev, onScrollActivity, opts); } catch { /* noop */ }
+      });
+    });
+    window.removeEventListener("resize", onScrollActivity);
+    window.removeEventListener("orientationchange", onScrollActivity);
+  };
 }
 
 function protoDripAnchorCoords(anchor, pos = "tr", size = 26, offset = 6, id) {
@@ -5716,8 +6463,8 @@ function protoDripBuildHtmlSnippet(store) {
 function protoDripExport(store, username) {
   const stamped = {
     ...store,
-    notes: store.notes.map((n) => ({ ...n, author: n.author || username, updatedAt: n.updatedAt || protoDripNowIso() })),
-    todos: store.todos.map((t) => ({ ...t, author: t.author || username, updatedAt: t.updatedAt || protoDripNowIso() })),
+    notes: store.notes.map((n, i) => protoDripEnsureTimestamps({ ...n, author: n.author || username }, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
+    todos: store.todos.map((t, i) => protoDripEnsureTimestamps({ ...t, author: t.author || username }, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
     exportedAt: protoDripNowIso(),
     exportedBy: username,
   };
@@ -5727,13 +6474,150 @@ function protoDripExport(store, username) {
   return stamped;
 }
 
+function protoDripDripDomId(kind, source, key) {
+  if (source === "manual") return key;
+  if (kind === "note") return `sn:${encodeURIComponent(key)}`;
+  return `st:${key}`;
+}
+
+function protoDripScrollToDrip(sel, { allowModuleFallback = true } = {}) {
+  if (!sel?.key) return false;
+
+  const nav = document.querySelector(".nav");
+  const navOffset = Math.ceil(nav?.getBoundingClientRect().height ?? 88) + 4;
+
+  const scrollTop = (top) => {
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    return true;
+  };
+
+  const scrollEl = (el) => {
+    if (!(el instanceof Element)) return false;
+    const rect = el.getBoundingClientRect();
+    const top = window.scrollY + rect.top - navOffset - Math.max(0, (window.innerHeight - Math.min(rect.height, 120)) * 0.35);
+    return scrollTop(top);
+  };
+
+  const scrollDocPoint = (anchor) => {
+    if (!anchor || typeof anchor.docY !== "number") return false;
+    const top = anchor.docY - navOffset - window.innerHeight * 0.35;
+    return scrollTop(top);
+  };
+
+  const scrollAnchorPoint = (anchor, id, kind) => {
+    const pos = anchor?.pos || (kind === "note" ? "tr" : "br");
+    const pt = protoDripAnchorCoords(anchor, pos, 30, 6, id);
+    if (!pt) return false;
+    const top = window.scrollY + pt.top - navOffset - 48;
+    return scrollTop(top);
+  };
+
+  const scrollModule = (raw) => {
+    if (!raw || !allowModuleFallback) return false;
+    const mod = protoDripResolveItemModule(raw, raw.prd);
+    if (/^path-\d+$/.test(mod.moduleId || "")) {
+      const pathEl = document.getElementById(mod.moduleId);
+      if (scrollEl(pathEl)) return "fallback";
+    }
+    const modDef = PROTO_PAGE_MODULES.find((m) => m.id === mod.moduleId);
+    if (modDef) {
+      const sectionEl = document.querySelector(modDef.selector);
+      if (scrollEl(sectionEl)) return "fallback";
+    }
+    return false;
+  };
+
+  // 手写：滚到锚点或水滴坐标，不用顶层 fixed 节点
+  if (sel.source === "manual") {
+    const anchorEl = protoDripResolveAnchorElement(sel.anchor, sel.key)
+      || protoDripResolveOrNearest(sel.anchor, sel.key);
+    if (scrollEl(anchorEl)) return "precise";
+    if (scrollAnchorPoint(sel.anchor, sel.key, sel.kind)) return "precise";
+    if (scrollDocPoint(sel.anchor)) return "precise";
+    return scrollModule(sel.raw);
+  }
+
+  const domId = protoDripDripDomId(sel.kind, sel.source, sel.key);
+  let dripEl = null;
+  try {
+    dripEl = document.querySelector(`[data-proto-drip-id="${CSS.escape(domId)}"]`);
+  } catch {
+    dripEl = document.querySelector(`[data-proto-drip-id="${domId}"]`);
+  }
+
+  if (dripEl instanceof Element && !dripEl.classList.contains("proto-drip--floating")) {
+    const anchorWrap = dripEl.closest(".proto-anchor");
+    const focusTarget = anchorWrap?.querySelector("button, a, input, select, textarea, img, h1, h2, h3, h4, h5, h6, p, label")
+      || anchorWrap?.firstElementChild
+      || dripEl;
+    if (scrollEl(focusTarget)) return "precise";
+    if (scrollEl(dripEl)) return "precise";
+  }
+
+  const moduleHit = scrollModule(sel.raw);
+  if (moduleHit) return moduleHit;
+
+  if (dripEl instanceof Element) {
+    if (scrollEl(dripEl)) return dripEl.classList.contains("proto-drip--floating") ? "fallback" : "precise";
+  }
+
+  return false;
+}
+
+function protoDripScheduleScrollToDrip(sel, { attempts = 24, interval = 72, onDone } = {}) {
+  if (!sel?.key) return () => {};
+  let count = 0;
+  let timer = 0;
+  let stopped = false;
+  const finish = (hit) => {
+    if (stopped) return;
+    stopped = true;
+    window.clearTimeout(timer);
+    onDone?.(hit);
+  };
+  const tick = () => {
+    if (stopped) return;
+    count += 1;
+    const allowModuleFallback = count >= attempts;
+    const hit = protoDripScrollToDrip(sel, { allowModuleFallback });
+    if (hit === "precise" || (hit === "fallback" && allowModuleFallback)) {
+      finish(hit);
+      return;
+    }
+    if (count < attempts) timer = window.setTimeout(tick, interval);
+    else finish(false);
+  };
+  tick();
+  requestAnimationFrame(() => {
+    if (!stopped) tick();
+  });
+  return () => finish(false);
+}
+
+function protoDripSelectionKey(item, isNote) {
+  if (isNote) {
+    return item.source === "system" ? (item.raw?._key || item.title) : item.id;
+  }
+  return item.id;
+}
+
+function protoDripIsSelected(selectedDrip, kind, source, key) {
+  return !!(selectedDrip
+    && selectedDrip.kind === kind
+    && selectedDrip.source === source
+    && selectedDrip.key === key);
+}
+
 const DripContext = createContext(null);
 
 function DripProvider({ children }) {
   const [showNotes, setShowNotes] = useState(false);
   const [showTodos, setShowTodos] = useState(false);
-  const [noteViewMode, setNoteViewMode] = useState("page");
-  const [todoViewMode, setTodoViewMode] = useState("page");
+  const [noteListOpen, setNoteListOpen] = useState(false);
+  const [todoListOpen, setTodoListOpen] = useState(false);
+  const [selectedDrip, setSelectedDrip] = useState(null);
+  const scrollSessionRef = useRef(null);
+  const showLayerPrevRef = useRef({ notes: false, todos: false });
   const [editMode, setEditMode] = useState(false);
   const [pickKind, setPickKind] = useState(null);
   const [store, setStore] = useState(protoDripLoadStore);
@@ -5747,10 +6631,94 @@ function DripProvider({ children }) {
 
   const close = useCallback(() => setActive(null), []);
 
+  const cancelScrollSession = useCallback(() => {
+    scrollSessionRef.current?.cancel?.();
+    scrollSessionRef.current = null;
+  }, []);
+
+  const startScrollSession = useCallback((sel, { attempts = 24, interval = 72 } = {}) => {
+    cancelScrollSession();
+    const session = { sel, done: false, cancel: null };
+    session.cancel = protoDripScheduleScrollToDrip(sel, {
+      attempts,
+      interval,
+      onDone: () => {
+        session.done = true;
+        if (scrollSessionRef.current === session) scrollSessionRef.current = null;
+      },
+    });
+    scrollSessionRef.current = session;
+  }, [cancelScrollSession]);
+
+  const focusDrip = useCallback((sel, { scroll = true } = {}) => {
+    if (!sel?.key) return;
+    setSelectedDrip(sel);
+    if (sel.kind === "note") setShowNotes(true);
+    if (sel.kind === "todo") setShowTodos(true);
+    if (scroll) startScrollSession(sel);
+  }, [startScrollSession]);
+
+  useEffect(() => {
+    const notesJustOn = showNotes && !showLayerPrevRef.current.notes;
+    const todosJustOn = showTodos && !showLayerPrevRef.current.todos;
+    showLayerPrevRef.current = { notes: showNotes, todos: showTodos };
+    const session = scrollSessionRef.current;
+    if (!session || session.done) return undefined;
+    const needsRetry = (session.sel.kind === "note" && notesJustOn)
+      || (session.sel.kind === "todo" && todosJustOn);
+    if (!needsRetry) return undefined;
+    const prevCancel = session.cancel;
+    const extraCancel = protoDripScheduleScrollToDrip(session.sel, {
+      attempts: 12,
+      interval: 80,
+      onDone: (hit) => {
+        if (hit) {
+          session.done = true;
+          if (scrollSessionRef.current === session) scrollSessionRef.current = null;
+        }
+      },
+    });
+    session.cancel = () => {
+      prevCancel?.();
+      extraCancel?.();
+    };
+    return () => extraCancel?.();
+  }, [showNotes, showTodos]);
+
+  useEffect(() => {
+    setSelectedDrip((prev) => {
+      if (!prev) return prev;
+      if (prev.kind === "note" && !noteListOpen) return null;
+      if (prev.kind === "todo" && !todoListOpen) return null;
+      return prev;
+    });
+  }, [noteListOpen, todoListOpen]);
+
   const registerSystemNote = useCallback((key, note) => {
     setSystemNotes((prev) => {
       const idx = prev.findIndex((n) => n._key === key);
-      const entry = { ...note, _key: key };
+      const mod = note.moduleId
+        ? { moduleId: note.moduleId, moduleLabel: note.moduleLabel }
+        : protoDripInferModuleFromPrd(note.prd);
+      const registeredAt = idx === -1 ? Date.now() : prev[idx].registeredAt;
+      const prevEntry = idx >= 0 ? prev[idx] : null;
+      const contentChanged = prevEntry && (
+        prevEntry.title !== note.title || prevEntry.body !== note.body
+      );
+      const defaultIso = new Date(registeredAt).toISOString();
+      const updatedAt = contentChanged
+        ? protoDripNowIso()
+        : (note.updatedAt || prevEntry?.updatedAt || defaultIso);
+      const createdAt = prevEntry?.createdAt || note.createdAt || updatedAt;
+      const entry = protoDripEnsureTimestamps({
+        ...note,
+        _key: key,
+        moduleId: note.moduleId || mod.moduleId,
+        moduleLabel: note.moduleLabel || mod.moduleLabel,
+        registeredAt,
+        createdAt,
+        updatedAt,
+      }, registeredAt);
       if (idx === -1) return [...prev, entry];
       const next = [...prev];
       next[idx] = entry;
@@ -5759,6 +6727,12 @@ function DripProvider({ children }) {
   }, []);
 
   const openSystemNote = useCallback((item) => {
+    focusDrip({
+      kind: "note",
+      source: "system",
+      key: item._key || item.title,
+      raw: item,
+    }, { scroll: false });
     setActive({
       kind: "note",
       source: "system",
@@ -5767,9 +6741,11 @@ function DripProvider({ children }) {
       prd: item.prd || [],
       docs: item.docs || [],
       links: item.links || [],
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
       editable: false,
     });
-  }, []);
+  }, [focusDrip]);
 
   const showDripToast = useCallback((msg) => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
@@ -5781,11 +6757,23 @@ function DripProvider({ children }) {
   }, []);
 
   const persistStore = useCallback((next) => {
-    setStore(next);
-    protoDripSaveStore(next);
+    const stamped = {
+      ...next,
+      notes: next.notes.map((n, i) => protoDripEnsureTimestamps(n, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
+      todos: next.todos.map((t, i) => protoDripEnsureTimestamps(t, PROTO_DRIP_SYSTEM_EPOCH + i * 60000)),
+    };
+    setStore(stamped);
+    protoDripSaveStore(stamped);
   }, []);
 
   const openManualNote = useCallback((item) => {
+    focusDrip({
+      kind: "note",
+      source: "manual",
+      key: item.id,
+      anchor: item.anchor,
+      raw: item,
+    }, { scroll: false });
     setActive({
       kind: "note",
       source: "manual",
@@ -5793,14 +6781,22 @@ function DripProvider({ children }) {
       title: item.title,
       body: item.body,
       author: item.author,
+      createdAt: item.createdAt,
       updatedAt: item.updatedAt,
       anchor: item.anchor,
       docs: ["manualNotes"],
       editable: true,
     });
-  }, []);
+  }, [focusDrip]);
 
   const openManualTodo = useCallback((item) => {
+    focusDrip({
+      kind: "todo",
+      source: "manual",
+      key: item.id,
+      anchor: item.anchor,
+      raw: item,
+    }, { scroll: false });
     setActive({
       kind: "todo",
       source: "manual",
@@ -5808,17 +6804,24 @@ function DripProvider({ children }) {
       title: `${item.id} · ${item.title}`,
       body: item.detail,
       author: item.author,
+      createdAt: item.createdAt,
       updatedAt: item.updatedAt,
       anchor: item.anchor,
       meta: { owner: item.owner, status: item.status, blocker: item.blocker },
       docs: ["manualTodos"],
       editable: true,
     });
-  }, []);
+  }, [focusDrip]);
 
   const openSystemTodo = useCallback((todoId) => {
     const todo = PAGE_TODOS[todoId];
     if (!todo) return;
+    focusDrip({
+      kind: "todo",
+      source: "system",
+      key: todoId,
+      raw: { id: todoId, ...todo },
+    }, { scroll: false });
     setActive({
       kind: "todo",
       source: "system",
@@ -5827,10 +6830,12 @@ function DripProvider({ children }) {
       body: todo.detail,
       prd: todo.prd || [],
       docs: ["todo", ...(todo.docs || [])],
+      createdAt: todo.createdAt,
+      updatedAt: todo.updatedAt,
       meta: { owner: todo.owner, status: todo.status, blocker: todo.blocker },
       editable: false,
     });
-  }, []);
+  }, [focusDrip]);
 
   const deleteManual = useCallback((kind, id) => {
     if (!window.confirm("确定删除这条手写标注？")) return;
@@ -5840,6 +6845,7 @@ function DripProvider({ children }) {
       todos: kind === "todo" ? store.todos.filter((t) => t.id !== id) : store.todos,
     });
     setActive(null);
+    setSelectedDrip((prev) => (prev?.key === id && prev?.source === "manual" ? null : prev));
     showDripToast("已删除");
   }, [store, persistStore, showDripToast]);
 
@@ -5921,8 +6927,9 @@ function DripProvider({ children }) {
   const ctx = {
     showNotes, setShowNotes,
     showTodos, setShowTodos,
-    noteViewMode, setNoteViewMode,
-    todoViewMode, setTodoViewMode,
+    noteListOpen, setNoteListOpen,
+    todoListOpen, setTodoListOpen,
+    selectedDrip, setSelectedDrip, focusDrip,
     editMode, setEditMode,
     pickKind, setPickKind,
     store, persistStore,
@@ -5973,25 +6980,40 @@ function DripAnchor({ side = "end", gap = 6, row = false, block = false, classNa
 }
 
 function NoteDrip({ pos = "tr", style, inline, title, body, prd = [], docs = [], links = [] }) {
-  const { showNotes, noteViewMode, setActive, registerSystemNote } = useDrip();
+  const { showNotes, setActive, registerSystemNote, openSystemNote, selectedDrip } = useDrip();
   const regKey = title;
+  const btnRef = useRef(null);
+  const domId = protoDripDripDomId("note", "system", regKey);
+  const isSelected = protoDripIsSelected(selectedDrip, "note", "system", regKey);
 
   useEffect(() => {
     registerSystemNote(regKey, { title, body, prd, docs, links });
   }, [regKey, title, body, prd, docs, links, registerSystemNote]);
 
-  if (!showNotes || noteViewMode !== "page") return null;
+  useEffect(() => {
+    const btn = btnRef.current;
+    if (!btn || !showNotes) return;
+    const anchor = btn.closest(".proto-anchor") || btn;
+    const r = btn.getBoundingClientRect();
+    const mod = protoDripDetectModule(anchor, r.left + r.width / 2, r.top + r.height / 2);
+    registerSystemNote(regKey, { title, body, prd, docs, links, moduleId: mod.moduleId, moduleLabel: mod.moduleLabel });
+  }, [regKey, title, body, prd, docs, links, showNotes, registerSystemNote]);
+
+  if (!showNotes) return null;
   const isInline = inline || style;
   return (
     <button
+      ref={btnRef}
       type="button"
-      className={`proto-drip proto-drip--note proto-drip--system${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}`}
+      data-proto-drip-id={domId}
+      className={`proto-drip proto-drip--note proto-drip--system${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}${isSelected ? " proto-drip--selected" : ""}`}
       style={style}
       title={title}
       aria-label={`备注：${title}`}
+      aria-current={isSelected ? "true" : undefined}
       onClick={(e) => {
         e.stopPropagation();
-        setActive({ kind: "note", source: "system", title, body, prd, docs, links, editable: false });
+        openSystemNote({ _key: regKey, title, body, prd, docs, links });
       }}
     >
       <span className="proto-drip__icon">i</span>
@@ -6000,17 +7022,21 @@ function NoteDrip({ pos = "tr", style, inline, title, body, prd = [], docs = [],
 }
 
 function TodoDrip({ pos = "br", style, inline, todoId }) {
-  const { showTodos, todoViewMode, openSystemTodo } = useDrip();
+  const { showTodos, openSystemTodo, selectedDrip } = useDrip();
   const todo = PAGE_TODOS[todoId];
-  if (!showTodos || todoViewMode !== "page" || !todo) return null;
+  if (!showTodos || !todo) return null;
+  const domId = protoDripDripDomId("todo", "system", todoId);
+  const isSelected = protoDripIsSelected(selectedDrip, "todo", "system", todoId);
   const isInline = inline || style;
   return (
     <button
       type="button"
-      className={`proto-drip proto-drip--todo proto-drip--system${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}`}
+      data-proto-drip-id={domId}
+      className={`proto-drip proto-drip--todo proto-drip--system${isInline ? " proto-drip--inline" : ` proto-drip--${pos}`}${isSelected ? " proto-drip--selected" : ""}`}
       style={style}
       title={`${todoId} ${todo.title}`}
       aria-label={`待办：${todoId}`}
+      aria-current={isSelected ? "true" : undefined}
       onClick={(e) => {
         e.stopPropagation();
         openSystemTodo(todoId);
@@ -6022,7 +7048,7 @@ function TodoDrip({ pos = "br", style, inline, todoId }) {
 }
 
 function ManualDripLayer() {
-  const { store, showNotes, showTodos, openManualNote, openManualTodo } = useDrip();
+  const { store, showNotes, showTodos, openManualNote, openManualTodo, selectedDrip } = useDrip();
   const itemRefs = useRef(new Map());
   const itemsRef = useRef([]);
 
@@ -6039,51 +7065,21 @@ function ManualDripLayer() {
 
   itemsRef.current = items;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!items.length) return undefined;
-
-    const apply = () => {
-      itemsRef.current.forEach(({ item, kind }) => {
-        const node = itemRefs.current.get(item.id);
-        if (!node) return;
-        const pos = item.anchor?.pos || (kind === "note" ? "tr" : "br");
-        const pt = protoDripAnchorCoords(item.anchor, pos, 30, 6, item.id);
-        if (pt) {
-          node.style.transform = `translate3d(${pt.left}px, ${pt.top}px, 0) rotate(-45deg)`;
-          node.style.visibility = "visible";
-        } else {
-          node.style.visibility = "hidden";
-        }
-      });
-    };
-
-    apply();
-    let rafId = 0;
-    const tick = () => {
-      apply();
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-
-    const scrollers = new Set();
-    items.forEach(({ item }) => {
-      protoDripScrollTargets(item.anchor, item.id).forEach((s) => scrollers.add(s));
-    });
-    scrollers.forEach((s) => s.addEventListener("scroll", apply, { passive: true, capture: true }));
-    window.addEventListener("resize", apply, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      scrollers.forEach((s) => s.removeEventListener("scroll", apply, { capture: true }));
-      window.removeEventListener("resize", apply);
-    };
+    return protoDripBindManualLayerSync(
+      () => itemsRef.current,
+      (id) => itemRefs.current.get(id),
+    );
   }, [items]);
 
   if (!items.length) return null;
 
-  return (
+  const layer = (
     <div className="proto-drip-top-layer" aria-hidden="false">
-      {items.map(({ item, kind, onOpen }) => (
+      {items.map(({ item, kind, onOpen }) => {
+        const isSelected = protoDripIsSelected(selectedDrip, kind, "manual", item.id);
+        return (
         <button
           key={item.id}
           ref={(node) => {
@@ -6091,9 +7087,11 @@ function ManualDripLayer() {
             else itemRefs.current.delete(item.id);
           }}
           type="button"
-          className={`proto-drip proto-drip--floating proto-drip--manual proto-drip--${kind === "note" ? "note" : "todo"}`}
+          data-proto-drip-id={item.id}
+          className={`proto-drip proto-drip--floating proto-drip--manual proto-drip--${kind === "note" ? "note" : "todo"}${isSelected ? " proto-drip--selected" : ""}`}
           title={item.title}
           aria-label={`手写${kind === "note" ? "备注" : "待办"}：${item.title}`}
+          aria-current={isSelected ? "true" : undefined}
           onClick={(e) => {
             e.stopPropagation();
             onOpen();
@@ -6101,85 +7099,302 @@ function ManualDripLayer() {
         >
           <span className="proto-drip__icon">{kind === "note" ? "✎" : "✦"}</span>
         </button>
-      ))}
+        );
+      })}
     </div>
   );
+
+  return ReactDOM.createPortal(layer, document.body);
 }
 
 function DripListPanel({ kind }) {
   const {
-    showNotes, showTodos, noteViewMode, todoViewMode,
+    showNotes, showTodos, noteListOpen, todoListOpen,
     openManualNote, openManualTodo, openSystemTodo, openSystemNote, systemNotes, store,
+    selectedDrip, focusDrip,
+    setNoteListOpen, setTodoListOpen,
   } = useDrip();
 
   const isNote = kind === "note";
-  const visible = isNote ? showNotes && noteViewMode === "list" : showTodos && todoViewMode === "list";
+  const visible = isNote ? noteListOpen : todoListOpen;
+  const otherListOpen = isNote ? todoListOpen : noteListOpen;
+  const [query, setQuery] = useState("");
+  const [sourceFilter, setSourceFilter] = useState("all");
+  const [authorFilter, setAuthorFilter] = useState("");
+  const [moduleFilter, setModuleFilter] = useState("");
+  const [sortOrder, setSortOrder] = useState("desc");
+
+  const allItems = useMemo(() => {
+    const list = [];
+    if (isNote) {
+      systemNotes.forEach((n, i) => {
+        const mod = protoDripResolveItemModule(n, n.prd);
+        const stamped = protoDripEnsureTimestamps(n, PROTO_DRIP_SYSTEM_EPOCH + i * 60000);
+        list.push({
+          id: `N-${String(i + 1).padStart(3, "0")}`,
+          listKey: n._key || n.title,
+          title: n.title,
+          body: n.body,
+          prd: n.prd,
+          docs: n.docs,
+          links: n.links,
+          source: "system",
+          author: "系统",
+          moduleId: mod.moduleId,
+          moduleLabel: mod.moduleLabel,
+          createdAt: stamped.createdAt,
+          updatedAt: stamped.updatedAt,
+          sortTime: protoDripListSortTime(stamped),
+          raw: stamped,
+        });
+      });
+      store.notes.forEach((n, i) => {
+        const mod = protoDripResolveItemModule(n);
+        const stamped = protoDripEnsureTimestamps(n, PROTO_DRIP_SYSTEM_EPOCH + i * 60000);
+        list.push({
+          id: n.id,
+          listKey: n.id,
+          title: n.title,
+          body: n.body,
+          source: "manual",
+          author: (n.author || "").trim() || "—",
+          moduleId: mod.moduleId,
+          moduleLabel: mod.moduleLabel,
+          createdAt: stamped.createdAt,
+          updatedAt: stamped.updatedAt,
+          sortTime: protoDripListSortTime(stamped),
+          raw: stamped,
+        });
+      });
+    } else {
+      Object.entries(PAGE_TODOS).forEach(([id, t]) => {
+        const mod = protoDripInferModuleFromPrd(t.prd);
+        const stamped = protoDripEnsureTimestamps(t);
+        list.push({
+          id,
+          listKey: id,
+          title: t.title,
+          detail: t.detail,
+          status: t.status,
+          owner: t.owner,
+          prd: t.prd,
+          source: "system",
+          author: "系统",
+          moduleId: mod.moduleId,
+          moduleLabel: mod.moduleLabel,
+          createdAt: stamped.createdAt,
+          updatedAt: stamped.updatedAt,
+          sortTime: protoDripListSortTime(stamped),
+          raw: { id, ...stamped },
+        });
+      });
+      store.todos.forEach((t, i) => {
+        const mod = protoDripResolveItemModule(t);
+        const stamped = protoDripEnsureTimestamps(t, PROTO_DRIP_SYSTEM_EPOCH + i * 60000);
+        list.push({
+          id: t.id,
+          listKey: t.id,
+          title: t.title,
+          detail: t.detail,
+          status: t.status,
+          owner: t.owner,
+          source: "manual",
+          author: (t.author || "").trim() || "—",
+          moduleId: mod.moduleId,
+          moduleLabel: mod.moduleLabel,
+          createdAt: stamped.createdAt,
+          updatedAt: stamped.updatedAt,
+          sortTime: protoDripListSortTime(stamped),
+          raw: stamped,
+        });
+      });
+    }
+    return list;
+  }, [isNote, systemNotes, store]);
+
+  const authorOptions = useMemo(() => {
+    const authors = new Set();
+    allItems.forEach((item) => {
+      if (item.author) authors.add(item.author);
+    });
+    return ["", ...Array.from(authors).sort((a, b) => a.localeCompare(b, "zh"))];
+  }, [allItems]);
+
+  const moduleOptions = useMemo(() => protoDripModuleFilterOptions(), []);
+
+  const filteredItems = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const filtered = allItems.filter((item) => {
+      if (sourceFilter === "system" && item.source !== "system") return false;
+      if (sourceFilter === "manual" && item.source !== "manual") return false;
+      if (authorFilter && item.author !== authorFilter) return false;
+      if (!protoDripModuleMatches(moduleFilter, item.moduleId)) return false;
+      if (!q) return true;
+      const hay = [
+        item.id,
+        item.title,
+        protoDripContentPlain(item.body || item.detail),
+        item.author,
+        item.moduleLabel,
+        item.status,
+        item.owner,
+        item.updatedAt,
+      ].filter(Boolean).join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+    return filtered.sort((a, b) => {
+      const diff = b.sortTime - a.sortTime;
+      return sortOrder === "desc" ? diff : -diff;
+    });
+  }, [allItems, query, sourceFilter, authorFilter, moduleFilter, sortOrder]);
+
   if (!visible) return null;
 
-  const manualItems = isNote ? store.notes : store.todos;
-  const systemItems = isNote
-    ? systemNotes.map((n, i) => ({
-      id: `N-${String(i + 1).padStart(3, "0")}`,
-      title: n.title,
-      body: n.body,
-      prd: n.prd,
-      docs: n.docs,
-      links: n.links,
-      source: "system",
-    }))
-    : Object.entries(PAGE_TODOS).map(([id, t]) => ({ id, ...t, source: "system" }));
-
-  const openItem = (item, source) => {
-    if (isNote) {
-      if (source === "manual") openManualNote(item);
-      else openSystemNote(item);
-      return;
-    }
-    if (source === "system") openSystemTodo(item.id);
-    else openManualTodo(item);
+  const openItem = (item) => {
+    const sel = {
+      kind: isNote ? "note" : "todo",
+      source: item.source,
+      key: item.listKey,
+      anchor: item.raw?.anchor,
+      raw: item.raw,
+    };
+    focusDrip(sel);
+    requestAnimationFrame(() => {
+      if (isNote) {
+        if (item.source === "manual") openManualNote(item.raw);
+        else openSystemNote(item.raw);
+        return;
+      }
+      if (item.source === "system") openSystemTodo(item.id);
+      else openManualTodo(item.raw);
+    });
   };
 
+  const panelClass = [
+    "proto-list-panel",
+    `proto-list-panel--${kind}`,
+    !isNote && otherListOpen ? "proto-list-panel--offset" : "",
+  ].filter(Boolean).join(" ");
+
   return (
-    <aside className="proto-list-panel" aria-label={isNote ? "备注列表" : "待办列表"}>
+    <aside className={panelClass} aria-label={isNote ? "备注列表" : "待办列表"}>
       <div className="proto-list-panel__head">
         <div className="proto-list-panel__title">{isNote ? "备注 · 列表模式" : "待办 · 列表模式"}</div>
+        <div className="proto-list-panel__head-actions">
+          <div className="proto-list-panel__count">{filteredItems.length}/{allItems.length}</div>
+          <button
+            type="button"
+            className="proto-list-panel__close"
+            onClick={() => (isNote ? setNoteListOpen(false) : setTodoListOpen(false))}
+            aria-label={isNote ? "关闭备注列表" : "关闭待办列表"}
+          >
+            ×
+          </button>
+        </div>
+      </div>
+      <div className="proto-list-panel__filters">
+        <input
+          type="search"
+          className="proto-list-panel__search"
+          placeholder="搜索标题、正文、ID、作者…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          aria-label="搜索列表"
+        />
+        <div className="proto-list-panel__source" role="group" aria-label="来源筛选">
+          {[
+            { id: "all", label: "全部" },
+            { id: "system", label: "系统" },
+            { id: "manual", label: "手写" },
+          ].map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              className={`proto-list-panel__source-btn${sourceFilter === opt.id ? " proto-list-panel__source-btn--active" : ""}`}
+              onClick={() => setSourceFilter(opt.id)}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <div className="proto-list-panel__filter-row">
+          <select
+            className="proto-list-panel__select"
+            value={authorFilter}
+            onChange={(e) => setAuthorFilter(e.target.value)}
+            aria-label="按作者筛选"
+          >
+            <option value="">全部作者</option>
+            {authorOptions.filter(Boolean).map((a) => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
+          <select
+            className="proto-list-panel__select"
+            value={moduleFilter}
+            onChange={(e) => setModuleFilter(e.target.value)}
+            aria-label="按模块筛选"
+          >
+            {moduleOptions.map((m) => (
+              <option key={m.id || "all"} value={m.id}>{m.label}</option>
+            ))}
+          </select>
+        </div>
+        <div className="proto-list-panel__source" role="group" aria-label="时间排序">
+          {[
+            { id: "desc", label: "最新优先" },
+            { id: "asc", label: "最早优先" },
+          ].map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              className={`proto-list-panel__source-btn${sortOrder === opt.id ? " proto-list-panel__source-btn--active" : ""}`}
+              onClick={() => setSortOrder(opt.id)}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="proto-list-panel__body">
-        {systemItems.map((item) => (
+        {filteredItems.map((item) => {
+          const isSelected = protoDripIsSelected(
+            selectedDrip,
+            isNote ? "note" : "todo",
+            item.source,
+            item.listKey,
+          );
+          return (
           <button
-            key={item.id}
+            key={`${item.source}-${item.id}`}
             type="button"
-            className="proto-list-item"
-            onClick={() => openItem(item, "system")}
+            className={`proto-list-item${isSelected ? " proto-list-item--selected" : ""}`}
+            aria-current={isSelected ? "true" : undefined}
+            onClick={() => openItem(item)}
           >
             <div className="proto-list-item__row">
               <span className="proto-list-item__id">{item.id}</span>
-              <span className="proto-list-item__badge proto-list-item__badge--system">系统</span>
+              <span className={`proto-list-item__badge ${item.source === "system" ? "proto-list-item__badge--system" : (isNote ? "proto-list-item__badge--manual-note" : "proto-list-item__badge--manual-todo")}`}>
+                {item.source === "system" ? "系统" : "手写"}
+              </span>
             </div>
             <div className="proto-list-item__title">{item.title}</div>
-            {!isNote && <div className="proto-list-item__meta">{item.status} · {item.owner}</div>}
-          </button>
-        ))}
-        {manualItems.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className="proto-list-item"
-            onClick={() => openItem(item, "manual")}
-          >
-            <div className="proto-list-item__row">
-              <span className="proto-list-item__id">{item.id}</span>
-              <span className={`proto-list-item__badge ${isNote ? "proto-list-item__badge--manual-note" : "proto-list-item__badge--manual-todo"}`}>手写</span>
+            <div className="proto-list-item__meta">
+              {item.author}
+              {item.moduleLabel ? ` · ${item.moduleLabel}` : ""}
+              {item.updatedAt ? ` · ${protoDripFmtTime(item.updatedAt)}` : ""}
+              {!isNote && item.status ? ` · ${item.status}` : ""}
             </div>
-            <div className="proto-list-item__title">{item.title}</div>
-            <div className="proto-list-item__meta">{item.author || "—"} · {protoDripFmtTime(item.updatedAt)}</div>
           </button>
-        ))}
-        {!systemItems.length && !manualItems.length && (
+          );
+        })}
+        {!filteredItems.length && (
           <div className="proto-toolbar__hint">
-            {isNote
-              ? "暂无备注。页面模式请先点「显示备注」；手写备注在编辑模式下添加。"
-              : "暂无待办"}
+            {allItems.length
+              ? "无匹配结果，请调整筛选或搜索关键词"
+              : (isNote
+                ? "暂无备注。页面模式请先点「显示备注」；手写备注在编辑模式下添加。"
+                : "暂无待办")}
           </div>
         )}
       </div>
@@ -6239,20 +7454,23 @@ function DripModal() {
               </span>
             </div>
             <div className="proto-modal__title">{active.title}</div>
-            {isManual && (
+            {(active.updatedAt || active.createdAt || isManual) && (
               <div className="proto-modal__meta" style={{ marginTop: 8 }}>
                 {active.id && <>ID：{active.id}<br /></>}
-                作者：{active.author || "—"}<br />
-                更新：{protoDripFmtTime(active.updatedAt)}
-                {active.anchor?.moduleLabel && <>所属模块：{active.anchor.moduleLabel}<br /></>}
-                {active.anchor?.label && <>锚点：{active.anchor.label}<br /></>}
+                {isManual && <>作者：{active.author || "—"}<br /></>}
+                {active.createdAt && active.createdAt !== active.updatedAt && (
+                  <>创建：{protoDripFmtTime(active.createdAt)}<br /></>
+                )}
+                更新：{protoDripFmtTime(active.updatedAt || active.createdAt)}
+                {isManual && active.anchor?.moduleLabel && <><br />所属模块：{active.anchor.moduleLabel}</>}
+                {isManual && active.anchor?.label && <><br />锚点：{active.anchor.label}</>}
               </div>
             )}
           </div>
           <button type="button" className="proto-modal__close" onClick={close} aria-label="关闭">×</button>
         </div>
         <div className="proto-modal__body">
-          {active.body && <div className="proto-modal__text">{active.body}</div>}
+          {active.body && <DripRichBody content={active.body} />}
           {active.meta && (
             <div className="proto-modal__meta">
               负责人：{active.meta.owner}<br />
@@ -6332,7 +7550,7 @@ function DripModal() {
 function DripEditorModal() {
   const {
     editor, setEditor, store, persistStore, username, setUsername, close, showDripToast,
-    openManualNote, openManualTodo, setShowNotes, setShowTodos, setNoteViewMode, setTodoViewMode,
+    openManualNote, openManualTodo, setShowNotes, setShowTodos, focusDrip,
   } = useDrip();
   const [draft, setDraft] = useState(null);
   const [name, setName] = useState(username);
@@ -6366,14 +7584,16 @@ function DripEditorModal() {
 
     if (isNote) {
       const id = editor.mode === "edit" ? editor.id : protoDripNextId(store.notes, "MN-");
-      const item = {
+      const prevNote = editor.mode === "edit" ? store.notes.find((n) => n.id === editor.id) : null;
+      const item = protoDripEnsureTimestamps({
         id,
         title: draft.title.trim(),
-        body: (draft.body || "").trim(),
+        body: protoDripSanitizeRichHtml(draft.body || ""),
         anchor: protoDripStampAnchor({ ...draft.anchor, label: (draft.anchor?.label || "").trim() }, id),
         author,
+        createdAt: prevNote?.createdAt || now,
         updatedAt: now,
-      };
+      });
       nextStore = {
         ...store,
         notes: editor.mode === "edit"
@@ -6384,21 +7604,23 @@ function DripEditorModal() {
       setEditor(null);
       close();
       setShowNotes(true);
-      setNoteViewMode("page");
       openManualNote(item);
+      focusDrip({ kind: "note", source: "manual", key: item.id, anchor: item.anchor, raw: item }, { scroll: true });
     } else {
       const id = editor.mode === "edit" ? editor.id : protoDripNextId(store.todos, "MT-");
-      const item = {
+      const prevTodo = editor.mode === "edit" ? store.todos.find((t) => t.id === editor.id) : null;
+      const item = protoDripEnsureTimestamps({
         id,
         title: draft.title.trim(),
-        detail: (draft.detail || "").trim(),
+        detail: protoDripSanitizeRichHtml(draft.detail || ""),
         owner: (draft.owner || "").trim() || "—",
         status: (draft.status || "").trim() || "待处理",
         blocker: (draft.blocker || "").trim(),
         anchor: protoDripStampAnchor({ ...draft.anchor, label: (draft.anchor?.label || "").trim() }, id),
         author,
+        createdAt: prevTodo?.createdAt || now,
         updatedAt: now,
-      };
+      });
       nextStore = {
         ...store,
         todos: editor.mode === "edit"
@@ -6409,8 +7631,8 @@ function DripEditorModal() {
       setEditor(null);
       close();
       setShowTodos(true);
-      setTodoViewMode("page");
       openManualTodo(item);
+      focusDrip({ kind: "todo", source: "manual", key: item.id, anchor: item.anchor, raw: item }, { scroll: true });
     }
     showDripToast(editor.mode === "edit" ? "已保存" : "已添加");
   };
@@ -6436,10 +7658,11 @@ function DripEditorModal() {
           </div>
           <div className="proto-editor__field">
             <label className="proto-editor__label">{isNote ? "说明正文" : "待办详情"}</label>
-            <textarea
-              className="proto-editor__textarea"
+            <DripRichEditor
+              editorKey={`${editor.mode}-${editor.kind}-${editor.id || "new"}`}
               value={isNote ? draft.body : draft.detail}
-              onChange={(e) => setDraft(isNote ? { ...draft, body: e.target.value } : { ...draft, detail: e.target.value })}
+              placeholder={isNote ? "输入说明，可直接粘贴截图…" : "输入待办详情，可直接粘贴截图…"}
+              onChange={(html) => setDraft(isNote ? { ...draft, body: html } : { ...draft, detail: html })}
             />
           </div>
           {!isNote && (
@@ -6529,7 +7752,7 @@ function DripSubmitModal() {
 function DripToolbar() {
   const {
     showNotes, setShowNotes, showTodos, setShowTodos,
-    noteViewMode, setNoteViewMode, todoViewMode, setTodoViewMode,
+    noteListOpen, setNoteListOpen, todoListOpen, setTodoListOpen,
     editMode, setEditMode, setPickKind, setSubmitOpen, store,
   } = useDrip();
   const [expanded, setExpanded] = useState(false);
@@ -6568,17 +7791,17 @@ function DripToolbar() {
         <div className="proto-toolbar__sep" />
         <button
           type="button"
-          className={`proto-toolbar__btn ${noteViewMode === "list" ? "is-on is-on--note" : ""}`}
-          onClick={() => setNoteViewMode((m) => (m === "page" ? "list" : "page"))}
+          className={`proto-toolbar__btn ${noteListOpen ? "is-on is-on--note" : ""}`}
+          onClick={() => setNoteListOpen((v) => !v)}
         >
-          备注：{noteViewMode === "page" ? "页面模式" : "列表模式"}
+          {noteListOpen ? "关闭备注列表" : "备注列表"}
         </button>
         <button
           type="button"
-          className={`proto-toolbar__btn ${todoViewMode === "list" ? "is-on is-on--todo" : ""}`}
-          onClick={() => setTodoViewMode((m) => (m === "page" ? "list" : "page"))}
+          className={`proto-toolbar__btn ${todoListOpen ? "is-on is-on--todo" : ""}`}
+          onClick={() => setTodoListOpen((v) => !v)}
         >
-          待办：{todoViewMode === "page" ? "页面模式" : "列表模式"}
+          {todoListOpen ? "关闭待办列表" : "待办列表"}
         </button>
         <div className="proto-toolbar__sep" />
         <button
@@ -9710,6 +10933,148 @@ function dispatchTweak(eventName, detail = {}) {
   window.dispatchEvent(new CustomEvent(eventName, { detail }));
 }
 
+const TWEAK_PANEL_GEOM_KEY = "tweak-panel-geom-v1";
+
+function tweakPanelDefaultGeom() {
+  const width = Math.min(400, Math.max(280, window.innerWidth - 32));
+  const height = Math.min(560, Math.max(240, window.innerHeight - 48));
+  return {
+    x: Math.max(12, window.innerWidth - width - 20),
+    y: Math.max(12, window.innerHeight - height - 20),
+    width,
+    height,
+    opacity: 1,
+  };
+}
+
+function tweakPanelClampOpacity(value) {
+  const n = Number(value);
+  if (Number.isNaN(n)) return 1;
+  return Math.max(0.35, Math.min(1, Math.round(n * 100) / 100));
+}
+
+function tweakPanelApplyOpacity(opacity) {
+  document.documentElement.style.setProperty("--proto-panel-opacity", String(tweakPanelClampOpacity(opacity ?? 1)));
+}
+
+function tweakPanelLoadGeom() {
+  try {
+    const raw = localStorage.getItem(TWEAK_PANEL_GEOM_KEY);
+    if (!raw) return tweakPanelDefaultGeom();
+    const data = JSON.parse(raw);
+    return tweakPanelClampGeom({
+      x: Number(data.x),
+      y: Number(data.y),
+      width: Number(data.width) || 400,
+      height: Number(data.height) || 400,
+      opacity: data.opacity,
+    });
+  } catch {
+    return tweakPanelDefaultGeom();
+  }
+}
+
+function tweakPanelClampGeom(geom) {
+  const minW = 280;
+  const minH = 200;
+  const maxW = Math.max(minW, window.innerWidth - 16);
+  const maxH = Math.max(minH, window.innerHeight - 16);
+  const width = Math.max(minW, Math.min(geom.width, maxW));
+  const height = Math.max(minH, Math.min(geom.height, maxH));
+  const x = Math.max(8, Math.min(geom.x, window.innerWidth - width - 8));
+  const y = Math.max(8, Math.min(geom.y, window.innerHeight - height - 8));
+  const opacity = tweakPanelClampOpacity(geom.opacity ?? 1);
+  return { x, y, width, height, opacity };
+}
+
+function useTweakPanelDrag(setGeom) {
+  const geomRef = useRef(tweakPanelDefaultGeom());
+  const dragRef = useRef(null);
+  const resizeRef = useRef(null);
+
+  const syncGeom = useCallback((next) => {
+    const clamped = tweakPanelClampGeom(next);
+    geomRef.current = clamped;
+    setGeom(clamped);
+    return clamped;
+  }, [setGeom]);
+
+  const persistGeom = useCallback(() => {
+    localStorage.setItem(TWEAK_PANEL_GEOM_KEY, JSON.stringify(geomRef.current));
+  }, []);
+
+  useEffect(() => {
+    const onMove = (e) => {
+      if (dragRef.current) {
+        const d = dragRef.current;
+        syncGeom({
+          ...geomRef.current,
+          x: d.originX + (e.clientX - d.startX),
+          y: d.originY + (e.clientY - d.startY),
+        });
+      }
+      if (resizeRef.current) {
+        const r = resizeRef.current;
+        syncGeom({
+          ...geomRef.current,
+          width: r.originW + (e.clientX - r.startX),
+          height: r.originH + (e.clientY - r.startY),
+        });
+      }
+    };
+    const onUp = () => {
+      if (!dragRef.current && !resizeRef.current) return;
+      dragRef.current = null;
+      resizeRef.current = null;
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+      persistGeom();
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+    };
+  }, [syncGeom, persistGeom]);
+
+  const startDrag = useCallback((e) => {
+    if (e.button !== 0) return;
+    if (e.target.closest("button, a, input, select, textarea, .proto-drip, .proto-anchor")) return;
+    e.preventDefault();
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      originX: geomRef.current.x,
+      originY: geomRef.current.y,
+    };
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "grabbing";
+  }, []);
+
+  const startResize = useCallback((e) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    resizeRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      originW: geomRef.current.width,
+      originH: geomRef.current.height,
+    };
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "nwse-resize";
+  }, []);
+
+  const bindGeom = useCallback((geom) => {
+    geomRef.current = geom;
+  }, []);
+
+  return { startDrag, startResize, bindGeom, syncGeom };
+}
+
 function TweakSection({ title, children }) {
   return (
     <div className="tweak-section">
@@ -9752,8 +11117,33 @@ function App() {
   } = usePath02Plan();
   const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [panelGeom, setPanelGeom] = useState(() => {
+    const geom = tweakPanelLoadGeom();
+    tweakPanelApplyOpacity(geom.opacity);
+    return geom;
+  });
+  const { startDrag: startTweakPanelDrag, startResize: startTweakPanelResize, bindGeom: bindTweakPanelGeom } = useTweakPanelDrag(setPanelGeom);
   const [matchHookIdx, setMatchHookIdx] = useState(TWEAK_DEFAULTS.highlightPath);
   const [pathToast, setPathToast] = useState("");
+
+  useEffect(() => {
+    bindTweakPanelGeom(panelGeom);
+    tweakPanelApplyOpacity(panelGeom.opacity);
+  }, [panelGeom, bindTweakPanelGeom]);
+
+  const updatePanelGeom = useCallback((edits) => {
+    setPanelGeom((g) => {
+      const next = tweakPanelClampGeom({ ...g, ...edits });
+      localStorage.setItem(TWEAK_PANEL_GEOM_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    const onResize = () => setPanelGeom((g) => tweakPanelClampGeom(g));
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const onPathCta = (e) => {
@@ -9958,8 +11348,19 @@ function App() {
       {/* Tweaks — 原型调试，生产环境移除 */}
       <div className="tweak-dock">
         {panelOpen ? (
-          <div className="tweak-panel" role="dialog" aria-label="调试面板">
-          <div className="tweak-panel__head">
+          <div
+            className="tweak-panel"
+            role="dialog"
+            aria-label="调试面板"
+            style={{
+              left: panelGeom.x,
+              top: panelGeom.y,
+              width: panelGeom.width,
+              height: panelGeom.height,
+              maxHeight: "none",
+            }}
+          >
+          <div className="tweak-panel__head" onPointerDown={startTweakPanelDrag}>
             <div>
               <div className="tweak-panel__title">调试面板</div>
               <div className="tweak-panel__sub">页内无入口 · 仅面板可触发</div>
@@ -9970,7 +11371,7 @@ function App() {
                 <NoteDrip
                   inline
                   title="Tweaks 调试面板"
-                  body={"⚠️ 交付专用 · 生产剔除\n\n收录：页内无入口的状态（边缘态 / 注入态 / Token 预览）\n\n含：匹配快捷演示、手动高亮、登录态、路径02 边缘态、强调色、Dark Mode\n\n页内已有入口的不放：A/B Tab、导航、微信咨询、Hero、登录网关等"}
+                  body={"⚠️ 交付专用 · 生产剔除\n\n收录：页内无入口的状态（边缘态 / 注入态 / Token 预览）\n\n含：面板设置（透明度联动调试/标注/列表、拖拽缩放）、匹配快捷演示、手动高亮、登录态、路径02 边缘态、强调色、Dark Mode\n\n页内已有入口的不放：A/B Tab、导航、微信咨询、Hero、登录网关等"}
                   prd={["§2.3.2 Tweaks 调试面板"]}
                   docs={["prd"]}
                 />
@@ -9980,6 +11381,24 @@ function App() {
             </DripAnchor>
           </div>
           <div className="tweak-panel__body">
+            <TweakSection title="面板设置">
+              <TweakField label="面板透明度">
+                <div className="tweak-range-row">
+                  <input
+                    type="range"
+                    className="tweak-range"
+                    min={35}
+                    max={100}
+                    step={5}
+                    value={Math.round((panelGeom.opacity ?? 1) * 100)}
+                    onChange={(e) => updatePanelGeom({ opacity: Number(e.target.value) / 100 })}
+                    aria-label="调节调试面板、标注面板与列表透明度"
+                  />
+                  <span className="tweak-range-row__value">{Math.round((panelGeom.opacity ?? 1) * 100)}%</span>
+                </div>
+              </TweakField>
+            </TweakSection>
+
             <TweakSection title="需求匹配 · 快捷演示">
               <div className="tweak-btn-grid">
                 <TweakBtn onClick={() => { update({ painPattern: "A" }); dispatchTweak("tweak-pain-select", { hookIdx: 2 }); }}>
@@ -10081,6 +11500,12 @@ function App() {
           <div className="tweak-panel__footer">
             <TweakBtn ghost onClick={resetDemoStates}>重置全部演示态</TweakBtn>
           </div>
+          <div
+            className="tweak-panel__resize"
+            onPointerDown={startTweakPanelResize}
+            aria-hidden="true"
+            title="拖拽调整大小"
+          />
         </div>
         ) : (
           <DripAnchor
